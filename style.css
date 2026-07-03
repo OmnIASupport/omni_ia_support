@@ -1,5 +1,28 @@
 body {
     font-family: Arial, sans-serif;
     margin:40px;
-    background-color: #f4f4f4;
+    background-color: #000000;
+    text-align: center;
+   
+      
+}
+main {
+    text-align: center;
+
+}
+.container {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+.container-h1 {
+    display: flex;
+    justify-content: flex-start;
+}
+
+button {
+    font-family: Arial, Helvetica, sans-serif;
+}
+h1 {
+    color: #ffffff;
 }
