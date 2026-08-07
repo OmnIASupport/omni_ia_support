@@ -35,7 +35,7 @@ main {
 
 h1 {
     display: flex;
-    justify-content: flex-start;
+    justify-content: flex-end;
     color: black;
     font-family: raleway;
     
@@ -45,17 +45,18 @@ h1 {
 button {
     font-family: inter, sans-serif;
     font-weight: 400;
-    background-color: rgb(255, 255, 255);
-    padding: 15px;
-    font-size: 15px;
-    border-radius: 30px;
+    background-color: #fff;
+    padding: 11px;
+    font-size: 15px; /*tamanho da fonte*/
+    border-radius: 5px; /*borda arredondada*/
     cursor: pointer; /*muda o cursor*/
-    border: 2px solid #000;
+    border:  1px solid transparent;
+
 }
 
-button:hover {
-    background-color: #E8E8E8;
-    
+button:hover {  /*o hover mudar o visual do elemento ao passar o mouse em cima*/
+    background-color: #9C9C9C;
+    color: #fff; /*muda a cor da palavra ao passar o cursor em cima*/
 }
 
 .container {
@@ -69,8 +70,8 @@ button:hover {
 }
 
 .logo-img {
-  max-height: 110px;      
-  width: 110px;
+  max-height: 90px;      
+  width: 90px;
   display: block;
 }
 
