@@ -1,11 +1,21 @@
+@font-face {
+    font-family: inter;
+    src: url(Inter-VariableFont_opsz\,wght.ttf);
+}
+
+@font-face {
+    font-family: raleway;
+    src: url(Raleway-VariableFont_wght.ttf);
+}
 body {
-    background-color: #83B0D6;
-    font-family: Arial, sans-serif;
+    background-color: #D6D6D6;
+    font-family: inter, sans-serif;
     margin:40px;
     text-align: center;  
     margin: 0;
     padding: 0;
 }
+
 header {
     background-color: #ffffff;
     width: 100%;
@@ -15,18 +25,44 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-direction: row-reverse;
-    
-}   
+    flex-direction: row-reverse;   
+} 
+
 main {
     text-align: center;
+    
+}
+
+h1 {
+    display: flex;
+    justify-content: flex-start;
+    color: black;
+    font-family: raleway;
+    
+    
+}
+
+button {
+    font-family: inter, sans-serif;
+    font-weight: 400;
+    background-color: rgb(255, 255, 255);
+    padding: 15px;
+    font-size: 15px;
+    border-radius: 30px;
+    cursor: pointer; /*muda o cursor*/
+    border: 2px solid #000;
+}
+
+button:hover {
+    background-color: #E8E8E8;
     
 }
 
 .container {
     display: flex;
     justify-content: flex-end;
-  }
+}
+
 .logo-container {
   display: flex;         
   align-items: center;         
@@ -38,18 +74,4 @@ main {
   display: block;
 }
 
-.container-h1 {
-    display: flex;
-    justify-content: flex-start;
-}
 
-button {
-    font-family: Arial, sans-serif;
-    background-color: dodgerblue;
-    padding: 13px;
-    border-radius: 20px;
-}
-
-h1 {
-    color: #000000;
-}
