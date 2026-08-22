@@ -21,7 +21,6 @@ header {
     width: 100%;
     box-sizing: border-box;
     padding: 10px 40px;
-    
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -30,7 +29,6 @@ header {
 
 main {
     text-align: center;
-    
 }
 
 h1 {
@@ -38,8 +36,6 @@ h1 {
     justify-content: flex-end;
     color: black;
     font-family: raleway;
-    
-    
 }
 
 button {
@@ -70,8 +66,8 @@ button:hover {  /*o hover mudar o visual do elemento ao passar o mouse em cima*/
 }
 
 .logo-img {
-  max-height: 110px;      
-  width: 110px;
+  max-height: 130px;      
+  width: 130px;
   display: block;
 }
 
