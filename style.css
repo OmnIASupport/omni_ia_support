@@ -1,0 +1,71 @@
+/*fontes adicionadas*/
+@font-face {
+    font-family: inter;
+    src: url(Inter-VariableFont_opsz\,wght.ttf);
+}
+
+@font-face {
+    font-family: raleway;
+    src: url(Raleway-VariableFont_wght.ttf);
+}
+
+body {
+    background-color: #000000;
+    font-family: inter, sans-serif;
+    margin:40px;
+    text-align: center;  
+    margin: 0;
+    padding: 0;
+    color: #fff;
+}
+
+header {
+    background-color: #000000;
+    box-sizing: border-box;
+    padding: 10px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row-reverse; 
+    width: 100%;  
+} 
+
+h1 {
+    display: flex;
+    justify-content: flex-end;
+    color: rgb(255, 255, 255);
+    font-family: raleway;
+}
+
+main {
+    text-align: center;
+}
+
+.logo-container {
+  display: flex;         
+  align-items: center;         
+}
+
+.logo-img {
+  max-height: 130px;      
+  width: 130px;
+  display: block;
+}
+
+button {
+    font-family: inter, sans-serif;
+    font-weight: 400;
+    background-color: transparent;
+    font-size: 15px; /*tamanho da fonte*/
+    cursor: pointer; /*muda o cursor*/
+    border:  transparent;
+    transition: background-color 0.7s ease;/*define o tempo da transição */
+    color: #fff;
+}
+ 
+button:hover {  /*hover mudar o visual do elemento ao passar o mouse em cima*/
+    color: #fff; /*muda a cor da palavra ao passar o cursor em cima*/
+}
+
+
+
