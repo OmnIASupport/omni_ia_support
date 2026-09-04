@@ -84,7 +84,7 @@ INSERT INTO RESULTADO_TRADUCAO (id_traducao, id_solicitacao_traducao, id_formato
     (1, 'video_libras', 4, 3, 0.9900, 0.9600, 0.9400, 0.9633, false, 1, now()); -- id_resultado 1
  
 -- ---------------------------------------------------------------------------
--- 15. MOVIMENTO_IA - movimentos gerados, referenciando a biblioteca de videos
+-- 13. MOVIMENTO_IA - movimentos gerados, referenciando a biblioteca de videos
 -- ---------------------------------------------------------------------------
 INSERT INTO MOVIMENTO_IA (id_resultado_traducao, id_biblioteca_video, sequencia_movimento, tipo_movimento, formato_representacao, dados_movimento, inicio_ms, fim_ms, confianca, status) VALUES
     (1, 1, 1, 'sinal', 'gerado', 'esqueleto_3d', 'referencia_bom_dia',  0,    1800, 0.9500, 'processado'),
