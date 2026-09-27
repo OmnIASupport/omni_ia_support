@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Omni IA Support - Tradutor Bidirecional de Libras com Avatar 3D</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Three.js CDN for 3D Avatar -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <!-- Chart.js CDN for Dashboard Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --primary-color: #1A56DB;
+      --primary-hover: #1E40AF;
+      --secondary-color: #0E9F6E;
+      --font-scale: 100%;
+    }
+
+    html {
+      font-size: var(--font-scale);
+      scroll-behavior: smooth;
+    }
+
+    /* High Contrast Mode Rules */
+    body.high-contrast {
+      background-color: #000000 !important;
+      color: #FFFF00 !important;
+    }
+    body.high-contrast .hc-card {
+      background-color: #121212 !important;
+      border: 2px solid #FFFF00 !important;
+      color: #FFFFFF !important;
+    }
+    body.high-contrast .hc-btn {
+      background-color: #FFFF00 !important;
+      color: #000000 !important;
+      font-weight: bold !important;
+      border: 2px solid #FFFFFF !important;
+    }
+    body.high-contrast .hc-text {
+      color: #FFFF00 !important;
+    }
+
+    /* Custom Animations */
+    @keyframes pulse-wave {
+      0%, 100% { height: 8px; }
+      50% { height: 32px; }
+    }
+    .wave-bar {
+      animation: pulse-wave 1.2s ease-in-out infinite;
+    }
+    .wave-bar:nth-child(2) { animation-delay: 0.2s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.4s; }
+    .wave-bar:nth-child(4) { animation-delay: 0.1s; }
+    .wave-bar:nth-child(5) { animation-delay: 0.3s; }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(26, 86, 219, 0.4);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(26, 86, 219, 0.7);
+    }
+
+    /* Canvas 3D viewport */
+    #avatarCanvas {
+      width: 100%;
+      height: 100%;
+      outline: none;
+    }
+  </style>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ebf5ff',
+              100: '#e1effe',
+              500: '#1A56DB',
+              600: '#1E40AF',
+              700: '#1e3a8a',
+            },
+            emeraldBrand: {
+              500: '#0E9F6E',
+              600: '#047857',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans min-h-screen flex flex-col transition-colors duration-200">
+
+  <!-- Accessibility Toolbar -->
+  <header class="bg-slate-900 text-white text-xs py-2 px-4 border-b border-slate-800 sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div class="flex items-center space-x-3">
+        <span class="font-semibold text-brand-500"><i class="fa-solid fa-universal-access mr-1"></i> Acessibilidade:</span>
+        <button onclick="adjustFontSize(10)" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded transition" title="Aumentar Fonte (Alt + +)" aria-label="Aumentar Fonte">A+</button>
+        <button onclick="adjustFontSize(-10)" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded transition" title="Diminuir Fonte (Alt + -)" aria-label="Diminuir Fonte">A-</button>
+        <button onclick="resetFontSize()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded transition" title="Tamanho Padrão" aria-label="Tamanho Padrão">A</button>
+        <button onclick="toggleHighContrast()" class="px-2 py-1 bg-amber-500 text-slate-950 font-bold hover:bg-amber-400 rounded transition" title="Alternar Alto Contraste" aria-label="Alto Contraste">
+          <i class="fa-solid fa-circle-half-stroke mr-1"></i> Alto Contraste
+        </button>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button onclick="toggleDarkMode()" class="hover:text-amber-300 transition flex items-center space-x-1" aria-label="Alternar Modo Escuro">
+          <i id="darkModeIcon" class="fa-solid fa-moon"></i>
+          <span id="darkModeText">Modo Escuro</span>
+        </button>
+        <button onclick="speakText('Bem-vindo à plataforma Omni IA Support. Tradução em tempo real de Português para Libras.')" class="hover:text-emerald-400 transition flex items-center space-x-1" title="Ouvir Resumo da Página">
+          <i class="fa-solid fa-volume-high"></i>
+          <span>Ouvir Tela</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Header / Navbar -->
+  <nav class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm sticky top-8 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-emeraldBrand-500 flex items-center justify-center text-white font-bold text-xl shadow-md">
+            <i class="fa-solid fa-[#]">O</i>
+          </div>
+          <div>
+            <span class="text-xl font-bold bg-gradient-to-r from-brand-500 to-emeraldBrand-500 bg-clip-text text-transparent">Omni IA</span>
+            <span class="text-xs block text-slate-500 dark:text-slate-400 font-medium tracking-wide">SUPPORT & ACESSIBILIDADE</span>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="hidden md:flex space-x-1 items-center" id="desktopNav">
+          <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition text-brand-500 bg-brand-50 dark:bg-slate-700">
+            <i class="fa-solid fa-house mr-1"></i> Início
+          </button>
+          <button onclick="switchTab('traducao')" id="nav-traducao" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition">
+            <i class="fa-solid fa-hands-asl-interpreting mr-1"></i> Tradutor 3D
+          </button>
+          <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition">
+            <i class="fa-solid fa-chart-line mr-1"></i> Dashboard
+          </button>
+          <button onclick="switchTab('cadastro')" id="nav-cadastro" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition">
+            <i class="fa-solid fa-user-gear mr-1"></i> Cadastro / Perfil
+          </button>
+          <button onclick="switchTab('suporte')" id="nav-suporte" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition">
+            <i class="fa-solid fa-headset mr-1"></i> Ajuda
+          </button>
+        </div>
+
+        <!-- User Profile Quick Badge -->
+        <div class="flex items-center space-x-3">
+          <div onclick="switchTab('cadastro')" class="flex items-center space-x-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 p-1.5 pr-3 rounded-full cursor-pointer transition">
+            <div id="userAvatarBadge" class="w-8 h-8 rounded-full bg-brand-500 text-white flex items-center justify-center font-bold text-sm">
+              JS
+            </div>
+            <div class="text-xs text-left hidden sm:block">
+              <span id="userNameBadge" class="font-bold block text-slate-800 dark:text-slate-200 leading-tight">João Silva</span>
+              <span id="userRoleBadge" class="text-slate-500 dark:text-slate-400">Usuário Surdo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Notification Toast Container -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6">
+
+    <!-- ==================== TAB 1: HOME ==================== -->
+    <section id="view-home" class="tab-view space-y-12">
+      <!-- Hero Section -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-brand-600 to-emeraldBrand-600 text-white p-8 md:p-12 shadow-xl hc-card">
+        <div class="relative z-10 max-w-2xl space-y-6">
+          <div class="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+            <span>Inteligência Artificial de Tradução em Tempo Real</span>
+          </div>
+          <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight">
+            Comunicação sem barreiras entre Português e Libras.
+          </h1>
+          <p class="text-slate-100 text-base md:text-lg leading-relaxed">
+            O <strong class="text-amber-300">Omni IA Support</strong> utiliza inteligência artificial avançada e um Avatar 3D hiper-expressivo para conectar pessoas surdas e ouvintes em tempo real com 100% de respeito à gramática da Libras.
+          </p>
+          <div class="flex flex-wrap gap-4 pt-2">
+            <button onclick="switchTab('traducao')" class="hc-btn bg-white text-brand-600 hover:bg-slate-100 font-bold px-6 py-3 rounded-xl shadow-lg transition flex items-center space-x-2 text-base">
+              <i class="fa-solid fa-comments"></i>
+              <span>Abrir Tradutor 3D</span>
+            </button>
+            <button onclick="switchTab('cadastro')" class="hc-btn bg-brand-700/60 hover:bg-brand-700 text-white border border-white/30 font-semibold px-6 py-3 rounded-xl transition flex items-center space-x-2 text-base">
+              <i class="fa-solid fa-id-card"></i>
+              <span>Configurar Perfil</span>
+            </button>
+          </div>
+        </div>
+        <div class="absolute -right-10 -bottom-10 opacity-20 md:opacity-30 pointer-events-none">
+          <i class="fa-solid fa-hands-asl-interpreting text-[260px] text-white"></i>
+        </div>
+      </div>
+
+      <!-- Key Pillars -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md transition hc-card">
+          <div class="w-12 h-12 rounded-xl bg-brand-50 dark:bg-brand-900/40 text-brand-500 flex items-center justify-center text-2xl mb-4">
+            <i class="fa-solid fa-cube"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Avatar 3D Interativo</h3>
+          <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+            Renderização tridimensional com controle de rotação 360°, variação de velocidade (0.5x a 1.5x) e suporte a variações regionais de sinais.
+          </p>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md transition hc-card">
+          <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-900/40 text-emeraldBrand-500 flex items-center justify-center text-2xl mb-4">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Tradução Bidirecional</h3>
+          <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+            Converte Texto/Fala em Português para animação em Libras e interpreta Libras em texto e áudio sintetizado em alto-falante.
+          </p>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md transition hc-card">
+          <div class="w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-900/40 text-purple-500 flex items-center justify-center text-2xl mb-4">
+            <i class="fa-solid fa-users"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Perfis Adaptativos</h3>
+          <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+            Interfaces customizadas para Crianças, Professores, Responsáveis e Usuários Surdos com níveis ajustáveis de surdez.
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Interactive Demo Callout -->
+      <div class="bg-slate-100 dark:bg-slate-800/60 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 flex flex-col md:flex-row items-center justify-between gap-6 hc-card">
+        <div class="space-y-2 max-w-xl">
+          <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Experimente agora mesmo!</h2>
+          <p class="text-slate-600 dark:text-slate-300 text-sm">
+            Digite uma mensagem como "Bom dia", "Obrigado" ou "Libras" e veja o Avatar 3D executar os gestos instantaneamente.
+          </p>
+        </div>
+        <button onclick="switchTab('traducao')" class="hc-btn bg-brand-500 hover:bg-brand-600 text-white font-bold px-6 py-3 rounded-xl shadow-md transition whitespace-nowrap">
+          Testar Tradutor Agora <i class="fa-solid fa-arrow-right ml-2"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: CADASTRO / LOGIN ==================== -->
+    <section id="view-cadastro" class="tab-view hidden space-y-8">
+      <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Registration Form Side -->
+        <div class="md:col-span-2 bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 hc-card">
+          <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100 dark:border-slate-700">
+            <div>
+              <h2 class="text-2xl font-bold">Cadastro do Usuário</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Entidades: <code class="bg-slate-100 dark:bg-slate-700 px-1 py-0.5 rounded">USUARIO</code> e <code class="bg-slate-100 dark:bg-slate-700 px-1 py-0.5 rounded">PERFIL_ACESSIBILIDADE</code></p>
+            </div>
+            <span class="text-xs font-semibold px-2.5 py-1 bg-brand-50 text-brand-600 rounded-full dark:bg-brand-900/30">Etapa <span id="formStepNum">1</span> de 3</span>
+          </div>
+
+          <!-- OAuth Google Simulation Button -->
+          <div class="mb-6">
+            <button type="button" onclick="simulateGoogleLogin()" class="w-full flex items-center justify-center space-x-3 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold py-2.5 px-4 rounded-xl transition shadow-sm">
+              <i class="fa-brands fa-google text-red-500 text-lg"></i>
+              <span>Entrar com conta Google (Gmail)</span>
+            </button>
+            <div class="relative my-4">
+              <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200 dark:border-slate-700"></div></div>
+              <div class="relative flex justify-center text-xs uppercase"><span class="bg-white dark:bg-slate-800 px-2 text-slate-400">ou preencha os dados</span></div>
+            </div>
+          </div>
+
+          <!-- Multi-step Form -->
+          <form id="registrationForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+            
+            <!-- STEP 1: Personal Data -->
+            <div id="step-1" class="form-step space-y-4">
+              <h3 class="font-bold text-sm text-brand-500 uppercase tracking-wider">1. Dados Pessoais</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold mb-1">Nome Completo *</label>
+                  <input type="text" id="inputNome" required value="João Silva" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold mb-1">Data de Nascimento *</label>
+                  <input type="date" id="inputDataNasc" required value="1998-05-14" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+                </div>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold mb-1">CPF *</label>
+                  <input type="text" id="inputCPF" required value="123.456.789-00" placeholder="000.000.000-00" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold mb-1">Telefone / WhatsApp *</label>
+                  <input type="tel" id="inputTelefone" required value="(11) 98765-4321" placeholder="(00) 00000-0000" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold mb-1">E-mail (Gmail) *</label>
+                <input type="email" id="inputEmail" required value="joao.silva@gmail.com" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+              </div>
+            </div>
+
+            <!-- STEP 2: User Classification -->
+            <div id="step-2" class="form-step hidden space-y-4">
+              <h3 class="font-bold text-sm text-brand-500 uppercase tracking-wider">2. Classificação de Usuário</h3>
+              <div>
+                <label class="block text-xs font-semibold mb-2">Tipo de Usuário *</label>
+                <div class="grid grid-cols-2 gap-3">
+                  <label class="border border-slate-200 dark:border-slate-600 p-3 rounded-xl flex items-center space-x-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700">
+                    <input type="radio" name="tipoUsuario" value="Usuário Surdo" checked onchange="updateProfilePreview()">
+                    <span class="text-sm font-medium"><i class="fa-solid fa-user-check text-brand-500 mr-1"></i> Usuário Surdo</span>
+                  </label>
+                  <label class="border border-slate-200 dark:border-slate-600 p-3 rounded-xl flex items-center space-x-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700">
+                    <input type="radio" name="tipoUsuario" value="Criança" onchange="updateProfilePreview()">
+                    <span class="text-sm font-medium"><i class="fa-solid fa-child text-emeraldBrand-500 mr-1"></i> Criança</span>
+                  </label>
+                  <label class="border border-slate-200 dark:border-slate-600 p-3 rounded-xl flex items-center space-x-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700">
+                    <input type="radio" name="tipoUsuario" value="Professor" onchange="updateProfilePreview()">
+                    <span class="text-sm font-medium"><i class="fa-solid fa-chalkboard-user text-purple-500 mr-1"></i> Professor</span>
+                  </label>
+                  <label class="border border-slate-200 dark:border-slate-600 p-3 rounded-xl flex items-center space-x-2 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700">
+                    <input type="radio" name="tipoUsuario" value="Responsável" onchange="updateProfilePreview()">
+                    <span class="text-sm font-medium"><i class="fa-solid fa-people-roof text-amber-500 mr-1"></i> Responsável</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold mb-1">Nível de Surdez *</label>
+                <select id="selectNivelSurdez" onchange="updateProfilePreview()" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+                  <option value="Profunda" selected>Profunda (&gt; 91 dB)</option>
+                  <option value="Severa">Severa (71 a 90 dB)</option>
+                  <option value="Moderada">Moderada (41 a 70 dB)</option>
+                  <option value="Leve">Leve (26 a 40 dB)</option>
+                  <option value="Ouvinte / Sem deficiência auditiva">Ouvinte / Sem deficiência auditiva</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- STEP 3: Accessibility Settings -->
+            <div id="step-3" class="form-step hidden space-y-4">
+              <h3 class="font-bold text-sm text-brand-500 uppercase tracking-wider">3. Preferências de Acessibilidade & Avatar</h3>
+              <div>
+                <label class="block text-xs font-semibold mb-1">Estilo do Avatar 3D</label>
+                <select id="selectAvatarStyle" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+                  <option value="Robô Amigável Omni">Robô Amigável Omni (Padrão)</option>
+                  <option value="Humanóide Realista">Humanóide Estilizado</option>
+                  <option value="Avatar Infantil Lúdico">Avatar Infantil Lúdico</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold mb-1">Velocidade Inicial das Animações em Libras</label>
+                <select id="selectAvatarSpeed" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+                  <option value="0.5">Lenta (0.5x)</option>
+                  <option value="1.0" selected>Normal (1.0x)</option>
+                  <option value="1.5">Rápida (1.5x)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between items-center pt-4 border-t border-slate-100 dark:border-slate-700">
+              <button type="button" id="prevStepBtn" onclick="changeFormStep(-1)" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-lg font-semibold text-sm transition hidden">
+                <i class="fa-solid fa-arrow-left mr-1"></i> Anterior
+              </button>
+              <div class="ml-auto flex space-x-2">
+                <button type="button" id="nextStepBtn" onclick="changeFormStep(1)" class="px-5 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg font-semibold text-sm transition">
+                  Próximo <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+                <button type="submit" id="submitFormBtn" class="px-5 py-2 bg-emeraldBrand-500 hover:bg-emeraldBrand-600 text-white rounded-lg font-semibold text-sm transition hidden">
+                  <i class="fa-solid fa-check mr-1"></i> Salvar e Atualizar Perfil
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Active Profile Card Display -->
+        <div class="bg-gradient-to-b from-brand-600 to-brand-700 text-white p-6 rounded-2xl shadow-md flex flex-col justify-between hc-card">
+          <div class="space-y-4">
+            <div class="flex items-center space-x-3">
+              <div class="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center font-bold text-2xl border-2 border-white/30">
+                <span id="cardAvatarInitials">JS</span>
+              </div>
+              <div>
+                <h3 id="cardUserName" class="font-extrabold text-lg leading-tight">João Silva</h3>
+                <span id="cardUserRole" class="inline-block bg-white/20 text-xs px-2 py-0.5 rounded-md font-semibold mt-1">Usuário Surdo</span>
+              </div>
+            </div>
+
+            <div class="border-t border-white/20 pt-4 space-y-2 text-xs">
+              <div class="flex justify-between"><span class="opacity-80">E-mail:</span> <span id="cardEmail" class="font-medium">joao.silva@gmail.com</span></div>
+              <div class="flex justify-between"><span class="opacity-80">CPF:</span> <span id="cardCPF" class="font-medium">123.456.789-00</span></div>
+              <div class="flex justify-between"><span class="opacity-80">Nível de Surdez:</span> <span id="cardDeafLevel" class="font-bold text-amber-300">Profunda</span></div>
+              <div class="flex justify-between"><span class="opacity-80">Estilo Avatar:</span> <span id="cardAvatarStyle" class="font-medium">Robô Amigável</span></div>
+              <div class="flex justify-between"><span class="opacity-80">Velocidade Libras:</span> <span id="cardAvatarSpeed" class="font-medium">1.0x</span></div>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-white/20 text-center">
+            <span class="text-[10px] text-white/70 block uppercase tracking-wider mb-1">Status da Conta</span>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-400 text-slate-950">
+              <i class="fa-solid fa-circle-check mr-1"></i> Perfil Acessível Ativo
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: DASHBOARD ==================== -->
+    <section id="view-dashboard" class="tab-view hidden space-y-6">
+      
+      <!-- Dashboard Mode Header Switcher -->
+      <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-wrap justify-between items-center gap-4 hc-card">
+        <div>
+          <h2 class="text-2xl font-bold">Dashboard de Atividades</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Acompanhamento do progresso de comunicação e métricas do sistema</p>
+        </div>
+
+        <!-- Profile Adaptive View Switcher -->
+        <div class="flex bg-slate-100 dark:bg-slate-700 p-1 rounded-xl text-xs font-semibold">
+          <button onclick="setDashboardMode('usuario')" id="dashMode-usuario" class="dash-mode-btn px-3 py-1.5 rounded-lg bg-white dark:bg-slate-600 shadow-sm text-brand-500">
+            <i class="fa-solid fa-user mr-1"></i> Modo Surdo
+          </button>
+          <button onclick="setDashboardMode('crianca')" id="dashMode-crianca" class="dash-mode-btn px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300">
+            <i class="fa-solid fa-child mr-1"></i> Modo Criança
+          </button>
+          <button onclick="setDashboardMode('professor')" id="dashMode-professor" class="dash-mode-btn px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300">
+            <i class="fa-solid fa-graduation-cap mr-1"></i> Modo Prof. / Resp.
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Metrics Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hc-card">
+          <span class="text-xs text-slate-500 dark:text-slate-400 font-medium block">Horas de Tradução</span>
+          <div class="flex items-baseline space-x-2 mt-1">
+            <span class="text-2xl font-black text-brand-500">42.8h</span>
+            <span class="text-xs text-emerald-500 font-semibold"><i class="fa-solid fa-arrow-up"></i> +12%</span>
+          </div>
+        </div>
+        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hc-card">
+          <span class="text-xs text-slate-500 dark:text-slate-400 font-medium block">Sinais Aprendidos</span>
+          <div class="flex items-baseline space-x-2 mt-1">
+            <span class="text-2xl font-black text-emeraldBrand-500">320</span>
+            <span class="text-xs text-emerald-500 font-semibold"><i class="fa-solid fa-arrow-up"></i> +28</span>
+          </div>
+        </div>
+        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hc-card">
+          <span class="text-xs text-slate-500 dark:text-slate-400 font-medium block">Precisão da IA</span>
+          <div class="flex items-baseline space-x-2 mt-1">
+            <span class="text-2xl font-black text-purple-500">98.4%</span>
+            <span class="text-xs text-slate-400 font-medium">Excelente</span>
+          </div>
+        </div>
+        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hc-card">
+          <span class="text-xs text-slate-500 dark:text-slate-400 font-medium block">Sessões Realizadas</span>
+          <div class="flex items-baseline space-x-2 mt-1">
+            <span class="text-2xl font-black text-amber-500">114</span>
+            <span class="text-xs text-emerald-500 font-semibold"><i class="fa-solid fa-arrow-up"></i> +8 hoje</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mode-Specific Sections -->
+      <div id="dashContent-crianca" class="hidden bg-gradient-to-r from-amber-100 to-orange-100 dark:from-slate-800 dark:to-amber-950/40 p-6 rounded-2xl border border-amber-200 dark:border-amber-800/40 space-y-4">
+        <h3 class="text-lg font-bold text-amber-800 dark:text-amber-300 flex items-center">
+          <i class="fa-solid fa-trophy mr-2 text-xl text-amber-500"></i> Gamificação Infantil - Conquistas da Semana!
+        </h3>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+          <div class="bg-white/80 dark:bg-slate-800 p-3 rounded-xl shadow-sm">
+            <i class="fa-solid fa-star text-amber-400 text-3xl mb-1"></i>
+            <span class="block text-xs font-bold">Mestre das Saudações</span>
+            <span class="text-[10px] text-slate-500">5/5 concluídos</span>
+          </div>
+          <div class="bg-white/80 dark:bg-slate-800 p-3 rounded-xl shadow-sm">
+            <i class="fa-solid fa-heart text-red-500 text-3xl mb-1"></i>
+            <span class="block text-xs font-bold">Expressões de Afeto</span>
+            <span class="text-[10px] text-slate-500">3/3 concluídos</span>
+          </div>
+          <div class="bg-white/80 dark:bg-slate-800 p-3 rounded-xl shadow-sm">
+            <i class="fa-solid fa-bolt text-blue-500 text-3xl mb-1"></i>
+            <span class="block text-xs font-bold">Tradução Rápida</span>
+            <span class="text-[10px] text-slate-500">Streak de 7 dias</span>
+          </div>
+          <div class="bg-white/80 dark:bg-slate-800 p-3 rounded-xl shadow-sm opacity-60">
+            <i class="fa-solid fa-lock text-slate-400 text-3xl mb-1"></i>
+            <span class="block text-xs font-bold">Vocabulário Avançado</span>
+            <span class="text-[10px] text-slate-500">Bloqueado</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="dashContent-professor" class="hidden bg-slate-100 dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 flex justify-between items-center">
+        <div>
+          <span class="text-sm font-bold block">Relatório Pedagógico para Exportação</span>
+          <span class="text-xs text-slate-500">Gere um documento contendo a evolução linguística e tempo de uso do aluno.</span>
+        </div>
+        <button onclick="triggerToast('Relatório em PDF gerado com sucesso!', 'success')" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold transition flex items-center space-x-1">
+          <i class="fa-solid fa-file-pdf"></i>
+          <span>Exportar PDF</span>
+        </button>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="md:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hc-card">
+          <h3 class="font-bold text-sm mb-4">Uso Semanal do Tradutor (Horas por dia)</h3>
+          <div class="h-64 relative">
+            <canvas id="chartUsage"></canvas>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hc-card">
+          <h3 class="font-bold text-sm mb-4">Categorias de Sinais</h3>
+          <div class="h-64 relative">
+            <canvas id="chartCategories"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recommendations & Feedback Row -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Daily Recommendation -->
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hc-card">
+          <div class="flex items-center space-x-2 text-brand-500 mb-3">
+            <i class="fa-solid fa-lightbulb text-xl"></i>
+            <h3 class="font-bold text-base">Recomendação do Dia</h3>
+          </div>
+          <div class="bg-brand-50 dark:bg-slate-700/50 p-4 rounded-xl border border-brand-100 dark:border-slate-600 space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-extrabold uppercase text-brand-600 dark:text-brand-400">Sinal em Destaque</span>
+              <span class="text-[10px] bg-brand-200 dark:bg-brand-900 text-brand-800 dark:text-brand-200 px-2 py-0.5 rounded font-bold">Cortesia</span>
+            </div>
+            <h4 class="text-xl font-black">"OBRIGADO" / "OBRIGADA"</h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300">
+              Coloque a mão dominante aberta tocando suavemente na testa e mova-a para a frente curvando ligeiramente o corpo.
+            </p>
+            <button onclick="switchTab('traducao'); setTimeout(() => sendSampleText('Obrigado'), 300)" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2 rounded-lg text-xs transition">
+              <i class="fa-solid fa-play mr-1"></i> Visualizar no Avatar 3D
+            </button>
+          </div>
+        </div>
+
+        <!-- User Feedback Widget -->
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hc-card space-y-3">
+          <h3 class="font-bold text-base flex items-center">
+            <i class="fa-solid fa-comment-dots text-emeraldBrand-500 mr-2"></i> Avaliar Precisão dos Sinais
+          </h3>
+          <p class="text-xs text-slate-500">Ajude nossa equipe a aprimorar o modelo de IA e o glossário.</p>
+          
+          <div class="flex items-center space-x-2 my-2" id="starRating">
+            <button type="button" onclick="setRating(1)" class="text-2xl text-amber-400"><i class="fa-solid fa-star"></i></button>
+            <button type="button" onclick="setRating(2)" class="text-2xl text-amber-400"><i class="fa-solid fa-star"></i></button>
+            <button type="button" onclick="setRating(3)" class="text-2xl text-amber-400"><i class="fa-solid fa-star"></i></button>
+            <button type="button" onclick="setRating(4)" class="text-2xl text-amber-400"><i class="fa-solid fa-star"></i></button>
+            <button type="button" onclick="setRating(5)" class="text-2xl text-amber-400"><i class="fa-solid fa-star"></i></button>
+            <span class="text-xs font-bold text-slate-500 ml-2" id="ratingText">5.0 / 5.0</span>
+          </div>
+
+          <textarea id="feedbackComment" rows="2" placeholder="O avatar executou bem as expressões faciais?" class="w-full p-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emeraldBrand-500"></textarea>
+
+          <button type="button" onclick="submitUserFeedback()" class="w-full bg-emeraldBrand-500 hover:bg-emeraldBrand-600 text-white font-bold py-2 rounded-xl text-xs transition">
+            Enviar Feedback do Modelo IA
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================== TAB 4: CENTRAL DE TRADUÇÃO (CORE FEATURE) ==================== -->
+    <section id="view-traducao" class="tab-view hidden space-y-4">
+      
+      <!-- Top Translation Control Bar -->
+      <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-4 hc-card">
+        <div class="flex items-center space-x-3">
+          <div class="p-2.5 bg-brand-50 dark:bg-brand-900/40 text-brand-500 rounded-xl">
+            <i class="fa-solid fa-hands-asl-interpreting text-xl"></i>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold leading-tight">Central de Tradução Bidirecional</h2>
+            <span class="text-xs text-slate-500 dark:text-slate-400">Sessão Ativa: <code class="text-brand-500 font-mono">SESSAO_COMUNICACAO #892</code></span>
+          </div>
+        </div>
+
+        <!-- Regional Variation Selector -->
+        <div class="flex items-center space-x-2 text-xs">
+          <label class="font-semibold text-slate-600 dark:text-slate-300"><i class="fa-solid fa-earth-americas mr-1"></i> Regionalismo (Libras):</label>
+          <select id="selectRegionalism" onchange="changeRegionalism()" class="bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg px-2.5 py-1.5 font-semibold text-xs outline-none">
+            <option value="Libras-SP" selected>Libras - São Paulo (SP)</option>
+            <option value="Libras-RJ">Libras - Rio de Janeiro (RJ)</option>
+            <option value="Libras-MG">Libras - Minas Gerais (MG)</option>
+            <option value="Libras-RS">Libras - Rio Grande do Sul (RS)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- SPLIT SCREEN LAYOUT -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[580px]">
+        
+        <!-- LEFT PANEL: Chat, Inputs & Media (5 Cols) -->
+        <div class="lg:col-span-5 flex flex-col bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden hc-card">
+          
+          <!-- Mode Tabs: PT->Libras vs Libras->PT -->
+          <div class="grid grid-cols-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs font-bold">
+            <button onclick="setTranslationDirection('pt-libras')" id="dir-pt-libras" class="py-3 text-center border-b-2 border-brand-500 text-brand-500 bg-white dark:bg-slate-800">
+              Português <i class="fa-solid fa-arrow-right mx-1"></i> Libras (3D)
+            </button>
+            <button onclick="setTranslationDirection('libras-pt')" id="dir-libras-pt" class="py-3 text-center text-slate-500 border-b-2 border-transparent hover:text-slate-700">
+              Libras <i class="fa-solid fa-arrow-right mx-1"></i> Português (Áudio)
+            </button>
+          </div>
+
+          <!-- Mode 1: PT -> Libras Box -->
+          <div id="panel-pt-libras" class="p-4 flex-grow flex flex-col space-y-4">
+            
+            <!-- Message Chat History -->
+            <div id="chatHistory" class="flex-grow min-h-[220px] max-h-[280px] overflow-y-auto space-y-3 p-2 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-700/50">
+              <!-- Message Bubble Item -->
+              <div class="flex flex-col items-start space-y-1">
+                <div class="bg-brand-500 text-white p-3 rounded-2xl rounded-tl-none max-w-[85%] text-xs shadow-sm">
+                  <span class="block font-semibold opacity-80 text-[10px]">Sistema Omni IA</span>
+                  Olá! Digite um texto abaixo ou use o microfone para ver a tradução em Libras no Avatar 3D.
+                </div>
+                <span class="text-[10px] text-slate-400 ml-1">10:00 AM</span>
+              </div>
+            </div>
+
+            <!-- Pipeline Progress Bar -->
+            <div id="pipelineProgress" class="hidden bg-slate-100 dark:bg-slate-700/60 p-2.5 rounded-xl text-xs space-y-1.5 border border-slate-200 dark:border-slate-600">
+              <div class="flex justify-between font-bold text-[11px]">
+                <span id="pipelineStepText" class="text-brand-500">Etapa: Analisando Sintaxe...</span>
+                <span id="pipelinePercent" class="text-slate-500">35%</span>
+              </div>
+              <div class="w-full bg-slate-200 dark:bg-slate-600 h-2 rounded-full overflow-hidden">
+                <div id="pipelineBar" class="bg-gradient-to-r from-brand-500 to-emeraldBrand-500 h-full w-[35%] transition-all duration-300"></div>
+              </div>
+              <span id="pipelineGlossText" class="block font-mono text-[10px] text-slate-500 truncate">Glossas: [PROCESSANDO...]</span>
+            </div>
+
+            <!-- Quick Phrase Buttons -->
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <span class="text-[10px] text-slate-400 font-semibold w-full">Frases Rápidas:</span>
+              <button onclick="sendSampleText('Oi, tudo bem?')" class="text-[11px] bg-slate-100 dark:bg-slate-700 hover:bg-brand-50 dark:hover:bg-slate-600 hover:text-brand-500 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-600 transition">"Oi, tudo bem?"</button>
+              <button onclick="sendSampleText('Muito obrigado!')" class="text-[11px] bg-slate-100 dark:bg-slate-700 hover:bg-brand-50 dark:hover:bg-slate-600 hover:text-brand-500 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-600 transition">"Muito obrigado!"</button>
+              <button onclick="sendSampleText('Preciso de ajuda')" class="text-[11px] bg-slate-100 dark:bg-slate-700 hover:bg-brand-50 dark:hover:bg-slate-600 hover:text-brand-500 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-600 transition">"Preciso de ajuda"</button>
+            </div>
+
+            <!-- Input Controls Area -->
+            <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-700">
+              <div class="flex space-x-2">
+                <input type="text" id="textInput" placeholder="Digite em português para traduzir em Libras..." onkeydown="if(event.key === 'Enter') processTranslation()" class="flex-grow px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl text-xs outline-none focus:ring-2 focus:ring-brand-500">
+                <button onclick="toggleSpeechRecognition()" id="micBtn" class="px-3 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-xl transition text-xs font-bold" title="Usar Microfone">
+                  <i class="fa-solid fa-microphone text-brand-500"></i>
+                </button>
+                <button onclick="processTranslation()" class="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl text-xs transition shadow-md">
+                  Traduzir
+                </button>
+              </div>
+
+              <!-- Media Upload Mock -->
+              <div class="flex justify-between items-center text-[11px] text-slate-500 pt-1">
+                <label class="cursor-pointer hover:text-brand-500 flex items-center space-x-1">
+                  <i class="fa-solid fa-paperclip"></i>
+                  <span>Anexar Áudio/Vídeo (`ARQUIVO_MIDIA`)</span>
+                  <input type="file" class="hidden" onchange="handleFileUpload(event)">
+                </label>
+                <span id="uploadFileName" class="text-emeraldBrand-500 font-semibold truncate max-w-[150px]"></span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Mode 2: Libras -> PT Box -->
+          <div id="panel-libras-pt" class="p-4 flex-grow flex flex-col space-y-4 hidden">
+            <div class="bg-slate-900 text-white rounded-xl p-4 flex flex-col items-center justify-center text-center space-y-3 relative overflow-hidden min-h-[200px]">
+              <i class="fa-solid fa-video text-4xl text-emeraldBrand-500 animate-pulse"></i>
+              <span class="text-xs font-semibold">Simulação de Captura de Câmera ativada</span>
+              <p class="text-[11px] text-slate-400">
+                Aponte a câmera para a pessoa sinalizando em Libras para detecção de articulações e gestos por IA.
+              </p>
+              <button onclick="simulateCameraGesture()" class="bg-emeraldBrand-500 hover:bg-emeraldBrand-600 text-white font-bold px-4 py-2 rounded-lg text-xs transition">
+                Simular Leitura de Gesto Libras
+              </button>
+            </div>
+
+            <!-- Synthesized Audio Player Player Card -->
+            <div class="bg-slate-50 dark:bg-slate-700/60 p-4 rounded-xl border border-slate-200 dark:border-slate-600 space-y-3">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-bold text-slate-700 dark:text-slate-200">Áudio Sintetizado (`AUDIO_SINTETIZADO`)</span>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">Voz IA</span>
+              </div>
+
+              <!-- Audio Animated Waveform Canvas -->
+              <div class="flex items-center justify-center space-x-1 h-10 bg-slate-200 dark:bg-slate-800 rounded-lg p-2">
+                <div class="w-1.5 bg-brand-500 rounded-full wave-bar h-2"></div>
+                <div class="w-1.5 bg-brand-500 rounded-full wave-bar h-4"></div>
+                <div class="w-1.5 bg-brand-500 rounded-full wave-bar h-6"></div>
+                <div class="w-1.5 bg-brand-500 rounded-full wave-bar h-3"></div>
+                <div class="w-1.5 bg-brand-500 rounded-full wave-bar h-7"></div>
+                <div class="w-1.5 bg-brand-500 rounded-full wave-bar h-2"></div>
+              </div>
+
+              <div class="p-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 text-xs">
+                <span class="text-[10px] text-slate-400 block font-semibold">Texto Sintetizado:</span>
+                <p id="synthOutputText" class="font-semibold text-slate-800 dark:text-slate-100">"Aguardando leitura de gestos..."</p>
+              </div>
+
+              <button onclick="replaySynthAudio()" class="w-full bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 text-slate-800 dark:text-slate-100 font-bold py-2 rounded-lg text-xs transition flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-volume-high text-brand-500"></i>
+                <span>Ouvir Áudio Novamente</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT PANEL: 3D Avatar Viewport Canvas (7 Cols) -->
+        <div class="lg:col-span-7 flex flex-col bg-slate-900 rounded-2xl border border-slate-800 shadow-xl overflow-hidden relative min-h-[450px]">
+          
+          <!-- 3D Header Overlay Bar -->
+          <div class="absolute top-3 left-3 right-3 z-10 flex justify-between items-center pointer-events-none">
+            <div class="bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700 text-white text-xs flex items-center space-x-2 pointer-events-auto">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+              <span class="font-bold text-[11px]" id="avatarStatusText">Avatar 3D Pronto</span>
+            </div>
+
+            <!-- View Angle Presets -->
+            <div class="bg-slate-900/80 backdrop-blur-md p-1 rounded-xl border border-slate-700 text-white text-[11px] flex space-x-1 pointer-events-auto">
+              <button onclick="setCameraPreset('front')" class="px-2 py-1 bg-slate-700 hover:bg-slate-600 rounded">Frente</button>
+              <button onclick="setCameraPreset('side')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded">Perfil</button>
+              <button onclick="setCameraPreset('close')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded">Rosto</button>
+            </div>
+          </div>
+
+          <!-- Three.js Canvas Container -->
+          <div id="threeContainer" class="w-full flex-grow relative bg-gradient-to-b from-slate-950 to-slate-900 flex items-center justify-center">
+            <canvas id="avatarCanvas"></canvas>
+
+            <!-- Subtitle Overlay / Gloss Banner -->
+            <div class="absolute bottom-16 left-4 right-4 z-10 pointer-events-none text-center">
+              <div id="glossSubtitleBox" class="inline-block bg-slate-950/85 backdrop-blur-md px-4 py-2 rounded-xl border border-amber-500/40 text-amber-300 font-mono text-sm font-bold shadow-lg transition-all">
+                [ GLOSSA: AGUARDANDO COMANDO ]
+              </div>
+            </div>
+          </div>
+
+          <!-- 3D Avatar Bottom Control Bar -->
+          <div class="bg-slate-950 p-3 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 text-white text-xs z-10">
+            <!-- Play / Pause / Replay Controls -->
+            <div class="flex items-center space-x-2">
+              <button onclick="playAvatarSign()" class="w-8 h-8 rounded-lg bg-brand-500 hover:bg-brand-600 flex items-center justify-center text-white transition" title="Reproduzir Sinais">
+                <i class="fa-solid fa-play"></i>
+              </button>
+              <button onclick="pauseAvatarSign()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-white transition" title="Pausar">
+                <i class="fa-solid fa-pause"></i>
+              </button>
+              <button onclick="resetAvatarSign()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-white transition" title="Reiniciar Pose">
+                <i class="fa-solid fa-rotate-left"></i>
+              </button>
+            </div>
+
+            <!-- Speed Multiplier -->
+            <div class="flex items-center space-x-1 bg-slate-900 p-1 rounded-lg border border-slate-800">
+              <span class="text-[10px] text-slate-400 font-semibold px-1">Velocidade:</span>
+              <button onclick="setAvatarSpeed(0.5)" id="speed-05" class="px-2 py-0.5 text-[11px] rounded hover:bg-slate-800 text-slate-400">0.5x</button>
+              <button onclick="setAvatarSpeed(1.0)" id="speed-10" class="px-2 py-0.5 text-[11px] rounded bg-brand-500 text-white font-bold">1.0x</button>
+              <button onclick="setAvatarSpeed(1.5)" id="speed-15" class="px-2 py-0.5 text-[11px] rounded hover:bg-slate-800 text-slate-400">1.5x</button>
+            </div>
+
+            <!-- Facial Expression Badge -->
+            <div class="flex items-center space-x-1.5 text-[11px] text-slate-400">
+              <i class="fa-regular fa-face-smile text-amber-400"></i>
+              <span>Expressão: <strong id="expressionText" class="text-white">Neutro / Amigável</strong></span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ==================== TAB 5: SUPORTE & AJUDA ==================== -->
+    <section id="view-suporte" class="tab-view hidden space-y-8">
+      
+      <!-- Support Header -->
+      <div class="text-center max-w-2xl mx-auto space-y-3">
+        <h2 class="text-3xl font-extrabold">Central de Ajuda e Suporte</h2>
+        <p class="text-slate-600 dark:text-slate-300 text-sm">
+          Tire suas dúvidas sobre o funcionamento do avatar 3D, integração com escolas ou abra um chamado direto com nossa equipe.
+        </p>
+
+        <!-- FAQ Search Bar -->
+        <div class="relative max-w-lg mx-auto pt-2">
+          <input type="text" id="faqSearchInput" onkeyup="filterFAQ()" placeholder="Pesquisar dúvidas (ex: 'como funciona o avatar', 'precisão')..." class="w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-brand-500 shadow-sm">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-6 text-slate-400"></i>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Accordion FAQ (2 Cols) -->
+        <div class="md:col-span-2 space-y-3" id="faqContainer">
+          
+          <div class="faq-item bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm hc-card">
+            <button onclick="toggleFAQ(this)" class="w-full p-4 text-left font-bold text-sm flex justify-between items-center hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+              <span>Como a IA garante 100% da gramática da Libras?</span>
+              <i class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+            </button>
+            <div class="faq-answer hidden p-4 pt-0 text-xs text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-700/50 space-y-2">
+              <p>O Omni IA Support não faz apenas tradução palavra-por-palavra. Nossa pipeline analisa a estrutura sintática da sentença em português e a converte para a estrutura gramatical da Libras (Tópico-Comentário), selecionando as glossas exatas.</p>
+              <div class="inline-flex items-center space-x-1.5 bg-brand-50 text-brand-600 px-2.5 py-1 rounded-md text-[10px] font-bold">
+                <i class="fa-solid fa-video"></i>
+                <span>Vídeo em Libras disponível</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm hc-card">
+            <button onclick="toggleFAQ(this)" class="w-full p-4 text-left font-bold text-sm flex justify-between items-center hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+              <span>O sistema funciona em celulares e tablets?</span>
+              <i class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+            </button>
+            <div class="faq-answer hidden p-4 pt-0 text-xs text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-700/50 space-y-2">
+              <p>Sim! Todo o renderizador WebGL 3D e a interface do chat são 100% responsivos e otimizados para funcionar em navegadores móveis sem necessidade de instalação de aplicativos pesados.</p>
+            </div>
+          </div>
+
+          <div class="faq-item bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm hc-card">
+            <button onclick="toggleFAQ(this)" class="w-full p-4 text-left font-bold text-sm flex justify-between items-center hover:bg-slate-50 dark:hover:bg-slate-700/50 transition">
+              <span>Como alternar variações regionais de sinais?</span>
+              <i class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+            </button>
+            <div class="faq-answer hidden p-4 pt-0 text-xs text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-700/50 space-y-2">
+              <p>Na Central de Tradução, utilize o seletor no topo direito do painel de controle para escolher entre os regionalismos disponíveis (Libras-SP, Libras-RJ, Libras-MG, etc.).</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Contact Form Side -->
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hc-card space-y-4">
+          <h3 class="font-bold text-base flex items-center">
+            <i class="fa-solid fa-paper-plane text-brand-500 mr-2"></i> Abrir Chamado de Suporte
+          </h3>
+          <form onsubmit="handleSupportSubmit(event)" class="space-y-3 text-xs">
+            <div>
+              <label class="block font-semibold mb-1">Seu Nome</label>
+              <input type="text" required placeholder="Digite seu nome..." class="w-full p-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">Assunto / Categoria</label>
+              <select class="w-full p-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl outline-none focus:ring-2 focus:ring-brand-500">
+                <option>Dúvida sobre o Avatar 3D</option>
+                <option>Sugestão de Sinal/Vocabulário</option>
+                <option>Problema Técnico / Erro</option>
+                <option>Parcerias Escolares</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">Mensagem</label>
+              <textarea rows="3" required placeholder="Descreva como podemos ajudar..." class="w-full p-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+            </div>
+            <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 rounded-xl transition">
+              Enviar Solicitação
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Application Footer -->
+  <footer class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 py-6 mt-12 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="font-bold text-slate-800 dark:text-slate-200">Omni IA Support</span>
+        <span>&copy; 2026 - Acessibilidade Inclusiva em Libras</span>
+      </div>
+      <div class="flex space-x-4">
+        <a href="#" class="hover:underline">Termos de Uso</a>
+        <a href="#" class="hover:underline">Política de Privacidade</a>
+        <a href="#" class="hover:underline">Diretrizes WCAG 2.1 AA</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const appState = {
+      theme: 'light',
+      highContrast: false,
+      fontSizeScale: 100,
+      activeTab: 'home',
+      currentFormStep: 1,
+      user: {
+        nome: "João Silva",
+        dataNasc: "1998-05-14",
+        cpf: "123.456.789-00",
+        telefone: "(11) 98765-4321",
+        email: "joao.silva@gmail.com",
+        tipoUsuario: "Usuário Surdo",
+        nivelSurdez: "Profunda",
+        avatarStyle: "Robô Amigável Omni",
+        avatarSpeed: 1.0,
+        regionalism: "Libras-SP"
+      },
+      avatar: {
+        scene: null,
+        camera: null,
+        renderer: null,
+        humanMesh: null,
+        leftArmGroup: null,
+        rightArmGroup: null,
+        leftForearmGroup: null,
+        rightForearmGroup: null,
+        headMesh: null,
+        mouthMesh: null,
+        isPlaying: false,
+        speed: 1.0,
+        currentSign: 'IDLE'
+      },
+      dashboardRating: 5
+    };
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-view').forEach(view => view.classList.add('hidden'));
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('text-brand-500', 'bg-brand-50', 'dark:bg-slate-700');
+        btn.classList.add('text-slate-600', 'dark:text-slate-300');
+      });
+
+      const targetView = document.getElementById(`view-${tabId}`);
+      if (targetView) targetView.classList.remove('hidden');
+
+      const targetNav = document.getElementById(`nav-${tabId}`);
+      if (targetNav) {
+        targetNav.classList.add('text-brand-500', 'bg-brand-50', 'dark:bg-slate-700');
+      }
+
+      appState.activeTab = tabId;
+
+      if (tabId === 'traducao' && !appState.avatar.renderer) {
+        setTimeout(init3DAvatar, 100);
+      } else if (tabId === 'dashboard') {
+        setTimeout(renderCharts, 100);
+      }
+    }
+
+    function adjustFontSize(delta) {
+      appState.fontSizeScale = Math.min(130, Math.max(80, appState.fontSizeScale + delta));
+      document.documentElement.style.setProperty('--font-scale', `${appState.fontSizeScale}%`);
+      triggerToast(`Tamanho do texto ajustado para ${appState.fontSizeScale}%`, 'info');
+    }
+
+    function resetFontSize() {
+      appState.fontSizeScale = 100;
+      document.documentElement.style.setProperty('--font-scale', '100%');
+      triggerToast('Tamanho do texto restaurado', 'info');
+    }
+
+    function toggleHighContrast() {
+      appState.highContrast = !appState.highContrast;
+      if (appState.highContrast) {
+        document.body.classList.add('high-contrast');
+        triggerToast('Modo Alto Contraste Ativado', 'info');
+      } else {
+        document.body.classList.remove('high-contrast');
+        triggerToast('Modo Alto Contraste Desativado', 'info');
+      }
+    }
+
+    function toggleDarkMode() {
+      const htmlEl = document.documentElement;
+      const isDark = htmlEl.classList.toggle('dark');
+      const icon = document.getElementById('darkModeIcon');
+      const text = document.getElementById('darkModeText');
+      if (isDark) {
+        icon.className = 'fa-solid fa-sun';
+        text.innerText = 'Modo Claro';
+      } else {
+        icon.className = 'fa-solid fa-moon';
+        text.innerText = 'Modo Escuro';
+      }
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'pt-BR';
+        window.speechSynthesis.speak(utterance);
+      } else {
+        triggerToast('Sintetizador de voz não suportado neste navegador.', 'warning');
+      }
+    }
+
+    function triggerToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      
+      let bgColor = 'bg-slate-800 text-white';
+      if (type === 'success') bgColor = 'bg-emerald-600 text-white';
+      if (type === 'warning') bgColor = 'bg-amber-500 text-slate-950';
+
+      toast.className = `${bgColor} px-4 py-2.5 rounded-xl shadow-lg text-xs font-bold flex items-center space-x-2 pointer-events-auto transition-all duration-300 opacity-0 transform translate-y-2`;
+      toast.innerHTML = `<i class="fa-solid fa-circle-info"></i><span>${message}</span>`;
+      
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.remove('opacity-0', 'translate-y-2');
+      }, 50);
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    function changeFormStep(delta) {
+      const currentStepEl = document.getElementById(`step-${appState.currentFormStep}`);
+      currentStepEl.classList.add('hidden');
+
+      appState.currentFormStep = Math.min(3, Math.max(1, appState.currentFormStep + delta));
+
+      const nextStepEl = document.getElementById(`step-${appState.currentFormStep}`);
+      nextStepEl.classList.remove('hidden');
+
+      document.getElementById('formStepNum').innerText = appState.currentFormStep;
+      
+      const prevBtn = document.getElementById('prevStepBtn');
+      const nextBtn = document.getElementById('nextStepBtn');
+      const submitBtn = document.getElementById('submitFormBtn');
+
+      if (appState.currentFormStep === 1) {
+        prevBtn.classList.add('hidden');
+        nextBtn.classList.remove('hidden');
+        submitBtn.classList.add('hidden');
+      } else if (appState.currentFormStep === 2) {
+        prevBtn.classList.remove('hidden');
+        nextBtn.classList.remove('hidden');
+        submitBtn.classList.add('hidden');
+      } else {
+        prevBtn.classList.remove('hidden');
+        nextBtn.classList.add('hidden');
+        submitBtn.classList.remove('hidden');
+      }
+    }
+
+    function simulateGoogleLogin() {
+      document.getElementById('inputNome').value = "Ana Clara Santos";
+      document.getElementById('inputEmail').value = "ana.clara.google@gmail.com";
+      triggerToast('Dados autenticados via Google OAuth com sucesso!', 'success');
+      updateProfilePreview();
+    }
+
+    function updateProfilePreview() {
+      const nome = document.getElementById('inputNome').value || "João Silva";
+      const email = document.getElementById('inputEmail').value || "joao.silva@gmail.com";
+      const cpf = document.getElementById('inputCPF').value || "123.456.789-00";
+      const selectedType = document.querySelector('input[name="tipoUsuario"]:checked')?.value || "Usuário Surdo";
+      const deafLevel = document.getElementById('selectNivelSurdez').value;
+      const avatarStyle = document.getElementById('selectAvatarStyle').value;
+      const avatarSpeed = document.getElementById('selectAvatarSpeed').value;
+
+      document.getElementById('cardUserName').innerText = nome;
+      document.getElementById('cardUserRole').innerText = selectedType;
+      document.getElementById('cardEmail').innerText = email;
+      document.getElementById('cardCPF').innerText = cpf;
+      document.getElementById('cardDeafLevel').innerText = deafLevel;
+      document.getElementById('cardAvatarStyle').innerText = avatarStyle;
+      document.getElementById('cardAvatarSpeed').innerText = `${avatarSpeed}x`;
+
+      // Initials
+      const initials = nome.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+      document.getElementById('cardAvatarInitials').innerText = initials;
+      document.getElementById('userAvatarBadge').innerText = initials;
+      document.getElementById('userNameBadge').innerText = nome;
+      document.getElementById('userRoleBadge').innerText = selectedType;
+    }
+
+    function handleFormSubmit(event) {
+      event.preventDefault();
+      updateProfilePreview();
+      triggerToast('Perfil e configurações de acessibilidade salvos!', 'success');
+    }
+
+    let chartInstance1 = null;
+    let chartInstance2 = null;
+
+    function renderCharts() {
+      const ctx1 = document.getElementById('chartUsage')?.getContext('2d');
+      const ctx2 = document.getElementById('chartCategories')?.getContext('2d');
+
+      if (ctx1 && !chartInstance1) {
+        chartInstance1 = new Chart(ctx1, {
+          type: 'bar',
+          data: {
+            labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            datasets: [{
+              label: 'Horas de Tradução',
+              data: [5.2, 6.8, 4.5, 7.1, 8.0, 6.2, 5.0],
+              backgroundColor: '#1A56DB',
+              borderRadius: 8
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false }
+        });
+      }
+
+      if (ctx2 && !chartInstance2) {
+        chartInstance2 = new Chart(ctx2, {
+          type: 'doughnut',
+          data: {
+            labels: ['Saudações', 'Educação', 'Cotidiano', 'Saúde'],
+            datasets: [{
+              data: [40, 25, 20, 15],
+              backgroundColor: ['#1A56DB', '#0E9F6E', '#F59E0B', '#8B5CF6']
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false }
+        });
+      }
+    }
+
+    function setDashboardMode(mode) {
+      document.querySelectorAll('.dash-mode-btn').forEach(btn => {
+        btn.classList.remove('bg-white', 'dark:bg-slate-600', 'shadow-sm', 'text-brand-500');
+      });
+      document.getElementById(`dashMode-${mode}`).classList.add('bg-white', 'dark:bg-slate-600', 'shadow-sm', 'text-brand-500');
+
+      document.getElementById('dashContent-crianca').classList.add('hidden');
+      document.getElementById('dashContent-professor').classList.add('hidden');
+
+      if (mode === 'crianca') document.getElementById('dashContent-crianca').classList.remove('hidden');
+      if (mode === 'professor') document.getElementById('dashContent-professor').classList.remove('hidden');
+    }
+
+    function setRating(stars) {
+      appState.dashboardRating = stars;
+      const starBtns = document.querySelectorAll('#starRating button');
+      starBtns.forEach((btn, index) => {
+        if (index < stars) {
+          btn.className = "text-2xl text-amber-400";
+        } else {
+          btn.className = "text-2xl text-slate-300 dark:text-slate-600";
+        }
+      });
+      document.getElementById('ratingText').innerText = `${stars}.0 / 5.0`;
+    }
+
+    function submitUserFeedback() {
+      const comment = document.getElementById('feedbackComment').value;
+      triggerToast('Obrigado! Seu feedback sobre a acurácia dos sinais foi enviado.', 'success');
+      document.getElementById('feedbackComment').value = '';
+    }
+
+    function setTranslationDirection(dir) {
+      const btn1 = document.getElementById('dir-pt-libras');
+      const btn2 = document.getElementById('dir-libras-pt');
+      const panel1 = document.getElementById('panel-pt-libras');
+      const panel2 = document.getElementById('panel-libras-pt');
+
+      if (dir === 'pt-libras') {
+        btn1.className = "py-3 text-center border-b-2 border-brand-500 text-brand-500 bg-white dark:bg-slate-800";
+        btn2.className = "py-3 text-center text-slate-500 border-b-2 border-transparent hover:text-slate-700";
+        panel1.classList.remove('hidden');
+        panel2.classList.add('hidden');
+      } else {
+        btn2.className = "py-3 text-center border-b-2 border-emeraldBrand-500 text-emeraldBrand-500 bg-white dark:bg-slate-800";
+        btn1.className = "py-3 text-center text-slate-500 border-b-2 border-transparent hover:text-slate-700";
+        panel2.classList.remove('hidden');
+        panel1.classList.add('hidden');
+      }
+    }
+
+    function sendSampleText(text) {
+      document.getElementById('textInput').value = text;
+      processTranslation();
+    }
+
+    function processTranslation() {
+      const textInput = document.getElementById('textInput');
+      const text = textInput.value.trim();
+      if (!text) return;
+
+      // Add to Chat History
+      const chatHistory = document.getElementById('chatHistory');
+      const userMsg = document.createElement('div');
+      userMsg.className = 'flex flex-col items-end space-y-1';
+      userMsg.innerHTML = `
+        <div class="bg-emeraldBrand-500 text-white p-3 rounded-2xl rounded-tr-none max-w-[85%] text-xs shadow-sm">
+          ${text}
+        </div>
+        <span class="text-[10px] text-slate-400 mr-1">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+      `;
+      chatHistory.appendChild(userMsg);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+
+      textInput.value = '';
+
+      // Simulate AI Translation Pipeline
+      const progressBox = document.getElementById('pipelineProgress');
+      const stepText = document.getElementById('pipelineStepText');
+      const percentText = document.getElementById('pipelinePercent');
+      const bar = document.getElementById('pipelineBar');
+      const glossText = document.getElementById('pipelineGlossText');
+
+      progressBox.classList.remove('hidden');
+
+      // Simple Gloss Mapper Simulation
+      const cleanUpper = text.toUpperCase().replace(/[.,?!]/g, '');
+      const glosses = cleanUpper.split(' ');
+
+      stepText.innerText = "Etapa 1: Análise Gramatical Tópico-Comentário...";
+      percentText.innerText = "25%";
+      bar.style.width = "25%";
+      glossText.innerText = `GLOSSAS: [${glosses.join(' ')}]`;
+
+      setTimeout(() => {
+        stepText.innerText = "Etapa 2: Mapeamento de Keyframes 3D (`MOVIMENTO_IA`)...";
+        percentText.innerText = "70%";
+        bar.style.width = "70%";
+      }, 600);
+
+      setTimeout(() => {
+        stepText.innerText = "Etapa 3: Animação Concluída!";
+        percentText.innerText = "100%";
+        bar.style.width = "100%";
+        
+        setTimeout(() => progressBox.classList.add('hidden'), 1500);
+
+        // Trigger 3D Avatar Sign Animation
+        trigger3DSignAnimation(text);
+      }, 1200);
+    }
+
+    function handleFileUpload(e) {
+      const file = e.target.files[0];
+      if (file) {
+        document.getElementById('uploadFileName').innerText = `Anexo: ${file.name}`;
+        triggerToast(`Arquivo de mídia "${file.name}" anexado com sucesso!`, 'success');
+      }
+    }
+
+    function toggleSpeechRecognition() {
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        triggerToast('Reconhecimento de voz não suportado. Simulando áudio...', 'warning');
+        document.getElementById('textInput').value = "Olá, bom dia!";
+        processTranslation();
+        return;
+      }
+      triggerToast('Escutando microfone...', 'info');
+    }
+
+    function simulateCameraGesture() {
+      const textOutput = document.getElementById('synthOutputText');
+      textOutput.innerText = '"Bom dia! Como posso ajudar você hoje?"';
+      speakText("Bom dia! Como posso ajudar você hoje?");
+      triggerToast('Gestos reconhecidos pela câmera!', 'success');
+    }
+
+    function replaySynthAudio() {
+      const textOutput = document.getElementById('synthOutputText').innerText;
+      speakText(textOutput);
+    }
+
+    function changeRegionalism() {
+      const reg = document.getElementById('selectRegionalism').value;
+      appState.user.regionalism = reg;
+      triggerToast(`Variação de regionalismo alterada para: ${reg}`, 'info');
+    }
+
+    function init3DAvatar() {
+      const container = document.getElementById('threeContainer');
+      const canvas = document.getElementById('avatarCanvas');
+      
+      const width = container.clientWidth;
+      const height = container.clientHeight || 450;
+
+      // 1. Scene
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0f172a); // dark slate backdrop
+      appState.avatar.scene = scene;
+
+      // 2. Camera
+      const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+      camera.position.set(0, 1.4, 3.2);
+      camera.lookAt(0, 1.0, 0);
+      appState.avatar.camera = camera;
+
+      // 3. Renderer
+      const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      appState.avatar.renderer = renderer;
+
+      // 4. Lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0x1A56DB, 1.2);
+      dirLight.position.set(2, 4, 3);
+      scene.add(dirLight);
+
+      const pointLight = new THREE.PointLight(0x0E9F6E, 1.0, 10);
+      pointLight.position.set(-2, 2, 1);
+      scene.add(pointLight);
+
+      // 5. Construct Stylized Avatar Character
+      const avatarGroup = new THREE.Group();
+
+      // Head
+      const headGeo = new THREE.SphereGeometry(0.22, 32, 32);
+      const headMat = new THREE.MeshPhongMaterial({ color: 0x38bdf8, shininess: 80 });
+      const headMesh = new THREE.Mesh(headGeo, headMat);
+      headMesh.position.set(0, 1.45, 0);
+      avatarGroup.add(headMesh);
+      appState.avatar.headMesh = headMesh;
+
+      // Eyes
+      const eyeGeo = new THREE.SphereGeometry(0.03, 16, 16);
+      const eyeMat = new THREE.MeshBasicMaterial({ color: 0x0f172a });
+      const leftEye = new THREE.Mesh(eyeGeo, eyeMat);
+      leftEye.position.set(-0.08, 1.48, 0.18);
+      const rightEye = new THREE.Mesh(eyeGeo, eyeMat);
+      rightEye.position.set(0.08, 1.48, 0.18);
+      avatarGroup.add(leftEye);
+      avatarGroup.add(rightEye);
+
+      // Mouth
+      const mouthGeo = new THREE.BoxGeometry(0.1, 0.02, 0.02);
+      const mouthMat = new THREE.MeshBasicMaterial({ color: 0x0f172a });
+      const mouthMesh = new THREE.Mesh(mouthGeo, mouthMat);
+      mouthMesh.position.set(0, 1.38, 0.19);
+      avatarGroup.add(mouthMesh);
+
+      // Torso / Chest
+      const torsoGeo = new THREE.CylinderGeometry(0.25, 0.2, 0.7, 32);
+      const torsoMat = new THREE.MeshPhongMaterial({ color: 0x1A56DB });
+      const torsoMesh = new THREE.Mesh(torsoGeo, torsoMat);
+      torsoMesh.position.set(0, 0.9, 0);
+      avatarGroup.add(torsoMesh);
+
+      // --- Left Arm Joint Assembly ---
+      const leftArmGroup = new THREE.Group();
+      leftArmGroup.position.set(-0.3, 1.2, 0); // Shoulder
+      
+      const armGeo = new THREE.CylinderGeometry(0.06, 0.05, 0.35);
+      const armMat = new THREE.MeshPhongMaterial({ color: 0x0E9F6E });
+      const leftUpperArm = new THREE.Mesh(armGeo, armMat);
+      leftUpperArm.position.set(0, -0.17, 0);
+      leftArmGroup.add(leftUpperArm);
+
+      const leftForearmGroup = new THREE.Group();
+      leftForearmGroup.position.set(0, -0.35, 0); // Elbow
+      const leftForearm = new THREE.Mesh(armGeo, armMat);
+      leftForearm.position.set(0, -0.17, 0);
+      leftForearmGroup.add(leftForearm);
+
+      // Left Hand
+      const handGeo = new THREE.BoxGeometry(0.08, 0.1, 0.03);
+      const handMat = new THREE.MeshPhongMaterial({ color: 0xfde047 });
+      const leftHand = new THREE.Mesh(handGeo, handMat);
+      leftHand.position.set(0, -0.38, 0);
+      leftForearmGroup.add(leftHand);
+
+      leftArmGroup.add(leftForearmGroup);
+      avatarGroup.add(leftArmGroup);
+      appState.avatar.leftArmGroup = leftArmGroup;
+      appState.avatar.leftForearmGroup = leftForearmGroup;
+
+      // --- Right Arm Joint Assembly ---
+      const rightArmGroup = new THREE.Group();
+      rightArmGroup.position.set(0.3, 1.2, 0); // Shoulder
+      
+      const rightUpperArm = new THREE.Mesh(armGeo, armMat);
+      rightUpperArm.position.set(0, -0.17, 0);
+      rightArmGroup.add(rightUpperArm);
+
+      const rightForearmGroup = new THREE.Group();
+      rightForearmGroup.position.set(0, -0.35, 0); // Elbow
+      const rightForearm = new THREE.Mesh(armGeo, armMat);
+      rightForearm.position.set(0, -0.17, 0);
+      rightForearmGroup.add(rightForearm);
+
+      // Right Hand
+      const rightHand = new THREE.Mesh(handGeo, handMat);
+      rightHand.position.set(0, -0.38, 0);
+      rightForearmGroup.add(rightHand);
+
+      rightArmGroup.add(rightForearmGroup);
+      avatarGroup.add(rightArmGroup);
+      appState.avatar.rightArmGroup = rightArmGroup;
+      appState.avatar.rightForearmGroup = rightForearmGroup;
+
+      scene.add(avatarGroup);
+
+      // Animation Render Loop
+      let clock = new THREE.Clock();
+      
+      function animate() {
+        requestAnimationFrame(animate);
+
+        const elapsedTime = clock.getElapsedTime();
+
+        // Idle Breathing motion if not performing sign
+        if (!appState.avatar.isPlaying) {
+          torsoMesh.position.y = 0.9 + Math.sin(elapsedTime * 2) * 0.01;
+          headMesh.position.y = 1.45 + Math.sin(elapsedTime * 2) * 0.01;
+        } else {
+          // Perform Sign Gesture Kinematics
+          const spd = elapsedTime * 4 * appState.avatar.speed;
+          
+          if (appState.avatar.currentSign === 'OI') {
+            // Wave Right Hand
+            appState.avatar.rightArmGroup.rotation.z = -1.2 + Math.sin(spd * 2) * 0.2;
+            appState.avatar.rightArmGroup.rotation.x = -0.5;
+            appState.avatar.rightForearmGroup.rotation.y = Math.sin(spd * 8) * 0.4;
+          } else if (appState.avatar.currentSign === 'OBRIGADO') {
+            // Touch chin and bring forward down
+            appState.avatar.rightArmGroup.rotation.x = -1.4 + Math.sin(spd) * 0.4;
+            appState.avatar.rightArmGroup.rotation.y = -0.3;
+            appState.avatar.rightForearmGroup.rotation.x = -0.8;
+          } else if (appState.avatar.currentSign === 'LIBRAS') {
+            // Circular movement with both hands
+            appState.avatar.leftArmGroup.rotation.x = -0.8 + Math.cos(spd * 3) * 0.3;
+            appState.avatar.leftArmGroup.rotation.y = 0.5 + Math.sin(spd * 3) * 0.3;
+            appState.avatar.rightArmGroup.rotation.x = -0.8 + Math.sin(spd * 3) * 0.3;
+            appState.avatar.rightArmGroup.rotation.y = -0.5 + Math.cos(spd * 3) * 0.3;
+          }
+        }
+
+        renderer.render(scene, camera);
+      }
+
+      animate();
+
+      // Handle Canvas Window Resize
+      window.addEventListener('resize', () => {
+        if (!container) return;
+        const w = container.clientWidth;
+        const h = container.clientHeight || 450;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      });
+    }
+
+    function trigger3DSignAnimation(phrase) {
+      phrase = phrase.toUpperCase();
+      let signType = 'OI';
+      if (phrase.includes('OBRIGAD')) signType = 'OBRIGADO';
+      if (phrase.includes('LIBRAS')) signType = 'LIBRAS';
+
+      appState.avatar.currentSign = signType;
+      appState.avatar.isPlaying = true;
+
+      document.getElementById('avatarStatusText').innerText = `Sinalizando: [${signType}]`;
+      document.getElementById('glossSubtitleBox').innerText = `[ GLOSSA LIBRAS: ${signType} ]`;
+
+      setTimeout(() => {
+        appState.avatar.isPlaying = false;
+        resetAvatarPose();
+        document.getElementById('avatarStatusText').innerText = "Avatar 3D Pronto";
+      }, 4000 / appState.avatar.speed);
+    }
+
+    function playAvatarSign() {
+      appState.avatar.isPlaying = true;
+      triggerToast('Reprodução do sinal iniciada.', 'info');
+    }
+
+    function pauseAvatarSign() {
+      appState.avatar.isPlaying = false;
+      triggerToast('Animação pausada.', 'info');
+    }
+
+    function resetAvatarPose() {
+      if (appState.avatar.leftArmGroup) {
+        appState.avatar.leftArmGroup.rotation.set(0, 0, 0);
+        appState.avatar.rightArmGroup.rotation.set(0, 0, 0);
+        appState.avatar.leftForearmGroup.rotation.set(0, 0, 0);
+        appState.avatar.rightForearmGroup.rotation.set(0, 0, 0);
+      }
+    }
+
+    function resetAvatarSign() {
+      pauseAvatarSign();
+      resetAvatarPose();
+      document.getElementById('glossSubtitleBox').innerText = '[ GLOSSA: AGUARDANDO COMANDO ]';
+    }
+
+    function setAvatarSpeed(speedVal) {
+      appState.avatar.speed = speedVal;
+      document.querySelectorAll('#speed-05, #speed-10, #speed-15').forEach(btn => {
+        btn.className = 'px-2 py-0.5 text-[11px] rounded hover:bg-slate-800 text-slate-400';
+      });
+      const targetBtn = document.getElementById(`speed-${speedVal.toString().replace('.', '')}`);
+      if (targetBtn) targetBtn.className = 'px-2 py-0.5 text-[11px] rounded bg-brand-500 text-white font-bold';
+      triggerToast(`Velocidade da animação: ${speedVal}x`, 'info');
+    }
+
+    function setCameraPreset(preset) {
+      const camera = appState.avatar.camera;
+      if (!camera) return;
+      if (preset === 'front') {
+        camera.position.set(0, 1.4, 3.2);
+      } else if (preset === 'side') {
+        camera.position.set(2.2, 1.4, 2.2);
+      } else if (preset === 'close') {
+        camera.position.set(0, 1.45, 1.2);
+      }
+      camera.lookAt(0, 1.0, 0);
+    }
+
+    function toggleFAQ(button) {
+      const answer = button.nextElementSibling;
+      const icon = button.querySelector('i');
+      answer.classList.toggle('hidden');
+      if (answer.classList.contains('hidden')) {
+        icon.style.transform = 'rotate(0deg)';
+      } else {
+        icon.style.transform = 'rotate(180deg)';
+      }
+    }
+
+    function filterFAQ() {
+      const query = document.getElementById('faqSearchInput').value.toLowerCase();
+      document.querySelectorAll('.faq-item').forEach(item => {
+        const text = item.innerText.toLowerCase();
+        item.style.display = text.includes(query) ? 'block' : 'none';
+      });
+    }
+
+    function handleSupportSubmit(e) {
+      e.preventDefault();
+      triggerToast('Solicitação de suporte enviada! Entraremos em contato via e-mail.', 'success');
+      e.target.reset();
+    }
+
+    window.onload = function() {
+      updateProfilePreview();
+      console.log("Omni IA Support Platform initialized successfully.");
+    };
+  </script>
+
+</body>
+</html>

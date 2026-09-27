@@ -1,0 +1,9 @@
+font-family: inter, sans-serif;
+    font-weight: 400;
+    background-color: #fff;
+    padding: 11px;
+    font-size: 15px; /*tamanho da fonte*/
+    border-radius: 5px; /*borda arredondada*/
+    cursor: pointer; /*muda o cursor*/
+    border:  1px solid transparent;
+    transition: background-color 0.7s ease;/*define o tempo da transição */

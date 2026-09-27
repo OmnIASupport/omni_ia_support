@@ -26,25 +26,23 @@ body {
 header {
     background-color: #ffffff;
     color: #000000;
+    border: 2px solid #000;
     box-sizing: border-box;
     padding: 10px 40px;
-    /* NOVO: troca de flex para grid, com 3 colunas */
-    display: grid;
-     /* NOVO: cria 3 colunas —
-       1ª (logo) e 3ª (vazia) do mesmo tamanho (1fr cada),
-       coluna do meio (auto) ocupa só o espaço que o nav precisar.
-       Isso faz o conteúdo do meio ficar sempre centralizado,
-       porque as colunas 1 e 3 "empurram" ele igualmente dos dois lados */
-    grid-template-columns: 1fr auto 1fr;
+    display: flex;
     align-items: center;
     justify-content: space-between;
     flex-direction: row-reverse; 
     width: 100%;  
-     /* REMOVIDO: justify-content: space-between; → era usado no flex antigo,
-       não faz sentido junto com grid aqui, causava conflito */
-    /* REMOVIDO: flex-direction: row-reverse; → também era do flex antigo,
-       grid ignora essa propriedade, então só ficava "sujando" o código */
 } 
+
+.h3-logo{
+    font-family: montserrat;
+    font-size: 100;
+}
+.support{
+    color: #003E6B;
+}
 
 h1 {
     display: flex;
@@ -56,19 +54,13 @@ h1 {
 main {
     text-align: center;
 }
-/* NOVO: define em qual coluna do grid a logo fica */
+
 .logo-container {
-  grid-column: 1; /* logo vai na 1ª coluna (esquerda) */
-  justify-self: start;/* alinha a logo no início da coluna (bem à esquerda) */
   display: flex;         
   align-items: center; 
   gap: 10px;        
 }
-/* NOVO: define em qual coluna do grid o menu de botões fica */
-nav.container {
-  grid-column: 2;         /* nav vai na coluna do meio */
-  justify-self: center;   /* centraliza o nav dentro dessa coluna */
-}
+
 .logo-img {
   max-height: 40px;      
   width: 40px;
@@ -80,7 +72,6 @@ button {
     font-family: inter, sans-serif;
     font-weight: 400;
     padding: 10px;
-    align-items: center;
     border-radius: 20px;
     background-color: transparent;
     font-size: 15px; /*tamanho da fonte*/
