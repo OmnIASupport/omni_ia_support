@@ -39,7 +39,7 @@ header {
     align-items: center;
     justify-content: space-between;
     flex-direction: row-reverse; 
-    width: 100%;  
+    max-width: 100%;  
      /* REMOVIDO: justify-content: space-between; → era usado no flex antigo,
        não faz sentido junto com grid aqui, causava conflito */
     /* REMOVIDO: flex-direction: row-reverse; → também era do flex antigo,
@@ -64,16 +64,19 @@ main {
   align-items: center; 
   gap: 10px;        
 }
+
 /* NOVO: define em qual coluna do grid o menu de botões fica */
 nav.container {
   grid-column: 2;         /* nav vai na coluna do meio */
-  justify-self: center;   /* centraliza o nav dentro dessa coluna */
+  grid-row: 1;
+  justify-self: center;   /* centraliza o nav dentro dessa coluna*/
 }
+
 .logo-img {
-  max-height: 40px;      
-  width: 40px;
-  height: 40px;
-  display: block;
+  max-height: 60px;      
+  height: 60px;
+  display: flex;
+  padding: 20px;
 }
 
 button {
