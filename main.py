@@ -15,15 +15,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Caminhos do projeto
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))   # pasta backend
-PROJECT_DIR = os.path.dirname(BASE_DIR)                 # pasta raiz do projeto
-FRONTEND_DIR = os.path.join(PROJECT_DIR, "frontend")    # pasta frontend
-INDEX_FILE = os.path.join(FRONTEND_DIR, "index.html")   # arquivo index.html
-
-
-# Monta a pasta frontend como estática
-app.mount("/frontend", StaticFiles(directory=FRONTEND_DIR), name="frontend")
 
 # Rota principal que abre o HTML
 @app.get("/")
