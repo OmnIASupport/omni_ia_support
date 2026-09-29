@@ -27,7 +27,6 @@ header {
     background-color: #ffffff;
     color: #000000;
     box-sizing: border-box;
-    padding: 10px 40px;
     /* NOVO: troca de flex para grid, com 3 colunas */
     display: grid;
      /* NOVO: cria 3 colunas —
@@ -44,6 +43,9 @@ header {
        não faz sentido junto com grid aqui, causava conflito */
     /* REMOVIDO: flex-direction: row-reverse; → também era do flex antigo,
        grid ignora essa propriedade, então só ficava "sujando" o código */
+        
+       /* SOMBRA: deslocamento-x | deslocamento-y | desfoque | cor */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 } 
 
 h1 {
@@ -59,7 +61,8 @@ main {
 /* NOVO: define em qual coluna do grid a logo fica */
 .logo-container {
   grid-column: 1; /* logo vai na 1ª coluna (esquerda) */
-  justify-self: start;/* alinha a logo no início da coluna (bem à esquerda) */
+  justify-self: end;/* alinha a logo no início da coluna (bem à esquerda) */
+  margin-right: 20px;
   display: flex;         
   align-items: center; 
   gap: 10px;        
@@ -73,8 +76,8 @@ nav.container {
 }
 
 .logo-img {
-  max-height: 60px;      
-  height: 60px;
+  max-height: 45px;      
+  height: 45px;
   display: flex;
   padding: 20px;
 }
@@ -82,22 +85,73 @@ nav.container {
 button {
     font-family: inter, sans-serif;
     font-weight: 400;
-    padding: 10px;
+    padding: 5px;
     align-items: center;
-    border-radius: 20px;
+    border-radius: 6px;
     background-color: transparent;
     font-size: 15px; /*tamanho da fonte*/
     cursor: pointer; /*muda o cursor*/
     border:  transparent;
-    transition: background-color 0.7s ease;/*define o tempo da transição */
-    color: #000000;
+    transition: background-color 0.3s ease;/*define o tempo da transição */
+    color: #272727;
 }
  
 button:hover {  /*hover mudar o visual do elemento ao passar o mouse em cima*/
-    color: #ffffff; /*muda a cor da palavra ao passar o cursor em cima*/
-    background-color: #003E6B;
-    border-radius: 20px;
+    color: #000000; /*muda a cor da palavra ao passar o cursor em cima*/
+    background: rgba(35, 112, 184, 0.151);
+    border: solid rgba(35, 112, 184, 0.397) 1px;
+    border-radius: 6px;
 }
 
+/* ===== Login / usuário (canto direito do header) ===== */
+.user-pill {
+    grid-column: 3;          /* 3ª coluna do grid (a que estava vazia) */
+    grid-row: 1;
+    justify-self: end;       /* encosta na direita */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px 8px 8px;
+    border-radius: 999px;    /* formato de pílula */
+    background-color: #cac9c95e;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    margin-right: 40px;
+
+}
+ 
+.user-pill:hover {
+    background-color: #a1a0a093;
+}
+ 
+.avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;      /* círculo */
+    background-color: #17498a;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+ 
+.user-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    line-height: 1.2;
+}
+ 
+.user-name {
+    font-size: 13px;
+    color: #3b3b3b;
+}
+ 
+.user-role {
+    font-size: 11px;
+    color: #2f3238;
+}
 
 
