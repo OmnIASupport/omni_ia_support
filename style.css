@@ -55,6 +55,10 @@ h1 {
     font-family: montserrat;
 }
 
+.nome-logo-strong{
+    font-size: x-large;
+}
+
 main {
     text-align: center;
 }
