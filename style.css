@@ -1,166 +1,334 @@
-/*fontes adicionadas*/
+/* ===== Fontes (nomes de arquivo conferidos com os enviados) ===== */
 @font-face {
-    font-family: inter;
-    src: url(Inter-VariableFont_opsz\,wght.ttf);
+    font-family: "inter";
+    src: url("Inter-VariableFont_opsz_wght.ttf") format("truetype");
+    font-weight: 100 900;
+    font-display: swap;
 }
 
 @font-face {
-    font-family: raleway;
-    src: url(Raleway-VariableFont_wght.ttf);
+    font-family: "raleway";
+    src: url("Raleway-VariableFont_wght.ttf") format("truetype");
+    font-weight: 100 900;
+    font-display: swap;
 }
+
 @font-face {
-    font-family: montserrat;
-    src: url(Montserrat-VariableFont_wght.ttf);
+    font-family: "montserrat";
+    src: url("Montserrat-VariableFont_wght.ttf") format("truetype");
+    font-weight: 100 900;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "lexend";
+    src: url(Lexend-VariableFont_wght.ttf);
+    font-weight: 100 900;
+    font-display: swap;
+
+}
+/* ===== Base ===== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
 body {
-    background-color: #ffffff;
-    font-family: inter, sans-serif;
-    margin:40px;
-    text-align: center;  
     margin: 0;
     padding: 0;
-    color: #fff;
-}
-
-header {
     background-color: #ffffff;
-    color: #000000;
-    box-sizing: border-box;
-    /* NOVO: troca de flex para grid, com 3 colunas */
-    display: grid;
-     /* NOVO: cria 3 colunas —
-       1ª (logo) e 3ª (vazia) do mesmo tamanho (1fr cada),
-       coluna do meio (auto) ocupa só o espaço que o nav precisar.
-       Isso faz o conteúdo do meio ficar sempre centralizado,
-       porque as colunas 1 e 3 "empurram" ele igualmente dos dois lados */
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    justify-content: space-between;
-    flex-direction: row-reverse; 
-    max-width: 100%;  
-     /* REMOVIDO: justify-content: space-between; → era usado no flex antigo,
-       não faz sentido junto com grid aqui, causava conflito */
-    /* REMOVIDO: flex-direction: row-reverse; → também era do flex antigo,
-       grid ignora essa propriedade, então só ficava "sujando" o código */
-        
-       /* SOMBRA: deslocamento-x | deslocamento-y | desfoque | cor */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-} 
-
-h1 {
-    display: flex;
-    justify-content: flex-end;
-    color: rgb(0, 0, 0);
-    font-family: montserrat;
+    color: #272727;                 /* antes era #fff (texto invisível no fundo branco) */
+    font-family: inter, sans-serif;
 }
 
-.nome-logo-strong{
-    font-size:  large;
-    text-align: left;
-    grid-column: 1;
-    grid-row: 1;
+img {
+    max-width: 100%;
+    display: block;
 }
 
 main {
-    text-align: center;
-}
-/* NOVO: define em qual coluna do grid a logo fica */
-.logo-container {
-  grid-column: 1; /* logo vai na 1ª coluna (esquerda) */
-  justify-self: end;/* alinha a logo no início da coluna (bem à esquerda) */
-  margin-right: 20px;
-  display: flex;         
-  align-items: center; 
-  gap: 10px;        
+    padding: 24px;
 }
 
-/* NOVO: define em qual coluna do grid o menu de botões fica */
-nav.container {
-  grid-column: 2;         /* nav vai na coluna do meio */
-  grid-row: 1;
-  justify-self: center;   /* centraliza o nav dentro dessa coluna*/
-  display: flex;
-  gap: 50px;
+.retangulo {
+    margin-top: 40px;
+    width: 90%;
+    max-width: 1300px;
+    height: 440px;
+    aspect-ratio: 2 / 1;
+    background: linear-gradient(to right, #154aac, #1e6e13);
+    /* centralização */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;  
+    /*estilização */
+    border-radius: 20px;
+}
+
+.h1-retangulo{
+    color: #ffffff;
+    font-family: lexend, sans-serif;
+    font-size: 45px;
+    justify-self: left;
+    display: flex;
+    padding-top: 80px;
+    padding-left: 50px;
+}
+
+.p-retangulo{
+    color: #ffffff;
+    padding-left: 50px;
+    font-family: montserrat, sans-serif;
+    font-size: 18px;
+}
+
+.strong-retangulo{
+    color: goldenrod;
+}
+
+.nav-btn-ratangulo{
+    text-decoration: nome ;
+    background-color: #ffffff;
+    color: #17498a;
+}
+/* ===== Cabeçalho (grid de 3 colunas) ===== */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;   /* logo | menu | usuário */
+    align-items: center;
+    column-gap: 16px;
+    width: 100%;
+    padding: 8px 24px;
+    background-color: #ffffff;
+    color: #000000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Logo ===== */
+.logo-container {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;                 /* encosta a logo no menu, como no seu layout */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+    min-width: 0;
 }
 
 .logo-img {
-  max-height: 45px;      
-  height: 45px;
-  display: flex;
-  padding: 20px;
+    height: 45px;
+    width: auto;
+    flex-shrink: 0;
 }
 
-button {
-    font-family: inter, sans-serif;
-    font-weight: 400;
-    padding: 5px;
-    align-items: center;
-    border-radius: 6px;
-    background-color: transparent;
-    font-size: 15px; /*tamanho da fonte*/
-    cursor: pointer; /*muda o cursor*/
-    border: 1px solid transparent;
-    transform: translateY(0);
-    transition: background-color 0.3s ease;/*define o tempo da transição */
-    color: #272727;
-}
- 
-button:hover {  /*hover mudar o visual do elemento ao passar o mouse em cima*/
-    color: #1458a7; /*muda a cor da palavra ao passar o cursor em cima*/
-    background: rgba(35, 112, 184, 0.151);
-    border-radius: 6px;
+.nome-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;           /* texto alinhado à esquerda */
+    text-align: left;
+    line-height: 1.2;
+    color: #3a3a3a;
 }
 
-/* ===== Login / usuário (canto direito do header) ===== */
-.user-pill {
-    grid-column: 3;          /* 3ª coluna do grid (a que estava vazia) */
+.nome-logo strong {
+    font-size: 1.1rem;
+    font-family: montserrat, inter, sans-serif;
+}
+
+.nome-logo span {
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+}
+
+/* ===== Menu ===== */
+nav.container {
+    grid-column: 2;
     grid-row: 1;
-    justify-self: end;       /* encosta na direita */
+    justify-self: center;
+    display: flex;
+    gap: clamp(8px, 2.5vw, 40px);
+}
+
+.nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background-color: transparent;
+    color: #272727;
+    font-family: inter, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 400;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-btn:hover {
+    color: #1458a7;
+    background: rgba(35, 112, 184, 0.151);
+}
+
+.nav-btn[aria-current="page"] {
+    color: #1458a7;
+    background-color: rgba(35, 112, 184, 0.151);
+}
+
+.nav-btn:focus-visible,
+.user-pill:focus-visible,
+.logo-container:focus-visible {
+    outline: 3px solid #1458a7;
+    outline-offset: 2px;
+}
+
+/* ===== Usuário (canto direito) ===== */
+.user-pill {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 8px 16px 8px 8px;
-    border-radius: 999px;    /* formato de pílula */
+    border-radius: 999px;
     background-color: #cac9c95e;
     text-decoration: none;
     transition: background-color 0.3s ease;
-    margin-right: 40px;
-
 }
- 
+
 .user-pill:hover {
     background-color: #a1a0a093;
 }
- 
+
 .avatar {
     width: 34px;
     height: 34px;
-    border-radius: 50%;      /* círculo */
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
     background-color: #17498a;
     color: #ffffff;
     font-size: 13px;
     font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
- 
+
 .user-info {
     display: flex;
     flex-direction: column;
     text-align: left;
     line-height: 1.2;
 }
- 
+
 .user-name {
     font-size: 13px;
     color: #3b3b3b;
 }
- 
+
 .user-role {
     font-size: 11px;
     color: #2f3238;
 }
 
+/* ===== Responsivo ===== */
 
+/* Notebooks pequenos / tablets na horizontal */
+@media (max-width: 1100px) {
+    .site-header {
+        padding: 8px 16px;
+    }
+
+    .nome-logo span {
+        font-size: 0.7rem;
+    }
+}
+
+/* Tablets e celulares grandes: logo + usuário em cima, menu embaixo */
+@media (max-width: 860px) {
+    .site-header {
+        grid-template-columns: 1fr auto;
+        row-gap: 8px;
+    }
+
+    .logo-container {
+        grid-column: 1;
+        grid-row: 1;
+        justify-self: start;
+    }
+
+    .user-pill {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    nav.container {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        justify-self: stretch;
+        justify-content: space-around;
+        gap: 4px;
+        padding-top: 6px;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+    }
+}
+
+/* Celulares */
+@media (max-width: 480px) {
+    .site-header {
+        padding: 8px 12px;
+    }
+
+    .logo-img {
+        height: 36px;
+    }
+
+    .nome-logo strong {
+        font-size: 1rem;
+    }
+
+    .nome-logo span {
+        font-size: 0.6rem;
+    }
+
+    /* só o avatar, para caber na tela */
+    .user-info {
+        display: none;
+    }
+
+    .user-pill {
+        padding: 4px;
+    }
+
+    .nav-btn {
+        padding: 6px 6px;
+        font-size: 0.75rem;
+    }
+}
+
+/* Telas muito estreitas */
+@media (max-width: 340px) {
+    .nome-logo span {
+        display: none;
+    }
+}
+
+/* Respeita quem prefere menos animação */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}

@@ -4,40 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Omni IA Support</title>
-    <link rel="stylesheet" href="script.js">
-    <link rel="stylesheet" href="style.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header class="bg-slate-900 text-white text-xs py-2 px-4 border-b border-slate-800 shadow-md sticky top-0 z-50">
 
-    <nav class="container">
-        <button><i class="fa-solid fa-house"></i><br><strong>Home</strong></button>
-        <a href="dashboard.html"><button><i class="fa-solid fa-chart-line mr-1"></i><br><strong>Dashboard</strong></button></a>
-        <a href="chat.html"><button><i class="fa-solid fa-comments"></i><br><strong>Chat</strong></button></a>
-        <a href="traduzir.html"><button><i class="fa-solid fa-hands-asl-interpreting mr-1"></i><br><strong>Traduzir</strong></button></a>
-        <a href=""><button><i class="fa-solid fa-headset mr-1"></i><br><strong>Ajuda</strong></button></a>
-    </nav>
+    <header class="site-header">
 
-<div class="logo-container"></div>
-    <img src="logo.png" alt="Omni IA Support logo" class="logo-img">
-    <div class="nome-logo-strong">
-       <strong class="nome-logo-strong">Omni IA</strong> <br>
-        <span>SUPPORT & ACESSIBILIDADE</span> 
-    </div>
-        
-</div>
+        <!-- Logo + nome (coluna da esquerda) -->
+        <a href="index.html" class="logo-container" aria-label="Omni IA Support - página inicial">
+            <img src="logo.png" alt="Omni IA Support logo" class="logo-img">
+            <div class="nome-logo">
+                <strong>Omni IA</strong>
+                <span>SUPPORT &amp; ACESSIBILIDADE</span>
+            </div>
+        </a>
 
+        <!-- Menu (coluna do meio) -->
+        <nav class="container" aria-label="Menu principal">
 
-     <!-- Login / usuário (coluna da direita do header) -->
-     <a href="" class="user-pill">
-        <span class="avatar">JS</span>
-        <span class="user-info">
-            <strong class="user-name">João Silva</strong>
-            <small class="user-role">Usuário Surdo</small>
-        </span>
-    </a>
-</header>
+            <a href="index.html" class="nav-btn" aria-current="page"><i class="fa-solid fa-house" aria-hidden="true"></i>
+            <strong>Home</strong>
+            </a>
+
+            <a href="dashboard.html" class="nav-btn"><i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+            <strong>Dashboard</strong>
+            </a>
+
+            <a href="chat.html" class="nav-btn"><i class="fa-solid fa-comments" aria-hidden="true"></i>
+            <strong>Chat</strong>
+            </a>
+
+            <a href="traduzir.html" class="nav-btn"><i class="fa-solid fa-hands-asl-interpreting" aria-hidden="true"></i>
+            <strong>Traduzir</strong>
+            </a>
+
+            <a href="#" class="nav-btn"><i class="fa-solid fa-headset" aria-hidden="true"></i>
+            <strong>Ajuda</strong>
+            </a>
+
+        </nav>
+
+        <!-- Login / usuário (coluna da direita) -->
+        <a href="#" class="user-pill" aria-label="Perfil de João Silva, usuário surdo">
+            <span class="avatar" aria-hidden="true">JS</span>
+            <span class="user-info">
+                <strong class="user-name">João Silva</strong>
+                <small class="user-role">Usuário Surdo</small>
+            </span>
+        </a>
+
+    </header>
+
+    <main>
+        <!-- conteúdo da página -->
+         <div class="retangulo">
+        <h1 class="h1-retangulo">Comunicação sem barreiras <br> entre Português e Libras.</h1>
+
+        <p class="p-retangulo text-slate-100 text-base md:text-lg leading-relaxed">
+            O <strong class="strong-retangulo">Omni IA Support</strong> utiliza inteligência artificial avançada e um Avatar 3D hiper- <br>expressivo para conectar pessoas surdas e ouvintes em tempo real com 100% <br> de respeito à gramática da Libras.
+          </p>
+          <nav class="nav-btn-ratangulo">
+            <a href=""><i class="fa-solid fa-hands-asl-interpreting" aria-hidden="true"></i><strong>Abrir Tradutor 3D</strong></a>
+        </nav>
+          
+         </div>
+    </main>
+
+    <script src="script.js" defer></script>
 </body>
 </html>
