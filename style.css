@@ -56,7 +56,10 @@ h1 {
 }
 
 .nome-logo-strong{
-    font-size: x-large;
+    font-size:  large;
+    text-align: left;
+    grid-column: 1;
+    grid-row: 1;
 }
 
 main {
@@ -77,6 +80,8 @@ nav.container {
   grid-column: 2;         /* nav vai na coluna do meio */
   grid-row: 1;
   justify-self: center;   /* centraliza o nav dentro dessa coluna*/
+  display: flex;
+  gap: 50px;
 }
 
 .logo-img {
@@ -95,15 +100,15 @@ button {
     background-color: transparent;
     font-size: 15px; /*tamanho da fonte*/
     cursor: pointer; /*muda o cursor*/
-    border:  transparent;
+    border: 1px solid transparent;
+    transform: translateY(0);
     transition: background-color 0.3s ease;/*define o tempo da transição */
     color: #272727;
 }
  
 button:hover {  /*hover mudar o visual do elemento ao passar o mouse em cima*/
-    color: #000000; /*muda a cor da palavra ao passar o cursor em cima*/
+    color: #1458a7; /*muda a cor da palavra ao passar o cursor em cima*/
     background: rgba(35, 112, 184, 0.151);
-    border: solid rgba(35, 112, 184, 0.397) 1px;
     border-radius: 6px;
 }
 
