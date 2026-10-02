@@ -766,7 +766,7 @@ VALUES
     'video-libras',
     'Vídeo em Libras (avatar)',
     'video',
-    'Saída em avatar 3D',
+    'Saída em avatar 2D',
     1
 ),
 (
@@ -1232,7 +1232,7 @@ VALUES
     1,
     'sinal',
     'gerado',
-    'esqueleto_3d',
+    'esqueleto_2d',
     0,
     1800,
     0.950,
@@ -1247,7 +1247,7 @@ VALUES
     2,
     'sinal',
     'gerado',
-    'esqueleto_3d',
+    'esqueleto_2d',
     1800,
     4200,
     0.930,
