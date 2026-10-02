@@ -90,10 +90,34 @@ main {
     color: goldenrod;
 }
 
-.nav-btn-ratangulo{
-    text-decoration: nome ;
+.nav-btn-retangulo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid transparent;
     background-color: #ffffff;
-    color: #17498a;
+    color: #000000;
+    font-family: inter, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 400;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-btn-retangulo:hover {
+    color: #000000;
+    background: #c2c1c1;
+}
+
+nav.retangulo-btn {
+    justify-self: center;
+    display: flex;
+    gap: clamp(8px, 2.5vw, 40px);
 }
 /* ===== Cabeçalho (grid de 3 colunas) ===== */
 .site-header {
