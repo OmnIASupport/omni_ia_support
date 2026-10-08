@@ -721,6 +721,9 @@ nav.container {
     background:
         rgba(255, 255, 255, 0.12);
 
+        padding: 2px 4px;
+
+        background: #eef1f6;
     color: #ffffff;
 
     font-size: 16px;
