@@ -1,4 +1,7 @@
-/* ===== Fontes (nomes de arquivo conferidos com os enviados) ===== */
+/* =========================================================
+   FONTES
+========================================================= */
+
 @font-face {
     font-family: "inter";
     src: url("Inter-VariableFont_opsz_wght.ttf") format("truetype");
@@ -22,23 +25,35 @@
 
 @font-face {
     font-family: "lexend";
-    src: url(Lexend-VariableFont_wght.ttf);
+    src: url("Lexend-VariableFont_wght.ttf");
     font-weight: 100 900;
     font-display: swap;
-
 }
-/* ===== Base ===== */
+
+
+/* =========================================================
+   BASE
+========================================================= */
+
 *,
 *::before,
 *::after {
     box-sizing: border-box;
 }
 
+html {
+    margin: 0;
+    padding: 0;
+}
+
 body {
     margin: 0;
     padding: 0;
-    background-color: #ffffff;
-    color: #272727;                 /* antes era #fff (texto invisível no fundo branco) */
+
+    background-color: #f7f9fc;
+
+    color: #272727;
+
     font-family: inter, sans-serif;
 }
 
@@ -47,163 +62,825 @@ img {
     display: block;
 }
 
-main {
-    padding: 24px;
-}
 
-/* ===== Cabeçalho (grid de 3 colunas) ===== */
+/* =========================================================
+   HEADER
+   NÃO ALTERADO
+========================================================= */
+
 .site-header {
     position: sticky;
     top: 0;
     z-index: 50;
+
     display: grid;
-    grid-template-columns: 1fr auto 1fr;   /* logo | menu | usuário */
+
+    grid-template-columns: 1fr auto 1fr;
+
     align-items: center;
+
     column-gap: 16px;
+
     width: 100%;
+
     padding: 8px 24px;
+
     background-color: #ffffff;
+
     color: #000000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* ===== Logo ===== */
+
+/* LOGO */
+
 .logo-container {
     grid-column: 1;
     grid-row: 1;
-    justify-self: start;                 /* encosta a logo no menu, como no seu layout */
+
+    justify-self: start;
+
     display: flex;
+
     align-items: center;
+
     gap: 10px;
+
     text-decoration: none;
+
     color: inherit;
+
     min-width: 0;
 }
 
 .logo-img {
     height: 45px;
+
     width: auto;
+
     flex-shrink: 0;
 }
 
 .nome-logo {
     display: flex;
+
     flex-direction: column;
-    align-items: flex-start;           /* texto alinhado à esquerda */
+
+    align-items: flex-start;
+
     text-align: left;
+
     line-height: 1.2;
+
     color: #3a3a3a;
 }
 
 .nome-logo strong {
     font-size: 1.1rem;
-    font-family: montserrat, inter, sans-serif;
+
+    font-family:
+        montserrat,
+        inter,
+        sans-serif;
 }
 
 .nome-logo span {
     font-size: 0.8rem;
+
     letter-spacing: 0.02em;
 }
 
-/* ===== Menu ===== */
+
+/* MENU */
+
 nav.container {
     grid-column: 2;
     grid-row: 1;
+
     justify-self: center;
+
     display: flex;
+
     gap: clamp(8px, 2.5vw, 40px);
 }
 
 .nav-btn {
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
+
     gap: 2px;
+
     padding: 6px 10px;
+
     border-radius: 6px;
+
     border: 1px solid transparent;
+
     background-color: transparent;
+
     color: #272727;
+
     font-family: inter, sans-serif;
+
     font-size: 0.95rem;
+
     font-weight: 400;
+
     text-align: center;
+
     text-decoration: none;
+
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
 }
 
 .nav-btn:hover {
     color: #1458a7;
-    background: rgba(35, 112, 184, 0.151);
+
+    background:
+        rgba(35, 112, 184, 0.151);
 }
 
 .nav-btn[aria-current="page"] {
     color: #1458a7;
-    background-color: rgba(35, 112, 184, 0.151);
+
+    background-color:
+        rgba(35, 112, 184, 0.151);
 }
 
 .nav-btn:focus-visible,
 .user-pill:focus-visible,
 .logo-container:focus-visible {
     outline: 3px solid #1458a7;
+
     outline-offset: 2px;
 }
 
-/* ===== Usuário (canto direito) ===== */
+
+/* USUÁRIO */
+
 .user-pill {
     grid-column: 3;
     grid-row: 1;
+
     justify-self: end;
+
     display: flex;
+
     align-items: center;
+
     gap: 10px;
+
     padding: 8px 16px 8px 8px;
+
     border-radius: 999px;
-    background-color: #cac9c95e;
+
+    background-color:
+        #cac9c95e;
+
     text-decoration: none;
-    transition: background-color 0.3s ease;
+
+    transition:
+        background-color 0.3s ease;
 }
 
 .user-pill:hover {
-    background-color: #a1a0a093;
+    background-color:
+        #a1a0a093;
 }
 
 .avatar {
     width: 34px;
     height: 34px;
+
     flex-shrink: 0;
+
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
     border-radius: 50%;
-    background-color: #17498a;
+
+    background-color: #2d6ec4;
+
     color: #ffffff;
+
     font-size: 13px;
+
     font-weight: 700;
 }
 
 .user-info {
     display: flex;
+
     flex-direction: column;
+
     text-align: left;
+
     line-height: 1.2;
 }
 
 .user-name {
     font-size: 13px;
+
     color: #3b3b3b;
 }
 
 .user-role {
     font-size: 11px;
+
     color: #2f3238;
 }
 
-/* ===== Responsivo ===== */
 
-/* Notebooks pequenos / tablets na horizontal */
+/* =========================================================
+   ÁREA PRINCIPAL
+========================================================= */
+
+.cadastro-container {
+    width: 100%;
+
+    max-width: 950px;
+
+    margin: 20px auto 40px;
+
+    padding: 0 20px;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        240px;
+
+    gap: 26px;
+
+    align-items: stretch;
+}
+
+
+/* =========================================================
+   CARD BRANCO
+========================================================= */
+
+.card-cadastro {
+    width: 100%;
+
+    min-height: 495px;
+
+    padding: 28px;
+
+    background: #ffffff;
+
+    border:
+        1px solid #dfe4ec;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.05);
+}
+
+
+/* =========================================================
+   CABEÇALHO DO CADASTRO
+========================================================= */
+
+.cadastro-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding-bottom: 18px;
+
+    border-bottom:
+        1px solid #e7eaf0;
+}
+
+.cadastro-header h1 {
+    margin: 0 0 4px;
+
+    font-family:
+        inter,
+        sans-serif;
+
+    font-size: 22px;
+
+    line-height: 1.2;
+
+    font-weight: 700;
+
+    color: #252b3d;
+}
+
+.cadastro-header p {
+    margin: 0;
+
+    font-size: 10px;
+
+    color: #778096;
+}
+
+.cadastro-header p span {
+    padding: 2px 4px;
+
+    background: #eef1f6;
+
+    border-radius: 3px;
+
+    font-family: monospace;
+
+    color: #657089;
+}
+
+
+/* ETAPA */
+
+.etapa {
+    flex-shrink: 0;
+
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    background: #eef5ff;
+
+    color: #4212c5;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   BOTÃO GOOGLE
+========================================================= */
+
+.google-btn {
+    width: 100%;
+
+    height: 44px;
+
+    margin-top: 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    background: #ffffff;
+
+    border:
+        1px solid #cfd6e2;
+
+    border-radius: 9px;
+
+    color: #374151;
+
+    font-family: inter, sans-serif;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.google-btn:hover {
+    background: #f8f9fb;
+
+    border-color: #b9c1ce;
+}
+
+.google-icon {
+    color: #ea4335;
+
+    font-size: 20px;
+
+    font-family: Arial, sans-serif;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   SEPARADOR
+========================================================= */
+
+.separador {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin: 17px 0;
+}
+
+.separador span {
+    height: 1px;
+
+    flex: 1;
+
+    background: #e0e4eb;
+}
+
+.separador p {
+    margin: 0;
+
+    color: #a0a9b9;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   DADOS PESSOAIS
+========================================================= */
+
+.dados-pessoais h2 {
+    margin: 0 0 14px;
+
+    color: #1151b3;
+
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 14px;
+}
+
+.campo {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+.campo-email {
+    grid-column: 1 / -1;
+}
+
+.campo label {
+    color: #292f40;
+
+    font-size: 10px;
+
+    font-weight: 700;
+}
+
+.campo input {
+    width: 100%;
+
+    height: 34px;
+
+    padding: 0 11px;
+
+    border:
+        1px solid #cfd7e4;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #fdfefe;
+
+    color: #4a5365;
+
+    font-family: inter, sans-serif;
+
+    font-size: 11px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.campo input:focus {
+    border-color: #5518d5;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(85, 24, 213, 0.08);
+}
+
+
+/* =========================================================
+   RODAPÉ DO FORMULÁRIO
+========================================================= */
+
+.form-footer {
+    margin-top: 14px;
+
+    padding-top: 14px;
+
+    border-top:
+        1px solid #edf0f4;
+
+    display: flex;
+
+    justify-content: flex-end;
+}
+
+.proximo-btn {
+    height: 32px;
+
+    padding: 0 17px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background:
+        #0724cc;
+
+    color: #ffffff;
+
+    font-family: inter, sans-serif;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.proximo-btn:hover {
+    background: #03328a;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   CARD ROXO
+========================================================= */
+
+.card-perfil {
+    width: 240px;
+
+    min-height: 495px;
+
+    padding: 22px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    background:
+        linear-gradient(
+            180deg,
+            #0464b3 0%,
+            #074681 100%
+        );
+
+    color: #ffffff;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   PERFIL - TOPO
+========================================================= */
+
+.perfil-topo {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.perfil-avatar {
+    width: 48px;
+
+    height: 48px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    border:
+        2px solid
+        rgba(255, 255, 255, 0.35);
+
+    background:
+        rgba(255, 255, 255, 0.12);
+
+    color: #ffffff;
+
+    font-size: 16px;
+
+    font-weight: 500;
+}
+
+.perfil-nome {
+    min-width: 0;
+}
+
+.perfil-nome h2 {
+    margin: 0 0 4px;
+
+    color: #ffffff;
+
+    font-size: 20px;
+
+    font-weight: 700;
+}
+
+.perfil-nome span {
+    display: inline-block;
+
+    padding: 3px 7px;
+
+    border-radius: 4px;
+
+    background:
+        rgba(255, 255, 255, 0.15);
+
+    color: #ffffff;
+
+    font-size: 10px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   LINHA
+========================================================= */
+
+.linha-perfil {
+    width: 100%;
+
+    height: 1px;
+
+    margin: 15px 0;
+
+    background:
+        rgba(255, 255, 255, 0.18);
+}
+
+
+/* =========================================================
+   DADOS DO PERFIL
+========================================================= */
+
+.dados-perfil {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 11px;
+}
+
+.dado {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+.dado span {
+    flex-shrink: 0;
+
+    color:
+        rgba(255, 255, 255, 0.72);
+
+    font-size: 12px;
+}
+
+.dado strong {
+    max-width: 135px;
+
+    color: #ffffff;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    text-align: right;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status-conta {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+}
+
+.linha-status {
+    width: 100%;
+
+    height: 1px;
+
+    margin-bottom: 13px;
+
+    background:
+        rgba(255, 255, 255, 0.18);
+}
+
+.status-conta small {
+    margin-bottom: 7px;
+
+    color:
+        rgba(255, 255, 255, 0.6);
+
+    font-size: 9px;
+}
+
+.status-ativo {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 4px 10px;
+
+    border-radius: 20px;
+
+    background: #00e58b;
+
+    color: #062f22;
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   RESPONSIVIDADE
+========================================================= */
+
 @media (max-width: 1100px) {
+
     .site-header {
         padding: 8px 16px;
     }
@@ -211,39 +888,135 @@ nav.container {
     .nome-logo span {
         font-size: 0.7rem;
     }
+
+    .cadastro-container {
+        max-width: 900px;
+    }
+
 }
 
-/* Tablets e celulares grandes: logo + usuário em cima, menu embaixo */
+
+/* =========================================================
+   TABLET
+========================================================= */
+
 @media (max-width: 860px) {
+
     .site-header {
         grid-template-columns: 1fr auto;
+
         row-gap: 8px;
     }
 
     .logo-container {
         grid-column: 1;
+
         grid-row: 1;
+
         justify-self: start;
     }
 
     .user-pill {
         grid-column: 2;
+
         grid-row: 1;
     }
 
     nav.container {
         grid-column: 1 / -1;
+
         grid-row: 2;
+
         justify-self: stretch;
+
         justify-content: space-around;
+
         gap: 4px;
+
         padding-top: 6px;
-        border-top: 1px solid rgba(0, 0, 0, 0.08);
+
+        border-top:
+            1px solid
+            rgba(0, 0, 0, 0.08);
     }
+
+
+    /* Cadastro */
+
+    .cadastro-container {
+        max-width: 760px;
+
+        grid-template-columns:
+            minmax(0, 1fr)
+            220px;
+
+        gap: 18px;
+
+        padding: 0 15px;
+    }
+
+    .card-perfil {
+        width: 220px;
+    }
+
+    .card-cadastro {
+        padding: 23px;
+    }
+
 }
 
-/* Celulares */
+
+/* =========================================================
+   CELULAR
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .cadastro-container {
+        display: flex;
+
+        flex-direction: column;
+
+        width: 100%;
+
+        max-width: 520px;
+
+        margin: 15px auto 30px;
+
+        padding: 0 14px;
+    }
+
+    .card-cadastro {
+        width: 100%;
+
+        min-height: auto;
+
+        padding: 22px;
+    }
+
+    .card-perfil {
+        width: 100%;
+
+        min-height: 400px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .campo-email {
+        grid-column: auto;
+    }
+
+}
+
+
+/* =========================================================
+   CELULARES PEQUENOS
+========================================================= */
+
 @media (max-width: 480px) {
+
     .site-header {
         padding: 8px 12px;
     }
@@ -260,7 +1033,6 @@ nav.container {
         font-size: 0.6rem;
     }
 
-    /* só o avatar, para caber na tela */
     .user-info {
         display: none;
     }
@@ -271,20 +1043,77 @@ nav.container {
 
     .nav-btn {
         padding: 6px 6px;
+
         font-size: 0.75rem;
     }
+
+
+    /* Cadastro */
+
+    .cadastro-container {
+        padding: 0 10px;
+    }
+
+    .card-cadastro {
+        padding: 18px;
+    }
+
+    .cadastro-header {
+        align-items: flex-start;
+    }
+
+    .cadastro-header h1 {
+        font-size: 19px;
+    }
+
+    .cadastro-header p {
+        font-size: 8px;
+    }
+
+    .etapa {
+        padding: 6px 8px;
+
+        font-size: 8px;
+    }
+
+    .google-btn {
+        font-size: 12px;
+    }
+
 }
 
-/* Telas muito estreitas */
+
+/* =========================================================
+   TELAS MUITO ESTREITAS
+========================================================= */
+
 @media (max-width: 340px) {
+
     .nome-logo span {
         display: none;
     }
+
+    .cadastro-header {
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .etapa {
+        align-self: flex-start;
+    }
+
 }
 
-/* Respeita quem prefere menos animação */
+
+/* =========================================================
+   REDUZIR ANIMAÇÕES
+========================================================= */
+
 @media (prefers-reduced-motion: reduce) {
+
     * {
         transition: none !important;
     }
+
 }
