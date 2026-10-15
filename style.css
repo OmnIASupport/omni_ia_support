@@ -37,7 +37,7 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: #ffffff;
+    background: linear-gradient(to right, #103b7b 50%, #f8f5ed 50%);
     color: #272727;                 /* antes era #fff (texto invisível no fundo branco) */
     font-family: inter, sans-serif;
 }
@@ -49,26 +49,6 @@ img {
 
 main {
     padding: 24px;
-}
-
-.retangulo {
-    margin-top: 40px;
-    width: 90%;
-    max-width: 1300px;
-    height: 440px;
-    aspect-ratio: 2 / 1;
-    background: linear-gradient(to right, #154aac, #051e3b);
-    /* centralização */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;  
-    /*estilização */
-    border-radius: 20px;
-    /* Sombra adicionada aqui: */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.50);
 }
 
 .h1-retangulo{
@@ -135,7 +115,7 @@ nav.retangulo-btn {
     padding: 8px 24px;
     background-color: #ffffff;
     color: #000000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* ===== Logo ===== */

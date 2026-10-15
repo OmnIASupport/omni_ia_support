@@ -177,13 +177,11 @@ nav.container {
 
     padding: 6px 10px;
 
-    border-radius: 6px;
-
-    border: 1px solid transparent;
-
     background-color: transparent;
 
     color: #272727;
+
+    border-bottom: 1px solid;
 
     font-family: inter, sans-serif;
 
@@ -203,10 +201,8 @@ nav.container {
 }
 
 .nav-btn:hover {
-    color: #1458a7;
-
-    background:
-        rgba(35, 112, 184, 0.151);
+    color: #272727;
+    border-bottom: #03328a
 }
 
 .nav-btn[aria-current="page"] {
@@ -648,7 +644,7 @@ nav.container {
 }
 
 .proximo-btn:hover {
-    background: #03328a;
+    background: #1151b3;
 
     transform: translateY(-1px);
 }
@@ -671,12 +667,7 @@ nav.container {
 
     justify-content: space-between;
 
-    background:
-        linear-gradient(
-            180deg,
-            #0464b3 0%,
-            #074681 100%
-        );
+    background-color: #03328a;
 
     color: #ffffff;
 
