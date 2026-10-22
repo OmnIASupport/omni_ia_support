@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Omni IA Support: comunicação acessível entre Português e Libras.">
+<title>Omni IA Support — Traduzir</title>
+<link rel="icon" href="logo.png"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="traduzir.css"><script src="traduzir.js" defer></script>
+</head>
+<body>
+<a href="#conteudo" class="skip-link">Pular para o conteúdo</a>
+<header class="site-header">
+<a href="index.html" class="logo-container"><img src="logo.png" alt="" class="logo-img"><span class="nome-logo"><strong>Omni IA</strong><span>Support &amp; Acessibilidade</span></span></a>
+<nav class="menu" aria-label="Menu principal">
+<a href="index.html" class="nav-btn"><i class="fa-solid fa-house"></i><span>Home</span></a><a href="dashboard.html" class="nav-btn"><i class="fa-solid fa-chart-line"></i><span>Dashboard</span></a><a href="chat.html" class="nav-btn"><i class="fa-solid fa-comments"></i><span>Chat</span></a><a href="traduzir.html" class="nav-btn" aria-current="page"><i class="fa-solid fa-hands-asl-interpreting"></i><span>Traduzir</span></a><a href="ajuda.html" class="nav-btn"><i class="fa-solid fa-headset"></i><span>Ajuda</span></a>
+</nav>
+<div class="user-pill" id="user-pill" data-logado="false"><a href="login.html?redirect=traduzir.html" class="btn-entrar-header" id="btn-entrar-header"><i class="fa-solid fa-right-to-bracket"></i><span>Entrar</span></a>
+<div class="user-perfil-logado" id="user-perfil-logado" hidden><a href="usuario.html" class="perfil-link"><span class="avatar" id="avatar-iniciais">?</span><span class="user-info"><span class="user-name" id="user-nome">—</span><span class="user-role" id="user-papel">—</span></span></a><button id="btn-sair" class="btn-sair" type="button" aria-label="Sair da conta"><i class="fa-solid fa-arrow-right-from-bracket"></i></button></div></div>
+</header>
+<main id="conteudo" class="traduzir-main">
+<section class="intro"><p class="eyebrow"><span class="dot"></span> Comunicação acessível</p><h1>Vamos conversar <em>sem barreiras.</em></h1><p>Digite ou fale uma mensagem para preparar a comunicação entre Português e Libras.</p></section>
+<section class="tradutor">
+<div class="direcao"><div class="idioma"><i class="fa-solid fa-keyboard"></i><div><small>Idioma de origem</small><strong id="idioma-origem">Português</strong></div></div><button id="btn-inverter" class="btn-inverter" type="button" aria-label="Inverter direção"><i class="fa-solid fa-right-left"></i></button><div class="idioma"><i class="fa-solid fa-hands-asl-interpreting"></i><div><small>Idioma de destino</small><strong id="idioma-destino">Libras</strong></div></div></div>
+<div class="painel"><section class="cartao"><div class="cartao-topo"><h2 id="titulo-entrada">Sua mensagem em Português</h2><span id="contador">0 / 1000</span></div><label class="sr-only" for="texto-entrada">Digite sua mensagem</label><textarea id="texto-entrada" maxlength="1000" rows="7" placeholder="Digite aqui o que deseja comunicar..."></textarea><div class="acoes"><button class="secundario" id="btn-microfone" type="button"><i class="fa-solid fa-microphone"></i> Falar</button><button class="secundario" id="btn-limpar" type="button"><i class="fa-solid fa-eraser"></i> Limpar</button><button class="principal" id="btn-traduzir" type="button"><i class="fa-solid fa-wand-magic-sparkles"></i> Preparar tradução</button></div><p id="status-entrada" role="status" aria-live="polite">Digite uma mensagem para começar.</p></section>
+<section class="cartao"><div class="cartao-topo"><h2>Resultado</h2><span id="estado-texto">Aguardando mensagem</span></div><div class="avatar-area"><div class="avatar-icone"><i class="fa-solid fa-hands-asl-interpreting"></i></div><strong id="avatar-titulo">Sua tradução aparecerá aqui</strong><p id="avatar-descricao">A tradução automática e a animação do avatar precisam de uma integração de IA.</p></div><div class="resultado"><small id="rotulo-resultado">Texto preparado</small><p id="texto-resultado">Sua mensagem aparecerá aqui.</p></div><div class="acoes"><button class="secundario" id="btn-copiar" type="button"><i class="fa-regular fa-copy"></i> Copiar texto</button><button class="secundario" id="btn-ouvir" type="button"><i class="fa-solid fa-volume-high"></i> Ouvir texto</button></div><p class="nota">Esta interface oferece recursos básicos de texto, voz e leitura em voz alta. A tradução real para Libras exige integrar um modelo específico.</p></section></div>
+</section>
+<section class="dica"><i class="fa-solid fa-universal-access"></i><div><h2>Dica de acessibilidade</h2><p>A Libras tem gramática própria. Uma tradução confiável deve considerar o contexto, não apenas substituir palavras por sinais.</p></div></section>
+</main>
+<footer class="site-footer"><div class="footer-marca"><img src="logo.png" alt="" class="footer-logo"><p><strong>Omni IA Support</strong><br>Comunicação acessível entre Português e Libras.</p></div><nav aria-label="Rodapé"><a href="index.html">Home</a><a href="chat.html">Chat</a><a href="ajuda.html">Ajuda</a><a href="usuario.html">Perfil</a></nav><p class="footer-copy">© 2026 Omni IA Support</p></footer>
+</body></html>
