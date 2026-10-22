@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Central de ajuda do Omni IA Support. Encontre orientações sobre Libras, tradução, chat e sua conta.">
+  <meta name="theme-color" content="#eaf2ff">
+  <title>Ajuda — Omni IA Support</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="ajuda.css">
+  <script src="ajuda.js" defer></script>
+</head>
+<body>
+  <a href="#conteudo" class="skip-link">Pular para o conteúdo</a>
+
+  <header class="site-header">
+    <a href="index.html" class="logo-container" aria-label="Omni IA Support - página inicial">
+      <img src="logo.png" alt="" class="logo-img">
+      <div class="nome-logo">
+        <strong>Omni IA</strong>
+        <span>Support &amp; Acessibilidade</span>
+      </div>
+    </a>
+
+    <nav class="menu" aria-label="Menu principal">
+      <a href="index.html" class="nav-btn"><i class="fa-solid fa-house" aria-hidden="true"></i><span>Home</span></a>
+      <a href="dashboard.html" class="nav-btn"><i class="fa-solid fa-chart-line" aria-hidden="true"></i><span>Dashboard</span></a>
+      <a href="chat.html" class="nav-btn"><i class="fa-solid fa-comments" aria-hidden="true"></i><span>Chat</span></a>
+      <a href="traduzir.html" class="nav-btn"><i class="fa-solid fa-hands-asl-interpreting" aria-hidden="true"></i><span>Traduzir</span></a>
+      <a href="ajuda.html" class="nav-btn" aria-current="page"><i class="fa-solid fa-headset" aria-hidden="true"></i><span>Ajuda</span></a>
+    </nav>
+
+    <div class="user-pill" id="user-pill" data-logado="false">
+      <a href="login.html?redirect=ajuda.html" class="btn-entrar-header" id="btn-entrar-header" aria-label="Entrar na sua conta">
+        <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i><span>Entrar</span>
+      </a>
+      <a href="usuario.html" class="user-perfil-logado" id="user-perfil-logado" hidden aria-label="Abrir seu perfil">
+        <span class="avatar" id="avatar-iniciais" aria-hidden="true">?</span>
+        <span class="user-info">
+          <span class="user-name" id="user-nome">—</span>
+          <span class="user-role" id="user-papel">—</span>
+        </span>
+        <button type="button" class="btn-sair" id="btn-sair" aria-label="Sair da conta">
+          <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
+        </button>
+      </a>
+    </div>
+  </header>
+
+  <main id="conteudo" class="ajuda-main">
+    <section class="ajuda-hero" aria-labelledby="titulo-ajuda">
+      <div class="ajuda-hero-copy">
+        <p class="eyebrow"><span class="dot"></span> Central de suporte</p>
+        <h1 id="titulo-ajuda">Como podemos <em>ajudar você?</em></h1>
+        <p>Encontre orientações para usar o Omni IA Support e tornar a comunicação entre Português e Libras mais acessível.</p>
+        <a class="ajuda-cta" href="chat.html"><i class="fa-regular fa-comments" aria-hidden="true"></i> Ir para o chat</a>
+      </div>
+      <div class="ajuda-hero-icone" aria-hidden="true">
+        <div class="icone-circulo"><i class="fa-solid fa-hands-asl-interpreting"></i></div>
+        <span class="bolha bolha-um"><i class="fa-solid fa-comment-dots"></i></span>
+        <span class="bolha bolha-dois"><i class="fa-solid fa-heart"></i></span>
+      </div>
+    </section>
+
+    <section class="ajuda-topicos" aria-labelledby="titulo-topicos">
+      <header class="ajuda-section-head">
+        <p class="eyebrow">Orientações</p>
+        <h2 id="titulo-topicos">Encontre o que você precisa</h2>
+        <p>Selecione um tópico para ver instruções rápidas.</p>
+      </header>
+
+      <div class="topicos-grid">
+        <a class="topico-card" href="traduzir.html">
+          <span class="topico-icone"><i class="fa-solid fa-hands-asl-interpreting" aria-hidden="true"></i></span>
+          <h3>Tradução para Libras</h3>
+          <p>Acesse a ferramenta de tradução e acompanhe a mensagem apresentada pelo avatar.</p>
+          <span class="topico-link">Abrir tradução <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
+        <a class="topico-card" href="chat.html">
+          <span class="topico-icone"><i class="fa-solid fa-comments" aria-hidden="true"></i></span>
+          <h3>Chat e comunicação</h3>
+          <p>Vá para o chat para trocar mensagens e buscar apoio.</p>
+          <span class="topico-link">Abrir chat <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
+        <a class="topico-card" href="usuario.html">
+          <span class="topico-icone"><i class="fa-solid fa-user-gear" aria-hidden="true"></i></span>
+          <h3>Conta e perfil</h3>
+          <p>Acesse sua área de perfil para consultar os dados da conta.</p>
+          <span class="topico-link">Meu perfil <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
+      </div>
+    </section>
+
+    <section class="faq-section" aria-labelledby="titulo-faq">
+      <header class="ajuda-section-head">
+        <p class="eyebrow">Dúvidas frequentes</p>
+        <h2 id="titulo-faq">Respostas para começar</h2>
+      </header>
+
+      <div class="faq-lista">
+        <details class="faq-item">
+          <summary>O que é o Omni IA Support?</summary>
+          <p>É uma proposta de plataforma de acessibilidade voltada a facilitar a comunicação entre pessoas surdas e ouvintes, com recursos relacionados a Português e Libras.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Como acesso a tradução?</summary>
+          <p>Use a opção “Traduzir” no menu ou selecione o botão abaixo para abrir a página de tradução.</p>
+          <a href="traduzir.html" class="faq-link">Acessar tradução <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        </details>
+        <details class="faq-item">
+          <summary>Posso usar o chat para pedir ajuda?</summary>
+          <p>Sim. Abra a página Chat para acessar a área de conversas disponível no projeto.</p>
+          <a href="chat.html" class="faq-link">Abrir o chat <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        </details>
+        <details class="faq-item">
+          <summary>O que faço se não aparecer meu nome no cabeçalho?</summary>
+          <p>Confira se você entrou na sua conta. Se o problema continuar, saia e entre novamente. A exibição do nome depende dos dados salvos pelo sistema de login.</p>
+          <a href="login.html?redirect=ajuda.html" class="faq-link">Ir para o login <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        </details>
+      </div>
+    </section>
+
+    <section class="ajuda-final" aria-labelledby="titulo-contato">
+      <div class="ajuda-final-icone"><i class="fa-solid fa-headset" aria-hidden="true"></i></div>
+      <div class="ajuda-final-texto">
+        <p class="eyebrow">Ainda precisa de ajuda?</p>
+        <h2 id="titulo-contato">Estamos aqui para facilitar sua comunicação.</h2>
+        <p>Acesse o chat para continuar.</p>
+      </div>
+      <a href="chat.html" class="ajuda-cta ajuda-cta-escuro">Falar pelo chat <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-marca">
+      <img src="logo.png" alt="" class="footer-logo">
+      <p><strong>Omni IA Support</strong><br>Comunicação acessível entre Português e Libras.</p>
+    </div>
+    <nav aria-label="Links do rodapé">
+      <a href="index.html">Home</a>
+      <a href="traduzir.html">Traduzir</a>
+      <a href="chat.html">Chat</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+    <p class="footer-copy">© 2026 Omni IA Support</p>
+  </footer>
+</body>
+</html>

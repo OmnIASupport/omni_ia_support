@@ -1,0 +1,312 @@
+/* =========================================================
+   Omni IA Support — Cadastro (Layout Centralizado + Decoração)
+   ========================================================= */
+
+:root {
+    --azul-900: #001a6e;
+    --azul-700: #0135cd;
+    --azul-500: #0a7bf5;
+    --ciano: #57bffb;
+    --azul-100: #eaf2ff;
+    --azul-50: #f3f8ff;
+    --branco: #ffffff;
+    --fundo: #f6f9fe;
+    --texto: #0e1530;
+    --texto-suave: #5a6484;
+    --linha: rgba(1, 53, 205, 0.14);
+    --erro: #c62828;
+    --erro-bg: #fdecec;
+    --sombra-sm: 0 1px 2px rgba(1, 53, 205, 0.06), 0 2px 8px rgba(1, 53, 205, 0.04);
+    --sombra-md: 0 8px 30px rgba(1, 53, 205, 0.10);
+    --sombra-card: 0 25px 70px -20px rgba(1, 53, 205, 0.28);
+    --raio: 12px;
+    --raio-lg: 24px;
+    --transicao: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    --fonte-titulo: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+    --fonte-corpo: "Manrope", "Segoe UI", system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { min-height: 100%; }
+
+body {
+    font-family: var(--fonte-corpo);
+    color: var(--texto);
+    background: linear-gradient(180deg, #dde9f5 0%, #cfdff0 55%, #c6d8ec 100%);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input { font: inherit; color: inherit; }
+
+:focus-visible { outline: 2px solid var(--texto); outline-offset: 3px; border-radius: 6px; }
+
+.skip-link {
+    position: absolute; left: -9999px; top: 12px; padding: 10px 16px;
+    background: var(--texto); color: var(--branco); border-radius: 8px; z-index: 200;
+}
+.skip-link:focus { left: 12px; }
+
+h1, h2, h3 { font-family: var(--fonte-titulo); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+
+/* =========================================================
+   FUNDO DECORATIVO
+   ========================================================= */
+.fundo-decorativo { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+
+.forma-circulo { position: absolute; border-radius: 50%; mix-blend-mode: multiply; }
+.forma-circulo.c1 { width: 620px; height: 620px; top: -220px; left: -200px; background: radial-gradient(circle, rgba(184, 207, 235, 0.9), transparent 70%); }
+.forma-circulo.c2 { width: 420px; height: 420px; bottom: -150px; right: -120px; background: radial-gradient(circle, rgba(184, 207, 235, 0.85), transparent 70%); }
+.forma-circulo.c3 { width: 280px; height: 280px; top: 15%; right: 10%; background: radial-gradient(circle, rgba(255, 255, 255, 0.6), transparent 70%); }
+.forma-circulo.c4 { width: 180px; height: 180px; bottom: 25%; left: 8%; background: radial-gradient(circle, rgba(255, 255, 255, 0.5), transparent 70%); }
+
+.forma-linha { position: absolute; border: 1px solid rgba(255, 255, 255, 0.45); border-radius: 50%; }
+.forma-linha.l1 { width: 850px; height: 850px; top: -280px; right: -320px; opacity: 0.35; }
+.forma-linha.l2 { width: 550px; height: 550px; bottom: -200px; left: -180px; opacity: 0.35; }
+.forma-linha.l3 { width: 380px; height: 380px; top: 30%; right: 22%; opacity: 0.25; border-style: dashed; }
+
+/* =========================================================
+   LEO DECORATIVO (Esquerda - Espiando)
+   ========================================================= */
+.leo-decorativo {
+    position: fixed;
+    bottom: -50px; /* Ajustado para ficar no ponto ideal */
+    width: 460px;
+    height: 460px;
+    z-index: 1;
+    pointer-events: none;
+    animation: flutuarEntrada 0.9s 0.3s ease both;
+}
+
+.leo-esquerdo { left: -20px; } 
+
+.leo-glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85%; height: 85%;
+    border-radius: 50%;
+    background: #b8cfeb;
+    z-index: 1;
+    box-shadow: 0 0 0 20px rgba(184, 207, 235, 0.25);
+}
+
+.leo-img {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: contain;
+    z-index: 2;
+    filter: drop-shadow(0 20px 30px rgba(1, 53, 205, 0.2));
+}
+
+/* =========================================================
+   MAIN CENTRAL
+   ========================================================= */
+.cadastro-shell {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 40px 24px;
+}
+
+.cadastro-card {
+    width: 100%;
+    max-width: 520px;
+    background: var(--branco);
+    border: 1px solid rgba(1, 53, 205, 0.08);
+    border-radius: var(--raio-lg);
+    padding: 40px 44px;
+    box-shadow: var(--sombra-card);
+    animation: entrar 0.7s ease both;
+}
+
+/* =========================================================
+   CABEÇALHO DO CARD
+   ========================================================= */
+.cadastro-head { display: flex; flex-direction: column; gap: 24px; margin-bottom: 32px; }
+
+.logo-container {
+    display: flex; align-items: center; gap: 12px; width: fit-content;
+    transition: transform var(--transicao), color var(--transicao);
+}
+.logo-container:hover { transform: translateY(-2px); color: var(--azul-500); }
+.logo-container:hover .nome-logo strong,
+.logo-container:hover .nome-logo span { color: var(--azul-500); }
+
+.logo-img {
+    width: 40px; height: 40px; object-fit: contain;
+    border-radius: 10px; background: var(--branco); padding: 4px;
+    box-shadow: var(--sombra-sm);
+    transition: box-shadow var(--transicao);
+}
+.logo-container:hover .logo-img { box-shadow: 0 4px 12px rgba(10, 123, 245, 0.25); }
+
+.nome-logo { display: flex; flex-direction: column; line-height: 1.15; }
+.nome-logo strong { font-family: var(--fonte-titulo); font-size: 1.15rem; font-weight: 700; color: var(--texto); transition: color var(--transicao); }
+.nome-logo span { font-size: 0.68rem; font-weight: 500; color: var(--texto-suave); margin-top: 2px; transition: color var(--transicao); }
+
+.cadastro-titulo h1 { font-size: clamp(1.8rem, 3.2vw, 2.4rem); color: var(--texto); margin-bottom: 8px; }
+.cadastro-titulo p { font-size: 0.95rem; color: var(--texto-suave); }
+
+.eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--texto-suave);
+    margin-bottom: 12px;
+}
+.eyebrow .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--azul-500);
+    box-shadow: 0 0 0 4px rgba(10, 123, 245, 0.15);
+}
+
+/* =========================================================
+   FORMULÁRIO
+   ========================================================= */
+#form-cadastro { display: flex; flex-direction: column; gap: 22px; }
+
+.campo { display: flex; flex-direction: column; gap: 10px; }
+.campo > label, .campo-acessibilidade > legend {
+    font-size: 0.72rem; font-weight: 700; color: var(--texto-suave);
+    letter-spacing: 0.12em; text-transform: uppercase;
+}
+
+.campo-input {
+    display: flex; align-items: center; gap: 12px; padding: 4px 0 10px;
+    border-bottom: 1.5px solid var(--linha); transition: border-color var(--transicao);
+}
+.campo-input:focus-within { border-bottom-color: var(--texto); }
+.campo-input.invalido { border-bottom-color: var(--erro); }
+
+.campo-input > i {
+    color: var(--texto-suave); font-size: 0.85rem; flex-shrink: 0;
+    width: 16px; text-align: center; transition: color var(--transicao);
+}
+.campo-input:focus-within > i { color: var(--texto); }
+
+.campo-input input {
+    flex: 1; border: none; outline: none; background: transparent;
+    padding: 10px 0; font-size: 1rem; font-weight: 500;
+}
+.campo-input input::placeholder { color: #9aa3bd; font-weight: 400; }
+
+.toggle-senha {
+    display: grid; place-items: center; width: 32px; height: 32px;
+    border-radius: 8px; color: var(--texto-suave);
+    transition: color var(--transicao), background var(--transicao);
+}
+.toggle-senha:hover { color: var(--azul-500); background: var(--azul-100); }
+
+.erro { font-size: 0.78rem; font-weight: 600; color: var(--erro); padding-left: 28px; }
+.erro-geral { font-size: 0.85rem; font-weight: 600; color: var(--erro); background: var(--erro-bg); border-radius: var(--raio); padding: 10px 14px; }
+
+/* =========================================================
+   NÍVEL DE ACESSIBILIDADE
+   ========================================================= */
+.campo-acessibilidade { border: none; display: flex; flex-direction: column; gap: 14px; }
+.ajuda-acessibilidade { font-size: 0.85rem; color: var(--texto-suave); margin-top: -6px; }
+.niveis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+.nivel { position: relative; cursor: pointer; }
+.nivel input { position: absolute; opacity: 0; pointer-events: none; }
+
+.nivel-card {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    gap: 6px; padding: 16px 10px;
+    border: 1.5px solid var(--linha); border-radius: var(--raio);
+    background: var(--branco); height: 100%;
+    transition: border-color var(--transicao), background var(--transicao), transform var(--transicao);
+}
+.nivel-card i { font-size: 1.25rem; color: var(--texto); margin-bottom: 4px; transition: color var(--transicao); }
+.nivel-card strong { font-size: 0.85rem; font-weight: 700; color: var(--texto); }
+.nivel-card small { font-size: 0.7rem; color: var(--texto-suave); line-height: 1.3; }
+
+.nivel:hover .nivel-card { border-color: var(--azul-500); transform: translateY(-2px); }
+.nivel:hover .nivel-card i { color: var(--azul-500); }
+
+.nivel input:checked + .nivel-card { border-color: var(--azul-500); background: var(--azul-100); }
+.nivel input:checked + .nivel-card i { color: var(--azul-500); }
+
+.nivel input:focus-visible + .nivel-card { outline: 2px solid var(--azul-500); outline-offset: 2px; }
+
+/* =========================================================
+   TERMOS E BOTÃO
+   ========================================================= */
+.linha-termos { display: flex; flex-direction: column; gap: 8px; }
+.check { display: inline-flex; align-items: flex-start; gap: 8px; font-size: 0.82rem; color: var(--texto-suave); cursor: pointer; user-select: none; line-height: 1.4; transition: color var(--transicao); }
+.check:hover { color: var(--texto); }
+.check input { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; border: 1.5px solid var(--linha); border-radius: 5px; background: transparent; display: grid; place-items: center; cursor: pointer; flex-shrink: 0; margin-top: 2px; transition: border-color var(--transicao), background var(--transicao); }
+.check input:hover { border-color: var(--azul-500); }
+.check input:checked { background: var(--texto); border-color: var(--texto); }
+.check input:checked::after { content: "✓"; color: var(--branco); font-size: 0.72rem; font-weight: 800; line-height: 1; }
+.check a { color: var(--texto); font-weight: 700; border-bottom: 1px solid var(--texto); transition: color var(--transicao), border-color var(--transicao); }
+.check a:hover { color: var(--azul-500); border-color: var(--azul-500); }
+
+.btn-entrar {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; padding: 15px 20px; margin-top: 6px;
+    background: var(--texto); color: var(--branco);
+    font-weight: 700; font-size: 0.98rem; border-radius: var(--raio);
+    box-shadow: var(--sombra-md);
+    transition: background var(--transicao), transform var(--transicao), box-shadow var(--transicao);
+}
+.btn-entrar:hover:not(:disabled) { background: var(--azul-500); transform: translateY(-2px); box-shadow: 0 14px 30px -10px rgba(10, 123, 245, 0.55); }
+.btn-entrar:active:not(:disabled) { transform: translateY(0); }
+.btn-entrar:disabled { opacity: 0.7; cursor: progress; }
+.btn-entrar i { transition: transform var(--transicao); }
+.btn-entrar:hover:not(:disabled) i { transform: translateX(4px); }
+
+.btn-entrar.carregando .btn-texto::after {
+    content: ""; display: inline-block; width: 14px; height: 14px; margin-left: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.4); border-top-color: var(--branco); border-radius: 50%;
+    animation: girar 0.7s linear infinite; vertical-align: -2px;
+}
+.btn-entrar.carregando i { display: none; }
+@keyframes girar { to { transform: rotate(360deg); } }
+
+.rodape-card { text-align: center; font-size: 0.95rem; color: var(--texto-suave); padding-top: 22px; margin-top: 24px; border-top: 1px solid var(--linha); }
+.link-cadastro { color: var(--texto); font-size: 1.05rem; font-weight: 800; letter-spacing: -0.01em; border-bottom: 2px solid var(--texto); padding-bottom: 2px; margin-left: 4px; transition: color var(--transicao), border-color var(--transicao); }
+.link-cadastro:hover { color: var(--azul-500); border-bottom-color: var(--azul-500); }
+
+/* =========================================================
+   ANIMAÇÕES & RESPONSIVO
+   ========================================================= */
+@keyframes entrar { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes flutuarEntrada { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 1100px) {
+    .leo-decorativo { width: 380px; height: 380px; opacity: 0.85; bottom: -40px; }
+    .leo-esquerdo { left: -30px; }
+}
+
+@media (max-width: 900px) {
+    .leo-esquerdo { width: 300px; height: 300px; left: -40px; bottom: -50px; opacity: 0.9; }
+    .cadastro-card { padding: 32px 28px; }
+}
+
+@media (max-width: 640px) {
+    .cadastro-shell { padding: 24px 16px; }
+    .cadastro-card { padding: 28px 20px; border-radius: var(--raio); }
+    .cadastro-titulo h1 { font-size: 1.7rem; }
+    .niveis { grid-template-columns: 1fr; }
+    .nivel-card { flex-direction: row; text-align: left; padding: 14px 16px; gap: 12px; }
+    .nivel-card i { margin-bottom: 0; flex-shrink: 0; }
+    .nivel-card small { display: none; }
+    
+    .leo-esquerdo { width: 180px; height: 180px; left: -20px; bottom: -30px; opacity: 0.4; }
+    .forma-circulo.c1 { width: 300px; height: 300px; }
+    .forma-circulo.c2 { width: 200px; height: 200px; }
+    .forma-circulo.c3, .forma-circulo.c4 { display: none; }
+    .forma-linha.l3 { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+}

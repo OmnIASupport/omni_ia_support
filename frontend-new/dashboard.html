@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dashboard do Omni IA Support: acesso rápido às ferramentas de comunicação entre Português e Libras.">
+  <meta name="theme-color" content="#eaf2ff">
+  <title>Omni IA Support — Dashboard</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+  <script src="dashboard.js" defer></script>
+</head>
+<body>
+  <a href="#conteudo" class="skip-link">Pular para o conteúdo</a>
+
+  <header class="site-header">
+    <a href="index.html" class="logo-container" aria-label="Omni IA Support - página inicial">
+      <img src="logo.png" alt="" class="logo-img">
+      <span class="nome-logo"><strong>Omni IA</strong><span>Support &amp; Acessibilidade</span></span>
+    </a>
+
+    <nav class="menu" aria-label="Menu principal">
+      <a href="index.html" class="nav-btn"><i class="fa-solid fa-house" aria-hidden="true"></i><span>Home</span></a>
+      <a href="dashboard.html" class="nav-btn" aria-current="page"><i class="fa-solid fa-chart-line" aria-hidden="true"></i><span>Dashboard</span></a>
+      <a href="chat.html" class="nav-btn"><i class="fa-solid fa-comments" aria-hidden="true"></i><span>Chat</span></a>
+      <a href="traduzir.html" class="nav-btn"><i class="fa-solid fa-hands-asl-interpreting" aria-hidden="true"></i><span>Traduzir</span></a>
+      <a href="index.html#ajuda" class="nav-btn"><i class="fa-solid fa-headset" aria-hidden="true"></i><span>Ajuda</span></a>
+    </nav>
+
+    <div class="user-pill" id="user-pill" data-logado="false">
+      <a href="login.html?redirect=dashboard.html" class="btn-entrar-header" id="btn-entrar-header" aria-label="Entrar na sua conta">
+        <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i><span>Entrar</span>
+      </a>
+      <div class="user-perfil-logado" id="user-perfil-logado" hidden>
+        <a href="usuario.html" class="perfil-link" aria-label="Abrir seu perfil">
+          <span class="avatar" id="avatar-iniciais" aria-hidden="true">?</span>
+          <span class="user-info"><span class="user-name" id="user-nome">—</span><span class="user-role" id="user-papel">—</span></span>
+        </a>
+        <button type="button" class="btn-sair" id="btn-sair" aria-label="Sair da conta" title="Sair">
+          <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="conteudo" class="dashboard">
+    <section class="hero-dashboard" aria-labelledby="titulo-dashboard">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="dot"></span> Seu espaço acessível</p>
+        <h1 id="titulo-dashboard">A tecnologia que ouve o seu mundo</h1>
+        <p class="hero-desc">Acesse as ferramentas do Omni IA Support para facilitar a comunicação entre pessoas surdas e ouvintes.</p>
+      </div>
+      <div class="hero-card" aria-label="Resumo do Omni IA Support">
+        <div class="hero-card-glow"></div>
+        <div class="hero-icon"><i class="fa-solid fa-universal-access" aria-hidden="true"></i></div>
+        <p class="hero-card-kicker">OMNI IA SUPPORT</p>
+        <h2>Português <span>↔</span> Libras</h2>
+        <p>Mais acesso, mais inclusão, mais possibilidades de se comunicar.</p>
+        <div class="hero-card-footer"><span><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Acessibilidade em foco</span><i class="fa-solid fa-hands-asl-interpreting" aria-hidden="true"></i></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="titulo-resumo">
+      <header class="section-head section-head-inline">
+        <div><p class="eyebrow">Visão geral</p><h2 id="titulo-resumo">Resumo da atividade</h2></div>
+        <span class="tag-demo"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Dados demonstrativos</span>
+      </header>
+      <div class="metricas-grid">
+        <article class="metrica">
+          <span class="metrica-icone azul"><i class="fa-solid fa-language" aria-hidden="true"></i></span>
+          <p>Traduções realizadas</p><strong id="total-traducoes">0</strong><small>Indicador de demonstração</small>
+        </article>
+        <article class="metrica">
+          <span class="metrica-icone ciano"><i class="fa-solid fa-comments" aria-hidden="true"></i></span>
+          <p>Conversas iniciadas</p><strong id="total-conversas">0</strong><small>Indicador de demonstração</small>
+        </article>
+        <article class="metrica">
+          <span class="metrica-icone roxo"><i class="fa-solid fa-clock" aria-hidden="true"></i></span>
+          <p>Acesso atual</p><strong class="metrica-data" id="ultimo-acesso">—</strong><small id="data-acesso">Horário local</small>
+        </article>
+      </div>
+    </section>
+
+    <section class="bottom-grid" aria-label="Atividade e informações da plataforma">
+      <article class="card atividade-card">
+        <header class="card-head"><div><p class="eyebrow">Primeiros passos</p><h2>Continue por aqui</h2></div><span class="card-head-icon"><i class="fa-solid fa-list-check" aria-hidden="true"></i></span></header>
+        <ul class="atividade-lista">
+          <li><span class="atividade-icone"><i class="fa-solid fa-hands-asl-interpreting" aria-hidden="true"></i></span><span class="atividade-copy"><strong>Inicie uma tradução</strong><small>Acesse a ferramenta de Português e Libras.</small></span><a href="traduzir.html" aria-label="Iniciar tradução"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></li>
+          <li><span class="atividade-icone"><i class="fa-solid fa-message" aria-hidden="true"></i></span><span class="atividade-copy"><strong>Abra uma conversa</strong><small>Vá para a área de chat da plataforma.</small></span><a href="chat.html" aria-label="Abrir conversa"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></li>
+          <li><span class="atividade-icone"><i class="fa-solid fa-address-card" aria-hidden="true"></i></span><span class="atividade-copy"><strong>Confira seu perfil</strong><small>Veja as informações da sua conta.</small></span><a href="usuario.html" aria-label="Abrir perfil"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></li>
+        </ul>
+      </article>
+
+      <article class="card inclusao-card">
+        <div class="inclusao-icon"><i class="fa-solid fa-universal-access" aria-hidden="true"></i></div>
+        <p class="eyebrow">Nosso propósito</p>
+        <h2>Mais inclusão no dia a dia.</h2>
+        <p>O Omni IA Support foi pensado para apoiar a comunicação entre pessoas surdas e ouvintes, com acessibilidade e inclusão social.</p>
+        <div class="recursos">
+          <span><i class="fa-solid fa-check" aria-hidden="true"></i> Português e Libras</span>
+          <span><i class="fa-solid fa-check" aria-hidden="true"></i> Recursos de texto e chat</span>
+          <span><i class="fa-solid fa-check" aria-hidden="true"></i> Interface adaptável</span>
+        </div>
+        <a href="index.html#ajuda" class="link-ajuda">Conheça a plataforma <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      </article>
+    </section>
+
+    <p class="aviso-dados"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Os indicadores são apenas demonstrativos. Para exibir estatísticas reais, conecte esta página ao backend ou ao armazenamento usado pelas funções de tradução e chat.</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-marca">
+      <img src="logo.png" alt="" class="footer-logo">
+      <p><strong>Omni IA Support</strong><br>Comunicação acessível entre Português e Libras.</p>
+    </div>
+    <nav aria-label="Links do rodapé"><a href="traduzir.html">Traduzir</a><a href="chat.html">Chat</a><a href="dashboard.html">Dashboard</a><a href="usuario.html">Perfil</a></nav>
+    <div class="footer-redes"><a href="https://www.instagram.com/omniia.support" target="_blank" rel="noopener noreferrer" aria-label="Omni IA Support no Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a></div>
+    <p class="footer-copy">© 2026 Omni IA Support</p>
+  </footer>
+</body>
+</html>
