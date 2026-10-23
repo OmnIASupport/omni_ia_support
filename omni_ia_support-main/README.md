@@ -5,7 +5,7 @@ Além disso, colocaremos recursos de traduções via áudio ou texto para os usu
 Omni IA: A tecnologia que ouve o seu mundo
 
 Integrantes:
-Vitor Hugo
+Victor Hugo
 Felipe Modenes
 Alice Baraldi
 Leticia Marcela
