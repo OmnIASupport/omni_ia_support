@@ -1,0 +1,388 @@
+/* =========================================================
+   Omni IA Support — Dashboard
+   ========================================================= */
+
+.dashboard-main {
+    padding: 48px 32px 96px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 96px;
+}
+
+/* =========================================================
+   SEÇÕES E RESUMO
+   ========================================================= */
+.section { animation: entrar 0.7s ease both; }
+
+.secao-head {
+    max-width: 640px;
+    margin-bottom: 40px;
+}
+.secao-head h2 { margin-bottom: 10px; }
+.secao-intro {
+    color: var(--texto-suave);
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+/* Resumo (Grade de indicadores) */
+.resumo-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    background: var(--branco);
+    border: 1px solid var(--linha);
+    border-radius: var(--raio-lg);
+    box-shadow: var(--sombra-sm);
+    overflow: hidden;
+}
+
+.resumo-item {
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-right: 1px solid var(--linha);
+}
+.resumo-item:last-child {
+    border-right: none;
+}
+
+.resumo-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--texto-suave);
+}
+
+.resumo-valor {
+    font-family: var(--fonte-titulo);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--azul-500);
+    line-height: 1.1;
+}
+
+/* =========================================================
+   ATALHOS
+   ========================================================= */
+.atalhos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.atalho {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 28px 26px 24px;
+    background: var(--branco);
+    border: 1px solid var(--linha);
+    border-radius: var(--raio-lg);
+    transition: transform var(--transicao), border-color var(--transicao), box-shadow var(--transicao);
+}
+.atalho:hover {
+    transform: translateY(-4px);
+    border-color: var(--azul-500);
+    box-shadow: var(--sombra-md);
+}
+.atalho h3 {
+    font-size: 1.15rem;
+    color: var(--texto);
+}
+.atalho p {
+    font-size: 0.92rem;
+    color: var(--texto-suave);
+    line-height: 1.6;
+    flex: 1;
+}
+.atalho-acao {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--texto);
+    border-bottom: 1.5px solid var(--texto);
+    padding-bottom: 2px;
+    width: fit-content;
+    transition: color var(--transicao), border-color var(--transicao);
+}
+.atalho-acao i { transition: transform var(--transicao); }
+.atalho:hover .atalho-acao {
+    color: var(--azul-500);
+    border-bottom-color: var(--azul-500);
+}
+.atalho:hover .atalho-acao i {
+    transform: translateX(4px);
+}
+
+/* =========================================================
+   HISTÓRICO (TABELA)
+   ========================================================= */
+.tabela-wrapper {
+    background: var(--branco);
+    border: 1px solid var(--linha);
+    border-radius: var(--raio-lg);
+    box-shadow: var(--sombra-sm);
+    overflow: hidden;
+}
+
+.tabela-historico {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.92rem;
+}
+
+.tabela-historico thead {
+    background: var(--azul-100);
+    color: var(--texto);
+}
+
+.tabela-historico th {
+    padding: 16px 24px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--azul-700);
+    white-space: nowrap;
+}
+
+.tabela-historico td {
+    padding: 18px 24px;
+    border-top: 1px solid var(--linha);
+    color: var(--texto-suave);
+    vertical-align: middle;
+}
+
+.tabela-historico tbody tr {
+    transition: background var(--transicao);
+}
+
+.tabela-historico tbody tr:hover {
+    background: #f9fbff;
+}
+
+.celula-mensagem {
+    color: var(--texto) !important;
+    font-weight: 500;
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Status (Pílulas) */
+.status {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.status-concluido {
+    background: #e8f5ee;
+    color: #16a34a;
+}
+
+.status-rascunho {
+    background: var(--azul-100);
+    color: var(--azul-700);
+}
+
+/* =========================================================
+   SOBRE
+   ========================================================= */
+.sobre-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.sobre-item {
+    padding: 24px 26px;
+    background: var(--branco);
+    border: 1px solid var(--linha);
+    border-radius: var(--raio-lg);
+}
+.sobre-item h3 {
+    font-size: 1rem;
+    margin-bottom: 6px;
+    color: var(--texto);
+}
+.sobre-item p {
+    font-size: 0.9rem;
+    color: var(--texto-suave);
+    line-height: 1.6;
+}
+
+/* =========================================================
+   LEO DO DASHBOARD
+   ========================================================= */
+.dashboard-leo {
+    max-width: 100%; 
+    aspect-ratio: auto;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    overflow: visible;
+    animation: flutuarEntrada 0.9s 0.4s ease both;
+}
+
+.dashboard-leo .mascote-circulo {
+    position: absolute;
+    inset: 10% 0 10% 0;
+    border-radius: 50%;
+    border: none;
+    box-shadow: 0 15px 40px rgba(1, 53, 205, 0.08); 
+    background: linear-gradient(135deg, #eaf2ff 0%, #d4e3f7 100%);
+    z-index: 0;
+}
+
+.dashboard-leo::before {
+    content: "";
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(87, 191, 251, 0.35) 0%, rgba(87, 191, 251, 0) 70%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.dashboard-leo .hero-leo {
+    position: relative;
+    width: 115%;
+    max-width: none;
+    margin-left: -7.5%;
+    margin-bottom: -20px; 
+    object-fit: contain;
+    z-index: 2;
+    filter: drop-shadow(0 25px 35px rgba(1, 53, 205, 0.25));
+}
+
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+@media (max-width: 1024px) {
+    .dashboard-main {
+        padding: 32px 20px 72px;
+        gap: 72px;
+    }
+    .resumo-grid {
+        grid-template-columns: 1fr 1fr; /* Vira 2x2 no tablet */
+    }
+    .resumo-item:nth-child(2) {
+        border-right: none;
+    }
+    .resumo-item:nth-child(3),
+    .resumo-item:nth-child(4) {
+        border-top: 1px solid var(--linha);
+    }
+
+    .atalhos-grid,
+    .sobre-grid {
+        grid-template-columns: 1fr;
+    }
+    .dashboard-leo {
+        height: 320px;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    .dashboard-leo .hero-leo {
+        width: 120%;
+        margin-left: -10%;
+        margin-bottom: -15px; 
+    }
+
+    .tabela-historico th,
+    .tabela-historico td {
+        padding: 14px 16px;
+    }
+}
+
+@media (max-width: 640px) {
+    .dashboard-main {
+        padding: 28px 16px 56px;
+        gap: 56px;
+    }
+    .dashboard-leo {
+        height: 240px;
+    }
+    .dashboard-leo .hero-leo {
+        margin-bottom: -10px; 
+    }
+    
+    .resumo-grid {
+        grid-template-columns: 1fr; /* Empilha tudo no mobile */
+    }
+    .resumo-item {
+        border-right: none;
+        border-bottom: 1px solid var(--linha);
+    }
+    .resumo-item:last-child {
+        border-bottom: none;
+    }
+
+    /* Tabela Mobile */
+    .tabela-historico thead {
+        display: none;
+    }
+
+    .tabela-historico,
+    .tabela-historico tbody,
+    .tabela-historico tr,
+    .tabela-historico td {
+        display: block;
+        width: 100%;
+    }
+
+    .tabela-historico tr {
+        padding: 16px;
+        border-top: 1px solid var(--linha);
+    }
+
+    .tabela-historico tr:first-child {
+        border-top: none;
+    }
+
+    .tabela-historico td {
+        padding: 6px 0;
+        border-top: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        text-align: right;
+    }
+
+    .tabela-historico td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--texto-suave);
+        text-align: left;
+    }
+
+    .celula-mensagem {
+        max-width: 100%;
+        white-space: normal;
+    }
+}

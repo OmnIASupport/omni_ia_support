@@ -1,0 +1,456 @@
+/* =========================================================
+   Omni IA Support — Home (Efeitos de Entrada)
+   ========================================================= */
+
+/* Variáveis globais: paleta de cores, sombras, raios, transições e fontes. */
+:root {
+    --azul-900: #001a6e;
+    --azul-700: #0135cd;
+    --azul-500: #0a7bf5; /* Azul claro principal */
+    --ciano: #57bffb;
+    --azul-100: #eaf2ff;
+    --branco: #ffffff;
+    --fundo: #f6f9fe;
+    --texto: #0e1530;
+    --texto-suave: #5a6484;
+    --linha: rgba(1, 53, 205, 0.14);
+    --sombra-sm: 0 1px 2px rgba(1, 53, 205, 0.06), 0 2px 8px rgba(1, 53, 205, 0.04);
+    --sombra-md: 0 8px 30px rgba(1, 53, 205, 0.10);
+    --raio: 14px;
+    --raio-lg: 24px;
+    --transicao: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    --fonte-titulo: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+    --fonte-corpo: "Manrope", "Segoe UI", system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* Faz a rolagem entre âncoras acontecer de forma suave. */
+html { scroll-behavior: smooth; }
+
+/* Define a tipografia, as cores principais e o comportamento básico da página. */
+body {
+    font-family: var(--fonte-corpo);
+    color: var(--texto);
+    background: var(--fundo);
+    min-height: 100vh;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Links herdam a cor do contexto e não exibem sublinhado padrão. */
+a { text-decoration: none; color: inherit; }
+/* Impede imagens de ultrapassarem o contêiner e remove o espaço inline. */
+img { max-width: 100%; display: block; }
+/* Remove os marcadores padrão das listas. */
+ol, ul { list-style: none; }
+
+:focus-visible { outline: 2px solid var(--azul-500); outline-offset: 3px; border-radius: 6px; }
+
+/* Mantém o link de acessibilidade fora da tela até receber foco. */
+.skip-link {
+    position: absolute; left: -9999px; top: 12px; padding: 10px 16px;
+    background: var(--azul-700); color: var(--branco); border-radius: 8px; z-index: 200;
+}
+.skip-link:focus { left: 12px; }
+
+h1, h2, h3 { font-family: var(--fonte-titulo); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; color: var(--texto); }
+h2 { font-size: clamp(1.6rem, 2.6vw, 2.2rem); }
+
+/* Estilo para pequenos rótulos de seção em letras maiúsculas. */
+.eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.14em; color: var(--azul-500); margin-bottom: 14px;
+}
+/* Cria o ponto decorativo ao lado do rótulo da seção. */
+.eyebrow .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--azul-500); box-shadow: 0 0 0 4px rgba(10, 123, 245, 0.15);
+}
+
+/* =========================================================
+   HEADER (Animação de entrada)
+   ========================================================= */
+/* Cabeçalho fixo no topo, com fundo translúcido e animação de entrada. */
+.site-header {
+    position: sticky; top: 0; z-index: 100;
+    display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 24px;
+    padding: 14px 32px;
+    background: rgba(246, 249, 254, 0.82);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border-bottom: 1px solid var(--linha);
+    animation: entrar 0.6s 0.1s ease both;
+}
+
+.logo-container { display: flex; align-items: center; gap: 12px; flex-shrink: 0; transition: transform var(--transicao); }
+.logo-container:hover { transform: translateY(-1px); }
+.logo-img { width: 40px; height: 40px; object-fit: contain; border-radius: 10px; }
+.nome-logo { display: flex; flex-direction: column; line-height: 1.15; }
+.nome-logo strong { font-family: var(--fonte-titulo); font-size: 1.15rem; font-weight: 700; color: var(--texto); letter-spacing: -0.02em; }
+.nome-logo span { font-size: 0.68rem; font-weight: 500; letter-spacing: 0.02em; color: var(--texto-suave); margin-top: 2px; }
+
+/* Agrupa os links de navegação em uma cápsula centralizada. */
+.menu {
+    justify-self: center; display: flex; align-items: center; gap: 2px; padding: 4px;
+    background: var(--branco); border: 1px solid var(--linha); border-radius: 999px; box-shadow: var(--sombra-sm);
+}
+/* Define o formato e a tipografia de cada link do menu. */
+.nav-btn {
+    display: flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px;
+    font-size: 0.88rem; font-weight: 600; color: var(--texto-suave);
+    transition: color var(--transicao), background var(--transicao);
+}
+.nav-btn i { font-size: 0.9rem; opacity: 0.8; }
+.nav-btn:hover { color: var(--azul-500); background: var(--azul-100); }
+.nav-btn[aria-current="page"] { color: var(--branco); background: var(--texto); }
+.nav-btn[aria-current="page"] i { opacity: 1; }
+
+/* Contêiner em formato de cápsula para os controles de usuário. */
+.user-pill {
+    display: flex; align-items: center; gap: 8px; padding: 5px;
+    background: var(--branco); border: 1px solid var(--linha); border-radius: 999px;
+    flex-shrink: 0; transition: border-color var(--transicao), box-shadow var(--transicao);
+}
+.user-pill:hover { border-color: var(--azul-500); box-shadow: var(--sombra-sm); }
+
+/* Aparência do botão de entrar no cabeçalho. */
+.btn-entrar-header {
+    display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px;
+    font-size: 0.85rem; font-weight: 700; color: var(--texto); background: transparent; border-radius: 999px;
+    transition: background var(--transicao), color var(--transicao);
+}
+.btn-entrar-header i { font-size: 0.85rem; color: var(--azul-500); }
+.btn-entrar-header:hover { background: var(--azul-100); color: var(--azul-500); }
+
+.user-pill[data-logado="false"] .user-perfil-logado { display: none; }
+.user-pill[data-logado="true"] .btn-entrar-header { display: none; }
+
+/* Organiza os elementos apresentados quando o usuário está logado. */
+.user-perfil-logado {
+    display: inline-flex; align-items: center; gap: 10px; padding: 4px 6px 4px 4px;
+    border-radius: 999px; transition: background var(--transicao);
+}
+.user-perfil-logado:hover { background: var(--azul-100); }
+
+/* Formata o círculo que contém as iniciais ou o avatar do usuário. */
+.avatar {
+    display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
+    font-size: 0.78rem; font-weight: 800; color: var(--branco); background: var(--texto);
+}
+.user-info { display: flex; flex-direction: column; line-height: 1.2; padding-right: 4px; }
+.user-name { font-size: 0.85rem; font-weight: 700; color: var(--texto); }
+.user-role { font-size: 0.72rem; color: var(--texto-suave); }
+
+/* Botão circular para sair da conta. */
+.btn-sair {
+    display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
+    color: var(--texto-suave); background: transparent; transition: color var(--transicao), background var(--transicao);
+}
+.btn-sair:hover { color: #c62828; background: #fdecec; }
+.btn-sair i { font-size: 0.8rem; }
+
+/* Ajustes finais para celulares e telas estreitas. */
+@media (max-width: 640px) {
+    .btn-entrar-header span { display: none; }
+    .user-info { display: none; }
+    .user-perfil-logado { padding: 4px; }
+}
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+/* Define a largura máxima, os espaçamentos e o fluxo vertical do conteúdo. */
+main {
+    padding: 48px 32px 96px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 96px;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+/* Organiza a seção principal em texto e área visual. */
+.hero {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: center;
+    gap: 48px;
+}
+
+/* Cascata do Hero */
+/* Aplica a animação de entrada ao texto principal. */
+.hero-texto {
+    animation: entrar 0.8s 0.2s ease both;
+}
+
+.hero-texto h1 { font-size: clamp(2.1rem, 4.4vw, 3.6rem); margin-bottom: 20px; color: var(--texto); }
+.hero-texto h1 em {
+    font-style: normal; color: var(--azul-500); /* Azul claro */
+    background: linear-gradient(180deg, transparent 68%, rgba(10, 123, 245, 0.25) 68%); padding: 0 2px;
+}
+.hero-desc { font-size: 1.08rem; line-height: 1.75; color: var(--texto-suave); max-width: 54ch; margin-bottom: 32px; }
+.hero-desc strong { color: var(--texto); font-weight: 700; }
+
+/* Agrupa os botões de ação e anima sua entrada após o texto. */
+.hero-acoes { 
+    display: flex; flex-wrap: wrap; gap: 12px; 
+    animation: entrar 0.8s 0.35s ease both;
+}
+
+/* ---------- Botões ---------- */
+/* Base compartilhada para os botões primário e secundário. */
+.btn-primario, .btn-ghost {
+    display: inline-flex; align-items: center; gap: 10px; padding: 14px 26px;
+    font-family: var(--fonte-corpo); font-size: 0.98rem; font-weight: 700; border-radius: 12px;
+    transition: transform var(--transicao), background var(--transicao), color var(--transicao), box-shadow var(--transicao);
+}
+.btn-primario { color: var(--branco); background: var(--texto); box-shadow: var(--sombra-md); }
+.btn-primario:hover { background: var(--azul-500); transform: translateY(-2px); box-shadow: 0 14px 30px -10px rgba(10, 123, 245, 0.55); }
+.btn-ghost { color: var(--texto); background: transparent; border: 1px solid var(--linha); }
+.btn-ghost:hover { background: var(--branco); border-color: var(--azul-500); color: var(--azul-500); }
+
+/* =========================================================
+   MASCOTE (Leo dentro do círculo)
+   ========================================================= */
+/* Área circular que enquadra o mascote Leo. */
+.hero-mascote {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    border-radius: 50%;
+    overflow: hidden;
+    
+    /* Efeito de entrada para o mascote */
+    animation: flutuarEntrada 0.9s 0.4s ease both;
+}
+
+/* Fundo circular decorativo atrás do mascote. */
+.mascote-circulo {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #eaf2ff 0%, #c6d8ec 100%);
+    z-index: 0;
+    border: 4px solid var(--branco);
+    box-shadow: 0 10px 30px rgba(1, 53, 205, 0.1);
+}
+
+/* Posiciona e ajusta a imagem do Leo dentro do círculo. */
+.hero-leo {
+    position: relative;
+    z-index: 1;
+    width: 95%;
+    margin-bottom: -5%;
+    object-fit: contain;
+    filter: drop-shadow(0 15px 25px rgba(1, 53, 205, 0.15));
+}
+
+/* =========================================================
+   SEÇÕES GENÉRICAS
+   ========================================================= */
+.secao-head { max-width: 640px; margin-bottom: 40px; }
+.secao-intro { margin-top: 10px; color: var(--texto-suave); font-size: 1rem; }
+
+/* Passos */
+/* Aplica a animação de entrada à seção de passos. */
+.passos {
+    animation: entrar 0.8s 0.5s ease both; /* Cascata */
+}
+.passos-lista { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--linha); }
+.passo { padding: 32px 28px 32px 0; position: relative; }
+.passo + .passo { padding-left: 28px; border-left: 1px solid var(--linha); }
+.passo-num { display: inline-block; font-family: var(--fonte-titulo); font-size: 0.82rem; font-weight: 700; color: var(--azul-500); letter-spacing: 0.14em; margin-bottom: 14px; } /* Azul claro */
+.passo h3 { font-size: 1.15rem; margin-bottom: 8px; }
+.passo p { font-size: 0.95rem; color: var(--texto-suave); line-height: 1.65; }
+
+/* =========================================================
+   FORMAS (Cards de escolha)
+   ========================================================= */
+/* Aplica a animação de entrada à seção de opções. */
+.formas {
+    animation: entrar 0.8s 0.6s ease both; /* Cascata */
+}
+.formas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+/* Aparência e transições de cada cartão de escolha. */
+.forma {
+    position: relative; display: flex; flex-direction: column; gap: 10px; padding: 28px 26px 24px;
+    background: var(--branco); border: 1px solid var(--linha); border-radius: var(--raio-lg);
+    transition: transform var(--transicao), border-color var(--transicao), box-shadow var(--transicao);
+}
+.forma:hover { transform: translateY(-4px); border-color: var(--azul-500); box-shadow: var(--sombra-md); }
+
+/* Ícone padrão: Azul claro */
+.forma > i {
+    font-size: 1.3rem; 
+    color: var(--azul-500); 
+    width: 44px; height: 44px; 
+    display: grid; place-items: center; 
+    background: var(--azul-100); border-radius: 12px; margin-bottom: 8px;
+    transition: color var(--transicao);
+}
+
+/* Ícone no Hover */
+.forma:hover > i {
+    color: var(--azul-500);
+}
+
+.forma h3 { font-size: 1.1rem; }
+.forma p { font-size: 0.92rem; color: var(--texto-suave); line-height: 1.6; flex: 1; }
+
+/* Seta decorativa que aparece ao interagir com o cartão. */
+.forma-seta { 
+    position: absolute; top: 24px; right: 22px; 
+    color: var(--texto-suave); opacity: 0; transform: translateX(-6px); 
+    transition: opacity var(--transicao), transform var(--transicao), color var(--transicao); 
+}
+.forma:hover .forma-seta { opacity: 1; transform: translateX(0); color: var(--azul-500); }
+
+/* =========================================================
+   FAIXA DE AJUDA
+   ========================================================= */
+/* Faixa de chamada para ajuda, com fundo em tons de azul. */
+.faixa-ajuda {
+    display: flex; align-items: center; justify-content: space-between; gap: 32px;
+    padding: 48px; border-radius: var(--raio-lg); 
+    background: linear-gradient(180deg, #dde9f5 0%, #cfdff0 55%, #c6d8ec 100%);
+    color: var(--texto);
+    position: relative; overflow: hidden;
+    border: 1px solid rgba(1, 53, 205, 0.08);
+    
+    animation: entrar 0.8s 0.7s ease both; /* Cascata */
+}
+
+/* Círculo de luz decorativo no fundo da faixa de ajuda. */
+.faixa-ajuda::before {
+    content: "";
+    position: absolute;
+    right: -80px; top: -80px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #b8cfeb, transparent 70%);
+    pointer-events: none;
+}
+
+.faixa-ajuda h2 { color: var(--texto); margin-bottom: 6px; }
+.faixa-ajuda p { color: var(--texto-suave); font-size: 0.95rem; }
+
+.faixa-ajuda .eyebrow { color: var(--texto); }
+.faixa-ajuda .eyebrow .dot { background: var(--texto); box-shadow: 0 0 0 4px rgba(14, 21, 48, 0.15); }
+
+/* Estilo complementar para o botão da faixa de ajuda. */
+.btn-claro { 
+    background: var(--texto); 
+    color: var(--branco); 
+    box-shadow: var(--sombra-md); 
+    flex-shrink: 0; 
+}
+.btn-claro:hover { 
+    background: var(--azul-500); 
+    color: var(--branco); 
+    box-shadow: 0 12px 30px rgba(10, 123, 245, 0.3); 
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+/* Organiza marca, navegação e texto de direitos no rodapé. */
+.site-footer {
+    display: grid; 
+    grid-template-columns: 1.2fr 1fr auto auto; /* Ajustado para 4 colunas (Instagram) */
+    align-items: center; 
+    gap: 32px;
+    padding: 40px 32px; max-width: 1200px; margin: 0 auto; border-top: 1px solid var(--linha);
+    
+    animation: entrar 0.8s 0.8s ease both; /* Cascata */
+}
+.footer-marca { display: flex; align-items: center; gap: 14px; }
+.footer-logo { width: 36px; height: 36px; object-fit: contain; }
+.footer-marca p { font-size: 0.85rem; color: var(--texto-suave); line-height: 1.5; }
+.footer-marca strong { color: var(--texto); font-family: var(--fonte-titulo); font-size: 0.95rem; }
+.site-footer nav { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+.site-footer nav a { font-size: 0.85rem; font-weight: 600; color: var(--texto-suave); transition: color var(--transicao); }
+.site-footer nav a:hover { color: var(--azul-500); }
+.footer-copy { font-size: 0.78rem; color: var(--texto-suave); text-align: right; white-space: nowrap; }
+
+/* Instagram no rodapé (Adicionado) */
+.footer-redes { display: flex; gap: 12px; justify-content: center; align-items: center; }
+.footer-redes a {
+    display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: var(--branco); font-size: 1.25rem; border: none;
+    box-shadow: 0 4px 12px rgba(220, 39, 67, 0.3); transition: all var(--transicao);
+}
+.footer-redes a:hover {
+    transform: translateY(-4px) scale(1.08);
+    box-shadow: 0 8px 20px rgba(220, 39, 67, 0.5);
+    filter: brightness(1.1);
+}
+
+/* =========================================================
+   ANIMAÇÕES & RESPONSIVO
+   ========================================================= */
+/* Animação de entrada com opacidade e deslocamento vertical. */
+@keyframes entrar { 
+    from { opacity: 0; transform: translateY(16px); } 
+    to   { opacity: 1; transform: translateY(0); } 
+}
+
+/* Anima a entrada do mascote com deslocamento e leve escala. */
+@keyframes flutuarEntrada {
+    from { opacity: 0; transform: translateY(30px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Respeita a preferência do sistema por movimento reduzido. */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* Ajustes de layout para tablets e telas intermediárias. */
+@media (max-width: 1024px) {
+    .site-header { grid-template-columns: auto auto; padding: 12px 20px; }
+    .menu { justify-self: end; }
+    .user-pill { display: none; }
+    main { padding: 32px 20px 72px; gap: 72px; }
+    
+    .hero { grid-template-columns: 1fr; gap: 48px; text-align: center; }
+    .hero-texto { order: 1; }
+    .hero-mascote { order: 0; max-width: 420px; }
+    .hero-desc { margin: 0 auto 32px; }
+    .hero-acoes { justify-content: center; }
+    
+    .passos-lista { grid-template-columns: 1fr; }
+    .passo { padding: 28px 0; }
+    .passo + .passo { padding-left: 0; border-left: none; border-top: 1px solid var(--linha); }
+    .formas-grid { grid-template-columns: 1fr; }
+    
+    .faixa-ajuda { flex-direction: column; align-items: flex-start; padding: 32px 28px; }
+    .btn-claro { width: 100%; justify-content: center; }
+    
+    .site-footer { grid-template-columns: 1fr; text-align: center; gap: 20px; }
+    .footer-marca { justify-content: center; }
+    .footer-copy { text-align: center; }
+}
+
+@media (max-width: 640px) {
+    .nome-logo span { display: none; }
+    .nav-btn span { display: none; }
+    .nav-btn { padding: 10px 12px; }
+    .nav-btn i { font-size: 1rem; }
+    .hero-texto h1 { font-size: 1.9rem; }
+    .hero-desc { font-size: 1rem; }
+    .btn-primario, .btn-ghost { width: 100%; justify-content: center; }
+    .hero-acoes { flex-direction: column; }
+    .hero-mascote { max-width: 320px; }
+    .hero-leo { width: 100%; margin-bottom: -8%; }
+}

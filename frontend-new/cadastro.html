@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Crie sua conta no Omni IA Support.">
+    <meta name="theme-color" content="#dde9f5">
+    <title>Criar conta — Omni IA Support</title>
+
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="cadastro.css">
+    <script src="contas.js" defer></script>
+    <script src="login.js" defer></script>   <!-- ou cadastro.js, no cadastro.html -->
+</head>
+<body>
+    <a href="#form-cadastro" class="skip-link">Pular para o formulário</a>
+
+    <div class="fundo-decorativo" aria-hidden="true">
+        <span class="forma-circulo c1"></span>
+        <span class="forma-circulo c2"></span>
+        <span class="forma-circulo c3"></span>
+        <span class="forma-circulo c4"></span>
+        <span class="forma-linha l1"></span>
+        <span class="forma-linha l2"></span>
+        <span class="forma-linha l3"></span>
+    </div>
+
+    <div class="leo-decorativo leo-esquerdo" aria-hidden="true">
+        <div class="leo-glow"></div>
+        <img src="leo.cadastro.png" alt="" class="leo-img">
+    </div>
+
+    <main class="cadastro-shell">
+        <div class="cadastro-card">
+            
+            <header class="cadastro-head">
+                <a href="index.html" class="logo-container" aria-label="Voltar para a página inicial">
+                    <img src="logo.png" alt="" class="logo-img">
+                    <div class="nome-logo">
+                        <strong>Omni IA</strong>
+                        <span>Support &amp; Acessibilidade</span>
+                    </div>
+                </a>
+
+                <div class="cadastro-titulo">
+                    <p class="eyebrow"><span class="dot"></span> Tradução ao vivo · Português ↔ Libras</p>
+                    <h1>Crie sua conta.</h1>
+                    <p>Preencha seus dados para começar a traduzir em tempo real.</p>
+                </div>
+            </header>
+
+            <form id="form-cadastro" novalidate>
+                <!-- Nome de Exibição (Obrigatório) -->
+                <div class="campo">
+                    <label for="nome-exibicao">Nome de exibição</label>
+                    <div class="campo-input">
+                        <i class="fa-regular fa-user" aria-hidden="true"></i>
+                        <input type="text" id="nome-exibicao" name="nome_exibicao" placeholder="Como quer ser chamado" autocomplete="nickname" required aria-describedby="erro-nome-exibicao">
+                    </div>
+                    <p class="erro" id="erro-nome-exibicao" role="alert" hidden></p>
+                </div>
+
+                <!-- Nome Completo (Opcional) -->
+                <div class="campo">
+                    <label for="nome-completo">Nome completo <span class="opcional">(opcional)</span></label>
+                    <div class="campo-input">
+                        <i class="fa-regular fa-id-card" aria-hidden="true"></i>
+                        <input type="text" id="nome-completo" name="nome_completo" placeholder="Seu nome completo" autocomplete="name">
+                    </div>
+                    <p class="erro" id="erro-nome-completo" role="alert" hidden></p>
+                </div>
+
+                <!-- E-mail (Obrigatório) -->
+                <div class="campo">
+                    <label for="email">E-mail</label>
+                    <div class="campo-input">
+                        <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+                        <input type="email" id="email" name="email_usuario" placeholder="voce@exemplo.com" autocomplete="email" required aria-describedby="erro-email">
+                    </div>
+                    <p class="erro" id="erro-email" role="alert" hidden></p>
+                </div>
+
+                <!-- Telefone (Opcional) -->
+                <div class="campo">
+                    <label for="telefone">Telefone <span class="opcional">(opcional)</span></label>
+                    <div class="campo-input">
+                        <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                        <input type="tel" id="telefone" name="telefone_usuario" placeholder="(11) 99999-9999" autocomplete="tel">
+                    </div>
+                    <p class="erro" id="erro-telefone" role="alert" hidden></p>
+                </div>
+
+                <!-- Senha (Movida para cima do nível de acessibilidade) -->
+                <div class="campo">
+                    <label for="senha">Senha</label>
+                    <div class="campo-input">
+                        <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                        <input type="password" id="senha" name="senha" placeholder="Mínimo 6 caracteres" autocomplete="new-password" required minlength="6" aria-describedby="erro-senha">
+                        <button type="button" class="toggle-senha" id="toggle-senha" aria-label="Mostrar senha" aria-pressed="false">
+                            <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <p class="erro" id="erro-senha" role="alert" hidden></p>
+                </div>
+
+                <!-- Nível de Acessibilidade (Obrigatório - Vai para tipo_usuario) -->
+                <fieldset class="campo-acessibilidade">
+                    <legend>Nível de acessibilidade</legend>
+                    <p class="ajuda-acessibilidade">Isso nos ajuda a adaptar a experiência para você.</p>
+
+                    <div class="niveis">
+                        <label class="nivel">
+                            <input type="radio" name="acessibilidade" value="surdo" required>
+                            <span class="nivel-card">
+                                <i class="fa-solid fa-hands-asl-interpreting" aria-hidden="true"></i>
+                                <strong>Surdo</strong>
+                                <small>Uso Libras como primeira língua</small>
+                            </span>
+                        </label>
+
+                        <label class="nivel">
+                            <input type="radio" name="acessibilidade" value="ouvinte" required>
+                            <span class="nivel-card">
+                                <i class="fa-solid fa-ear-listen" aria-hidden="true"></i>
+                                <strong>Ouvinte</strong>
+                                <small>Quero me comunicar com surdos</small>
+                            </span>
+                        </label>
+
+                        <label class="nivel">
+                            <input type="radio" name="acessibilidade" value="ambos" required>
+                            <span class="nivel-card">
+                                <i class="fa-solid fa-people-arrows" aria-hidden="true"></i>
+                                <strong>Ambos</strong>
+                                <small>Uso as duas formas de comunicação</small>
+                            </span>
+                        </label>
+                    </div>
+                    <p class="erro" id="erro-acessibilidade" role="alert" hidden></p>
+                </fieldset>
+
+                <div class="linha-termos">
+                    <label class="check">
+                        <input type="checkbox" id="termos" name="termos" required>
+                        <span>Concordo com os <a href="#">Termos de Uso</a> e <a href="#">Política de Privacidade</a>.</span>
+                    </label>
+                    <p class="erro" id="erro-termos" role="alert" hidden></p>
+                </div>
+
+                <p class="erro-geral" id="erro-geral" role="alert" hidden></p>
+
+                <button type="submit" class="btn-entrar" id="btn-cadastrar">
+                    <span class="btn-texto">Criar conta</span>
+                    <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                </button>
+            </form>
+
+            <p class="rodape-card">
+                Já tem uma conta? <a href="login.html" class="link-cadastro">Entrar</a>
+            </p>
+        </div>
+    </main>
+
+    <script src="cadastro.js" defer></script>
+</body>
+</html>
