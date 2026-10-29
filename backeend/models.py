@@ -1,8 +1,15 @@
 from datetime import datetime
-from pydantic import BaseModel, Field, field_validator
 
-#USUARIO
-class UsuarioEntrada(BaseModel):
+from pydantic import (
+    BaseModel,
+    Field,
+    SecretStr,
+    field_validator,
+)
+
+
+# 1. Primeiro: classe base.
+class UsuarioBase(BaseModel):
     nome_exibicao: str = Field(
         min_length=1,
         max_length=150,
@@ -51,13 +58,50 @@ class UsuarioEntrada(BaseModel):
 
         return valor
 
+    @field_validator("nome_completo")
+    @classmethod
+    def validar_nome_completo(
+        cls,
+        valor: str | None,
+    ) -> str | None:
+        if valor is None:
+            return None
 
-class UsuarioSaida(UsuarioEntrada):
+        valor = valor.strip()
+
+        if not valor:
+            return None
+
+        if any(caractere.isnumeric() for caractere in valor):
+            raise ValueError(
+                "O nome completo não pode conter números."
+            )
+
+        return valor
+
+
+# 2. Depois: entrada do cadastro.
+class UsuarioEntrada(UsuarioBase):
+    senha_usuario: SecretStr = Field(
+        min_length=6,
+        max_length=128,
+    )
+
+
+# 3. Depois: entrada da atualização.
+class UsuarioAtualizacao(UsuarioBase):
+    senha_usuario: SecretStr | None = Field(
+        default=None,
+        min_length=6,
+        max_length=128,
+    )
+
+
+# 4. Por último: resposta pública.
+class UsuarioSaida(UsuarioBase):
     id_usuario: int
     criado_em: datetime
     atualizado_em: datetime
-
-
 
 # FORMATO_IDIOMA
 

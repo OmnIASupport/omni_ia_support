@@ -6,7 +6,8 @@
    (() => {
     "use strict";
 
-    // Não coloque a chave secreta do Supabase no frontend.
+    // ALTERADO: mantivemos o mesmo endpoint do backend.
+    // O cadastro agora envia senha_usuario para POST /usuarios/.
     const API_URL = "http://127.0.0.1:8000/usuarios/";
 
     const $ = (seletor) => document.querySelector(seletor);
@@ -24,6 +25,7 @@
     const termos = $("#termos");
     const toggleSenha = $("#toggle-senha");
     const btnCadastrar = $("#btn-cadastrar");
+
     const erroGeral = $("#erro-geral");
     const erroAcessibilidade = $("#erro-acessibilidade");
     const erroTermos = $("#erro-termos");
@@ -32,22 +34,30 @@
         'input[name="acessibilidade"]'
     );
 
+    // ALTERADO: senha e toggleSenha agora são obrigatórios
+    // no JavaScript, porque o campo voltou a ser utilizado.
     const elementosObrigatorios = [
         nomeExib,
         nomeCompleto,
         email,
         telefone,
+        senha,
         termos,
+        toggleSenha,
         btnCadastrar,
         erroGeral,
         erroAcessibilidade,
         erroTermos,
     ];
 
-    if (elementosObrigatorios.some((elemento) => !elemento)) {
+    if (
+        elementosObrigatorios.some((elemento) => !elemento) ||
+        opcoesAcessibilidade.length === 0
+    ) {
         console.error(
             "Cadastro: existem elementos ausentes no HTML. Confira os IDs."
         );
+
         return;
     }
 
@@ -57,39 +67,57 @@
         console.error(
             "Cadastro: o botão precisa conter um elemento .btn-texto."
         );
+
         return;
     }
 
     let enviando = false;
 
-    // ---------- Aviso sobre autenticação ----------
-    // O backend atual cadastra o perfil, mas não recebe senha.
-    // Oculta e desativa o campo para não solicitar uma senha sem usá-la.
-    if (senha) {
-        senha.required = false;
-        senha.disabled = true;
-        senha.value = "";
+    // ---------- Configuração inicial ----------
 
-        const blocoSenha = senha.closest(".campo");
+    // ALTERADO: removemos o bloqueio antigo da senha.
+    // Antes o código fazia:
+    // senha.required = false;
+    // senha.disabled = true;
+    // senha.value = "";
+    // blocoSenha.hidden = true;
+    // toggleSenha.disabled = true;
 
-        if (blocoSenha) {
-            blocoSenha.hidden = true;
-        }
+    // Agora o campo de senha fica ativo e obrigatório.
+    senha.disabled = false;
+    senha.required = true;
+
+    // ALTERADO: regras de senha definidas também no JavaScript.
+    senha.minLength = 6;
+    senha.maxLength = 128;
+
+    const blocoSenha = senha.closest(".campo");
+
+    // ALTERADO: garante que o bloco da senha permaneça visível.
+    if (blocoSenha) {
+        blocoSenha.hidden = false;
     }
 
-    if (toggleSenha) {
-        toggleSenha.disabled = true;
-    }
+    // ALTERADO: botão de mostrar/ocultar senha reativado.
+    toggleSenha.disabled = false;
 
-    const avisoPerfil = document.createElement("p");
-    avisoPerfil.className = "ajuda-acessibilidade";
-    avisoPerfil.textContent =
-        "Nesta etapa, será cadastrado apenas seu perfil. " +
-        "Senha e login ainda não estão disponíveis.";
+    // ALTERADO: limites alinhados ao backend.
+    nomeExib.maxLength = 150;
+    nomeCompleto.maxLength = 250;
+    email.maxLength = 255;
 
-    form.prepend(avisoPerfil);
+    textoBtn.textContent = "Criar conta";
 
-    textoBtn.textContent = "Cadastrar perfil";
+    // ---------- Mensagem de sucesso ----------
+    const mensagemSucesso = document.createElement("p");
+
+    mensagemSucesso.id = "sucesso-cadastro";
+    mensagemSucesso.className = "mensagem-sucesso";
+    mensagemSucesso.setAttribute("role", "status");
+    mensagemSucesso.setAttribute("aria-live", "polite");
+    mensagemSucesso.hidden = true;
+
+    erroGeral.insertAdjacentElement("afterend", mensagemSucesso);
 
     // ---------- Utilidades de erro ----------
     const mostrarErro = (campo, mensagem) => {
@@ -129,6 +157,8 @@
     };
 
     const mostrarErroGeral = (mensagem) => {
+        mensagemSucesso.hidden = true;
+
         erroGeral.textContent = mensagem;
         erroGeral.hidden = false;
     };
@@ -138,39 +168,49 @@
         erroGeral.hidden = true;
     };
 
-    // ---------- Mensagem de sucesso ----------
-    const mensagemSucesso = document.createElement("p");
-    mensagemSucesso.id = "sucesso-cadastro";
-    mensagemSucesso.setAttribute("role", "status");
-    mensagemSucesso.setAttribute("aria-live", "polite");
-    mensagemSucesso.hidden = true;
-
-    erroGeral.insertAdjacentElement("afterend", mensagemSucesso);
-
     const limparSucesso = () => {
         mensagemSucesso.textContent = "";
         mensagemSucesso.hidden = true;
     };
 
-// Limpa somente a tela. Não altera nem exclui dados do banco.
-function limparFormulario() {
-    form.reset();
+    const limparMensagens = () => {
+        limparErroGeral();
+        limparSucesso();
+    };
 
-    [nomeExib, nomeCompleto, email, telefone].forEach((campo) => {
-        limparErro(campo);
-    });
+    // ALTERADO: agora também limpa o campo de senha,
+    // restaura o tipo password e o ícone do botão.
+    const limparFormulario = () => {
+        form.reset();
 
-    erroAcessibilidade.textContent = "";
-    erroAcessibilidade.hidden = true;
+        [
+            nomeExib,
+            nomeCompleto,
+            email,
+            telefone,
+            senha,
+        ].forEach(limparErro);
 
-    erroTermos.textContent = "";
-    erroTermos.hidden = true;
+        erroAcessibilidade.textContent = "";
+        erroAcessibilidade.hidden = true;
 
-    limparErroGeral();
-    limparSucesso();
-}
+        erroTermos.textContent = "";
+        erroTermos.hidden = true;
 
-    // ---------- Validações dos nomes ----------
+        senha.type = "password";
+        toggleSenha.setAttribute("aria-pressed", "false");
+        toggleSenha.setAttribute("aria-label", "Mostrar senha");
+
+        const icone = toggleSenha.querySelector("i");
+
+        if (icone) {
+            icone.className = "fa-regular fa-eye";
+        }
+
+        limparMensagens();
+    };
+
+    // ---------- Nome de exibição ----------
     const validarNomeExib = (valor) => {
         const texto = valor.trim();
 
@@ -189,16 +229,23 @@ function limparFormulario() {
         return null;
     };
 
+    // ---------- Nome completo ----------
+
+    // ALTERADO: agora proíbe números no nome completo.
     const validarNomeCompleto = (valor) => {
         const texto = valor.trim();
 
         if (!texto) return null;
 
+        if (/\p{N}/u.test(texto)) {
+            return "O nome completo não pode conter números.";
+        }
+
         if (texto.length > 250) {
             return "O nome completo deve ter até 250 caracteres.";
         }
 
-        if (!texto.includes(" ")) {
+        if (texto.split(/\s+/).length < 2) {
             return "Informe nome e sobrenome.";
         }
 
@@ -220,7 +267,9 @@ function limparFormulario() {
         "yahoo.con": "yahoo.com",
     };
 
-    const validarEmailFormato = (valor) => {
+    // ALTERADO: exige e-mail completo, com @ e domínio.
+    // Também bloqueia domínios incorretos conhecidos.
+    const validarEmail = (valor) => {
         const texto = valor.trim().toLowerCase();
 
         if (!texto) {
@@ -232,13 +281,37 @@ function limparFormulario() {
         }
 
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(texto)) {
-            return "E-mail inválido.";
+            return "Digite um e-mail completo, como nome@gmail.com.";
         }
 
         const dominio = texto.split("@")[1];
+        const sugestao = ERROS_DOMINIO[dominio];
 
-        if (ERROS_DOMINIO[dominio]) {
-            return `Confira o domínio: você quis dizer @${ERROS_DOMINIO[dominio]}?`;
+        if (sugestao) {
+            return (
+                `O domínio @${dominio} não é aceito neste cadastro. ` +
+                `Confira se você quis dizer @${sugestao}.`
+            );
+        }
+
+        return null;
+    };
+
+    // ---------- Senha ----------
+
+    // ALTERADO: nova validação da senha.
+    // Mínimo de 6 caracteres e máximo de 128.
+    const validarSenha = (valor) => {
+        if (!valor) {
+            return "Informe sua senha.";
+        }
+
+        if (valor.length < 6) {
+            return "A senha deve ter pelo menos 6 caracteres.";
+        }
+
+        if (valor.length > 128) {
+            return "A senha deve ter até 128 caracteres.";
         }
 
         return null;
@@ -264,12 +337,8 @@ function limparFormulario() {
 
         if (!digitos) return null;
 
-        if (digitos.length < 10) {
+        if (![10, 11].includes(digitos.length)) {
             return "Informe o telefone com DDD. Ex.: (11) 99999-9999";
-        }
-
-        if (digitos.length > 11) {
-            return "Telefone com dígitos demais.";
         }
 
         if (!DDDS_VALIDOS.has(Number(digitos.slice(0, 2)))) {
@@ -314,18 +383,13 @@ function limparFormulario() {
         );
     };
 
-    telefone.addEventListener("input", () => {
-        telefone.value = formatarTelefone(telefone.value);
-    });
-
-    // ---------- Acessibilidade ----------
+    // ---------- Nível de acessibilidade ----------
     const nivelEscolhido = () =>
         form.querySelector('input[name="acessibilidade"]:checked');
 
-    // ---------- Validação do formulário ----------
+    // ---------- Validação geral ----------
     const validarFormulario = () => {
-        limparErroGeral();
-        limparSucesso();
+        limparMensagens();
 
         let valido = true;
 
@@ -343,8 +407,11 @@ function limparFormulario() {
             nomeCompleto,
             validarNomeCompleto(nomeCompleto.value)
         );
-        checar(email, validarEmailFormato(email.value));
+        checar(email, validarEmail(email.value));
         checar(telefone, validarTelefone(telefone.value));
+
+        // ALTERADO: senha agora entra na validação geral.
+        checar(senha, validarSenha(senha.value));
 
         const nivel = nivelEscolhido();
 
@@ -390,12 +457,56 @@ function limparFormulario() {
         return valido;
     };
 
-    // ---------- Limpar erros ao editar ----------
-    [nomeExib, nomeCompleto, email, telefone].forEach((campo) => {
+    // ---------- Eventos dos campos ----------
+
+    // ALTERADO: senha também limpa erros ao ser editada.
+    [
+        nomeExib,
+        nomeCompleto,
+        email,
+        telefone,
+        senha,
+    ].forEach((campo) => {
         campo.addEventListener("input", () => {
             limparErro(campo);
-            limparErroGeral();
-            limparSucesso();
+            limparMensagens();
+        });
+    });
+
+    // ALTERADO: remove números digitados ou colados
+    // no nome completo e mostra aviso ao usuário.
+    nomeCompleto.addEventListener("input", () => {
+        if (/\p{N}/u.test(nomeCompleto.value)) {
+            nomeCompleto.value = nomeCompleto.value.replace(
+                /\p{N}/gu,
+                ""
+            );
+
+            mostrarErro(
+                nomeCompleto,
+                "Números não são permitidos no nome completo."
+            );
+        }
+    });
+
+    telefone.addEventListener("input", () => {
+        telefone.value = formatarTelefone(telefone.value);
+    });
+
+    // ALTERADO: valida email e senha também ao sair do campo.
+    [
+        [nomeCompleto, validarNomeCompleto],
+        [email, validarEmail],
+        [senha, validarSenha],
+    ].forEach(([campo, validar]) => {
+        campo.addEventListener("blur", () => {
+            const erro = validar(campo.value);
+
+            if (erro) {
+                mostrarErro(campo, erro);
+            } else {
+                limparErro(campo);
+            }
         });
     });
 
@@ -404,8 +515,7 @@ function limparFormulario() {
             erroAcessibilidade.textContent = "";
             erroAcessibilidade.hidden = true;
 
-            limparErroGeral();
-            limparSucesso();
+            limparMensagens();
         });
     });
 
@@ -418,23 +528,44 @@ function limparFormulario() {
         limparSucesso();
     });
 
+    // ---------- Mostrar / ocultar senha ----------
+
+    // ALTERADO: função reativada.
+    // Antes o botão estava desabilitado.
+    toggleSenha.addEventListener("click", () => {
+        const mostrar = senha.type === "password";
+
+        senha.type = mostrar ? "text" : "password";
+
+        toggleSenha.setAttribute("aria-pressed", String(mostrar));
+        toggleSenha.setAttribute(
+            "aria-label",
+            mostrar ? "Ocultar senha" : "Mostrar senha"
+        );
+
+        const icone = toggleSenha.querySelector("i");
+
+        if (icone) {
+            icone.className = mostrar
+                ? "fa-regular fa-eye-slash"
+                : "fa-regular fa-eye";
+        }
+    });
+
     // ---------- Estado do botão ----------
     const atualizarBotao = (ocupado) => {
         btnCadastrar.disabled = ocupado;
 
-        btnCadastrar.classList.toggle(
-            "carregando",
-            ocupado
-        );
+        btnCadastrar.classList.toggle("carregando", ocupado);
 
         form.setAttribute("aria-busy", String(ocupado));
 
         textoBtn.textContent = ocupado
-            ? "Salvando perfil..."
-            : "Cadastrar perfil";
+            ? "Criando conta..."
+            : "Criar conta";
     };
 
-    // ---------- Erros retornados pela API ----------
+    // ---------- Erros da API ----------
     const obterMensagemErro = (dados, status) => {
         if (Array.isArray(dados?.detail)) {
             return dados.detail
@@ -458,77 +589,59 @@ function limparFormulario() {
         }
 
         return (
-            "Não foi possível cadastrar o perfil. " +
+            "Não foi possível criar a conta. " +
             `Código HTTP ${status}.`
         );
     };
 
-// Centraliza o envio e a leitura das respostas da FastAPI.
-async function requisicao(
-    caminho = "",
-    metodo = "GET",
-    dados = null
-) {
-    // Preserva /usuarios/ para a coleção e monta
-    // /usuarios/ID quando houver um caminho individual.
-    const url = caminho
-        ? `${API_URL.replace(/\/+$/, "")}/${String(caminho).replace(/^\/+/, "")}`
-        : API_URL;
+    // ---------- Envio ----------
 
-    const opcoes = {
-        method: metodo,
-        headers: {
-            Accept: "application/json",
-        },
+    // ALTERADO: função dedicada ao POST /usuarios/.
+    // Envia senha_usuario, mas nunca registra a senha no console.
+    const cadastrarUsuario = async (dados) => {
+        let resposta;
+
+        try {
+            resposta = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+                body: JSON.stringify(dados),
+            });
+        } catch {
+            throw new Error(
+                "Não foi possível acessar a API. Confira se a FastAPI " +
+                "está iniciada, a URL e o CORS. Antes de tentar novamente, " +
+                "verifique se o cadastro foi concluído."
+            );
+        }
+
+        let conteudo = null;
+
+        try {
+            conteudo = await resposta.json();
+        } catch {
+            // A resposta pode não conter JSON válido.
+        }
+
+        if (!resposta.ok) {
+            throw new Error(
+                obterMensagemErro(conteudo, resposta.status)
+            );
+        }
+
+        if (!conteudo || conteudo.id_usuario == null) {
+            throw new Error(
+                "A API respondeu sem o ID do usuário. Confira o backend " +
+                "antes de repetir o cadastro."
+            );
+        }
+
+        return conteudo;
     };
 
-    if (dados !== null) {
-        opcoes.headers["Content-Type"] = "application/json";
-        opcoes.body = JSON.stringify(dados);
-    }
-
-    let resposta;
-
-    try {
-        resposta = await fetch(url, opcoes);
-    } catch {
-        throw new Error(
-            "Não foi possível acessar a API. " +
-            "Confira se a FastAPI está iniciada, a URL e o CORS. " +
-            "Se foi uma operação de gravação, confira o banco " +
-            "antes de tentar novamente."
-        );
-    }
-
-    if (resposta.status === 204) {
-        return null;
-    }
-
-    let conteudo = null;
-
-    try {
-        conteudo = await resposta.json();
-    } catch {
-        // A resposta pode não conter um JSON válido.
-    }
-
-    if (!resposta.ok) {
-        throw new Error(
-            obterMensagemErro(conteudo, resposta.status)
-        );
-    }
-
-    if (conteudo === null) {
-        throw new Error(
-            "A API respondeu com sucesso, mas sem um JSON válido. " +
-            "Confira o banco antes de repetir uma gravação."
-        );
-    }
-
-    return conteudo;
-}
-
-    // ---------- Envio para a FastAPI ----------
     form.addEventListener("submit", async (evento) => {
         evento.preventDefault();
 
@@ -544,40 +657,27 @@ async function requisicao(
             nome_completo: nomeCompleto.value.trim() || null,
             email_usuario: email.value.trim().toLowerCase(),
             telefone_usuario: soDigitos(telefone.value) || null,
-
-            // Mapeamento definido no HTML atual.
             tipo_usuario: nivelEscolhido().value,
-
             status_usuario: "ativo",
+
+            // ALTERADO: agora o frontend envia a senha
+            // com o mesmo nome usado no backend e no Supabase.
+            senha_usuario: senha.value,
         };
 
         try {
-            const usuario = await requisicao(
-                "",
-                "POST",
-                conteudo
-            );
+            const usuario = await cadastrarUsuario(conteudo);
 
-            if (!usuario || usuario.id_usuario == null) {
-                throw new Error(
-                    "A API respondeu sem o ID do usuário. " +
-                    "Confira a tabela antes de repetir o cadastro."
-                );
-            }
-
-            // Limpa a tela, sem alterar o registro salvo.
             limparFormulario();
 
             mensagemSucesso.textContent =
-                `Perfil cadastrado com sucesso! ID: ${usuario.id_usuario}. ` +
-                "Senha e login ainda não estão disponíveis.";
+                `Conta criada com sucesso! ID: ${usuario.id_usuario}.`;
 
             mensagemSucesso.hidden = false;
         } catch (erro) {
-            console.error(
-                "Falha no cadastro do perfil:",
-                erro
-            );
+            // ALTERADO: não registramos o objeto completo,
+            // porque ele contém a senha em texto puro.
+            console.error("Falha no cadastro:", erro.message);
 
             mostrarErroGeral(erro.message);
         } finally {
