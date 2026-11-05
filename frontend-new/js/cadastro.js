@@ -280,6 +280,8 @@
             return "O e-mail deve ter até 255 caracteres.";
         }
 
+        // ALTERADO: mensagem corrigida.
+        // Antes estava com um link Markdown dentro do texto.
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(texto)) {
             return "Digite um e-mail completo, como nome@gmail.com.";
         }
@@ -668,12 +670,10 @@
         try {
             const usuario = await cadastrarUsuario(conteudo);
 
-            limparFormulario();
+            // ALTERADO: após criar a conta, redireciona para a página inicial.
+            // O cadastro já foi concluído e o usuário possui ID retornado pela API.
+            window.location.href = "/index.html";
 
-            mensagemSucesso.textContent =
-                `Conta criada com sucesso! ID: ${usuario.id_usuario}.`;
-
-            mensagemSucesso.hidden = false;
         } catch (erro) {
             // ALTERADO: não registramos o objeto completo,
             // porque ele contém a senha em texto puro.
