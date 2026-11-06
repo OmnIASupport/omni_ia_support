@@ -55,7 +55,7 @@
     evento.stopPropagation();
     localStorage.removeItem(CHAVE_USUARIO);
     sessionStorage.removeItem(CHAVE_SESSAO);
-    window.location.href = "index.html";
+    window.location.href = "../../index.html";
   });
 
   // Os dois contadores são placeholders até a integração com o backend.

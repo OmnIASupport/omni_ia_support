@@ -40,7 +40,7 @@
   $("#btn-sair")?.addEventListener("click", e => {
     e.preventDefault(); e.stopPropagation();
     localStorage.removeItem(KEY_USER); sessionStorage.removeItem(KEY_SESSION);
-    location.href = "index.html";
+    location.href = "../../index.html";
   });
   function updateCount() { count.textContent = `${input.value.length} / 1000`; }
   function resetResult() {

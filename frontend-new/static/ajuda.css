@@ -99,7 +99,7 @@
     background-color: #dce6f2; /* Fundo azul claro caso a imagem falhe */
     
     /* A MÁGICA: A imagem preenche o fundo do círculo */
-    background-image: url('leo.ajuda.png');
+    background-image: url('../pages/leo.ajuda.png');
     background-size: cover; /* Faz a imagem preencher todo o círculo */
     background-position: center bottom; /* Foca no rosto e tronco do Leo */
     background-repeat: no-repeat;

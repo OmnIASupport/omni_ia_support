@@ -87,7 +87,7 @@
       console.error("Não foi possível limpar os dados da sessão.", erro);
     }
 
-    window.location.href = "index.html";
+    window.location.href = "../../index.html";
   }
 
   function configurarFaq() {
