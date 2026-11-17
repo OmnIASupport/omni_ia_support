@@ -1,0 +1,84 @@
+/* =========================================================
+   Omni IA Support — Termos de Uso e Política de Privacidade
+   ========================================================= */
+:root {
+    --azul-500: #0a7bf5; --azul-100: #eaf2ff; --branco: #fff; --fundo: #f6f9fe;
+    --texto: #0e1530; --texto-suave: #5a6484; --linha: rgba(1, 53, 205, 0.14);
+    --sombra-sm: 0 1px 2px rgba(1, 53, 205, 0.06), 0 2px 8px rgba(1, 53, 205, 0.04);
+    --transicao: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    --fonte-titulo: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+    --fonte-corpo: "Manrope", "Segoe UI", system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+body { font-family: var(--fonte-corpo); color: var(--texto); background: var(--fundo); line-height: 1.75; -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+:focus-visible { outline: 2px solid var(--azul-500); outline-offset: 3px; border-radius: 6px; }
+.skip-link { position: absolute; left: -9999px; top: 12px; padding: 10px 16px; background: var(--texto); color: var(--branco); border-radius: 8px; z-index: 200; }
+.skip-link:focus { left: 12px; }
+h1, h2, h3 { font-family: var(--fonte-titulo); letter-spacing: -0.02em; line-height: 1.2; }
+
+/* O botão "Voltar" na barra de navegação */
+.voltar { display: inline-flex; align-items: center; gap: 8px; font-size: 0.88rem; font-weight: 700; padding: 9px 16px; border: 1px solid var(--linha); border-radius: 999px; background: var(--branco); transition: color var(--transicao), border-color var(--transicao); }
+.voltar:hover { color: var(--azul-500); border-color: var(--azul-500); }
+
+/* Página */
+main { max-width: 820px; margin: 0 auto; padding: 56px 24px 96px; }
+.capa { margin-bottom: 40px; }
+.capa h1 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 12px; }
+.atualizado { color: var(--texto-suave); font-size: 0.9rem; }
+.docs { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.docs a { padding: 12px 22px; font-weight: 700; border-radius: 12px; background: var(--texto); color: var(--branco); transition: background var(--transicao); }
+.docs a:hover { background: var(--azul-500); }
+.docs a + a { background: var(--branco); color: var(--texto); border: 1px solid var(--linha); }
+.docs a + a:hover { background: var(--branco); color: var(--azul-500); border-color: var(--azul-500); }
+
+.resumo { background: linear-gradient(180deg, #dde9f5, #cfdff0); border: 1px solid rgba(1, 53, 205, 0.08); border-radius: 20px; padding: 28px 32px; margin-bottom: 56px; }
+.resumo h2 { font-size: 1.3rem; margin-bottom: 4px; }
+.resumo > p { color: var(--texto-suave); font-size: 0.92rem; margin-bottom: 12px; }
+.resumo li { margin-left: 20px; padding-left: 4px; }
+
+/* Documentos */
+.doc { background: var(--branco); border: 1px solid var(--linha); border-radius: 20px; padding: 48px 48px 32px; margin-bottom: 40px; box-shadow: var(--sombra-sm); }
+.doc > h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); padding-bottom: 20px; margin-bottom: 8px; border-bottom: 1px solid var(--linha); }
+.doc section { padding-top: 28px; }
+.doc h3 { font-size: 1.15rem; margin-bottom: 8px; }
+.doc h3 span { color: var(--azul-500); margin-right: 8px; }
+.doc p + p, .doc p + ul, .doc ul + p { margin-top: 10px; }
+.doc ul { margin-left: 22px; }
+.doc li { padding-left: 4px; margin-top: 4px; }
+.doc p, .doc li { max-width: 68ch; }
+.doc strong { font-weight: 700; }
+.doc a { color: var(--azul-500); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.preencher { background: var(--azul-100); border: 1px dashed var(--azul-500); border-radius: 6px; padding: 0 6px; font-weight: 600; }
+.topo-link { display: inline-block; margin: 28px 0 8px; font-size: 0.85rem; font-weight: 700; color: var(--texto-suave); text-decoration: none !important; }
+.topo-link:hover { color: var(--azul-500); }
+
+.site-footer { text-align: center; color: var(--texto-suave); font-size: 0.82rem; padding: 0 24px 40px; }
+.footer-marca { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 16px; }
+.footer-logo { width: 40px; }
+
+/* MODO ESCURO */
+body.dark-mode {
+    --fundo: #0b1120;
+    --texto: #f1f5f9;
+    --texto-suave: #94a3b8;
+    --branco: #1e293b;
+    --linha: rgba(255, 255, 255, 0.1);
+    --azul-100: rgba(10, 123, 245, 0.2);
+    background: var(--fundo);
+}
+body.dark-mode .doc { background: var(--branco); }
+body.dark-mode .resumo { background: linear-gradient(180deg, #1e293b, #0f172a); }
+body.dark-mode .docs a { background: #f1f5f9; color: #0f172a; }
+body.dark-mode .docs a + a { background: var(--branco); color: var(--texto); }
+body.dark-mode .voltar { background: var(--branco); }
+
+@media (max-width: 640px) {
+    .voltar span { display: none; }
+    main { padding: 32px 16px 64px; }
+    .doc { padding: 32px 22px 20px; }
+    .resumo { padding: 22px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }

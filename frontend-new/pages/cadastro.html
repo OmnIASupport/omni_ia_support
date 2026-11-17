@@ -14,11 +14,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="../static/cadastro.css">
+    <link rel="stylesheet" href="../static/acessibilidade.css">
 
-    <!-- ALTERADO: mantemos apenas o cadastro.js nesta página.
-         Removemos script.js e login.js para evitar conflitos
-         de eventos no formulário e no botão de senha. -->
     <script src="../js/cadastro.js" defer></script>
+    <script src="../js/acessibilidade.js" defer></script>
 </head>
 <body>
     <a href="#form-cadastro" class="skip-link">Pular para o formulário</a>
@@ -41,7 +40,7 @@
     <main class="cadastro-shell">
         <div class="cadastro-card">
             <header class="cadastro-head">
-                <a href="index.html" class="logo-container" aria-label="Voltar para a página inicial">
+                <a href="../../index.html" class="logo-container" aria-label="Voltar para a página inicial">
                     <img src="logo.png" alt="" class="logo-img">
                     <div class="nome-logo">
                         <strong>Omni IA</strong>
@@ -64,156 +63,59 @@
             <form id="form-cadastro" novalidate>
                 <div class="campo">
                     <label for="nome-exibicao">Nome de exibição</label>
-
                     <div class="campo-input">
                         <i class="fa-regular fa-user" aria-hidden="true"></i>
-
-                        <!-- ALTERADO: maxlength alinhado ao backend. -->
-                        <input
-                            type="text"
-                            id="nome-exibicao"
-                            name="nome_exibicao"
-                            placeholder="Como quer ser chamado"
-                            autocomplete="nickname"
-                            maxlength="150"
-                            required
-                            aria-describedby="erro-nome-exibicao"
-                        >
+                        <input type="text" id="nome-exibicao" name="nome_exibicao" placeholder="Como quer ser chamado" autocomplete="nickname" maxlength="150" required aria-describedby="erro-nome-exibicao">
                     </div>
-
                     <p class="erro" id="erro-nome-exibicao" role="alert" hidden></p>
                 </div>
 
                 <div class="campo">
-                    <label for="nome-completo">
-                        Nome completo
-                        <span class="opcional">(opcional)</span>
-                    </label>
-
+                    <label for="nome-completo">Nome completo <span class="opcional">(opcional)</span></label>
                     <div class="campo-input">
                         <i class="fa-regular fa-id-card" aria-hidden="true"></i>
-
-                        <!-- ALTERADO: maxlength alinhado ao backend.
-                             A proibição de números é feita no JavaScript. -->
-                        <input
-                            type="text"
-                            id="nome-completo"
-                            name="nome_completo"
-                            placeholder="Seu nome completo"
-                            autocomplete="name"
-                            maxlength="250"
-                            aria-describedby="erro-nome-completo"
-                        >
+                        <input type="text" id="nome-completo" name="nome_completo" placeholder="Seu nome completo" autocomplete="name" maxlength="250" aria-describedby="erro-nome-completo">
                     </div>
-
                     <p class="erro" id="erro-nome-completo" role="alert" hidden></p>
                 </div>
 
                 <div class="campo">
                     <label for="email">E-mail</label>
-
                     <div class="campo-input">
                         <i class="fa-regular fa-envelope" aria-hidden="true"></i>
-
-                        <!-- ALTERADO: maxlength alinhado ao backend.
-                             A validação de @, domínio e domínios incorretos
-                             é feita no JavaScript. -->
-                        <input
-                            type="email"
-                            id="email"
-                            name="email_usuario"
-                            placeholder="voce@exemplo.com"
-                            autocomplete="email"
-                            maxlength="255"
-                            required
-                            aria-describedby="erro-email"
-                        >
+                        <input type="email" id="email" name="email_usuario" placeholder="voce@exemplo.com" autocomplete="email" maxlength="255" required aria-describedby="erro-email">
                     </div>
-
                     <p class="erro" id="erro-email" role="alert" hidden></p>
                 </div>
 
                 <div class="campo">
-                    <label for="telefone">
-                        Telefone
-                        <span class="opcional">(opcional)</span>
-                    </label>
-
+                    <label for="telefone">Telefone <span class="opcional">(opcional)</span></label>
                     <div class="campo-input">
                         <i class="fa-solid fa-phone" aria-hidden="true"></i>
-
-                        <input
-                            type="tel"
-                            id="telefone"
-                            name="telefone_usuario"
-                            placeholder="(11) 99999-9999"
-                            autocomplete="tel"
-                            aria-describedby="erro-telefone"
-                        >
+                        <input type="tel" id="telefone" name="telefone_usuario" placeholder="(11) 99999-9999" autocomplete="tel" aria-describedby="erro-telefone">
                     </div>
-
                     <p class="erro" id="erro-telefone" role="alert" hidden></p>
                 </div>
 
-                <!-- ALTERADO: campo de senha permanece visível e ativo.
-                     O nome agora é senha_usuario, igual ao modelo Pydantic
-                     e à coluna do Supabase. -->
                 <div class="campo">
                     <label for="senha">Senha</label>
-
                     <div class="campo-input">
                         <i class="fa-solid fa-lock" aria-hidden="true"></i>
-
-                        <!-- ALTERADO:
-                             - name mudou de "senha" para "senha_usuario";
-                             - minlength definido como 6;
-                             - maxlength definido como 128;
-                             - required mantido;
-                             - autocomplete="new-password" mantido. -->
-                        <input
-                            type="password"
-                            id="senha"
-                            name="senha_usuario"
-                            placeholder="Mínimo 6 caracteres"
-                            autocomplete="new-password"
-                            minlength="6"
-                            maxlength="128"
-                            required
-                            aria-describedby="erro-senha"
-                        >
-
-                        <!-- ALTERADO: botão de mostrar/ocultar senha
-                             permanece habilitado. -->
-                        <button
-                            type="button"
-                            class="toggle-senha"
-                            id="toggle-senha"
-                            aria-label="Mostrar senha"
-                            aria-pressed="false"
-                        >
+                        <input type="password" id="senha" name="senha_usuario" placeholder="Mínimo 6 caracteres" autocomplete="new-password" minlength="6" maxlength="128" required aria-describedby="erro-senha">
+                        <button type="button" class="toggle-senha" id="toggle-senha" aria-label="Mostrar senha" aria-pressed="false">
                             <i class="fa-regular fa-eye" aria-hidden="true"></i>
                         </button>
                     </div>
-
                     <p class="erro" id="erro-senha" role="alert" hidden></p>
                 </div>
 
                 <fieldset class="campo-acessibilidade">
                     <legend>Nível de acessibilidade</legend>
-
-                    <p class="ajuda-acessibilidade">
-                        Isso nos ajuda a adaptar a experiência para você.
-                    </p>
+                    <p class="ajuda-acessibilidade">Isso nos ajuda a adaptar a experiência para você.</p>
 
                     <div class="niveis">
                         <label class="nivel">
-                            <input
-                                type="radio"
-                                name="acessibilidade"
-                                value="surdo"
-                                required
-                            >
-
+                            <input type="radio" name="acessibilidade" value="surdo" required>
                             <span class="nivel-card">
                                 <i class="fa-solid fa-hands-asl-interpreting" aria-hidden="true"></i>
                                 <strong>Surdo</strong>
@@ -222,13 +124,7 @@
                         </label>
 
                         <label class="nivel">
-                            <input
-                                type="radio"
-                                name="acessibilidade"
-                                value="ouvinte"
-                                required
-                            >
-
+                            <input type="radio" name="acessibilidade" value="ouvinte" required>
                             <span class="nivel-card">
                                 <i class="fa-solid fa-ear-listen" aria-hidden="true"></i>
                                 <strong>Ouvinte</strong>
@@ -237,13 +133,7 @@
                         </label>
 
                         <label class="nivel">
-                            <input
-                                type="radio"
-                                name="acessibilidade"
-                                value="ambos"
-                                required
-                            >
-
+                            <input type="radio" name="acessibilidade" value="ambos" required>
                             <span class="nivel-card">
                                 <i class="fa-solid fa-people-arrows" aria-hidden="true"></i>
                                 <strong>Ambos</strong>
@@ -251,22 +141,20 @@
                             </span>
                         </label>
                     </div>
-
                     <p class="erro" id="erro-acessibilidade" role="alert" hidden></p>
                 </fieldset>
 
                 <div class="linha-termos">
                     <label class="check">
                         <input type="checkbox" id="termos" name="termos" required>
-
                         <span>
                             Concordo com os
-                            <a href="#">Termos de Uso</a>
-                            e
-                            <a href="#">Política de Privacidade</a>.
+                            <!-- AQUI ESTÃO OS LINKS CORRIGIDOS -->
+                            <a href="termos.html" target="_blank" rel="noopener">Termos de Uso</a>
+                            e a
+                            <a href="termos.html#privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.
                         </span>
                     </label>
-
                     <p class="erro" id="erro-termos" role="alert" hidden></p>
                 </div>
 

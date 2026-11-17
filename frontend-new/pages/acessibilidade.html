@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Acessibilidade - Omni IA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../static/acessibilidade.css">
+</head>
+<body style="background: #f6f9fe; font-family: sans-serif; padding: 50px;">
+    
+    <h1>Simulação de Página do Site</h1>
+    <p>O painel de acessibilidade deve aparecer no canto direito.</p>
+
+    <!-- INÍCIO DO WIDGET DE ACESSIBILIDADE -->
+    <div id="widget-acessibilidade">
+        <!-- Botão Flutuante -->
+        <button id="btn-abrir-acessibilidade" class="btn-flutuante" aria-label="Abrir menu de acessibilidade">
+            <i class="fa-solid fa-universal-access"></i>
+        </button>
+
+        <!-- Painel Lateral -->
+        <div id="painel-acessibilidade" class="painel-lateral" aria-hidden="true">
+            <div class="painel-header">
+                <div class="painel-titulo">
+                    <i class="fa-solid fa-universal-access"></i>
+                    <span>Acessibilidade</span>
+                </div>
+                <button id="btn-fechar-acessibilidade" class="btn-fechar" aria-label="Fechar menu">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="painel-conteudo">
+                <!-- Perfil e Comunicação (Baseado no SQL) -->
+                <section class="grupo">
+                    <h3>Comunicação</h3>
+                    <div class="grade-botoes">
+                        <button class="btn-acao" data-pref="usa_libras" aria-pressed="false">
+                            <i class="fa-solid fa-hands-asl-interpreting"></i>
+                            <span>Libras</span>
+                        </button>
+                        <button class="btn-acao" data-pref="preferir_audio" aria-pressed="false">
+                            <i class="fa-solid fa-volume-high"></i>
+                            <span>Áudio</span>
+                        </button>
+                        <button class="btn-acao" data-pref="preferir_texto" aria-pressed="false">
+                            <i class="fa-solid fa-keyboard"></i>
+                            <span>Texto</span>
+                        </button>
+                        <button class="btn-acao" data-pref="preferir_legenda" aria-pressed="false">
+                            <i class="fa-solid fa-closed-captioning"></i>
+                            <span>Legenda</span>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Controle de Fonte -->
+                <section class="grupo">
+                    <h3>Controle de fonte</h3>
+                    <div class="grade-botoes">
+                        <button class="btn-acao" id="btn-aumentar-fonte">
+                            <i class="fa-solid fa-font"></i>
+                            <span>A+</span>
+                        </button>
+                        <button class="btn-acao" id="btn-diminuir-fonte">
+                            <i class="fa-solid fa-font"></i>
+                            <span>A-</span>
+                        </button>
+                        <button class="btn-acao" data-pref="fonte_de_santo">
+                            <i class="fa-solid fa-text-height"></i>
+                            <span>Fonte Legível</span>
+                        </button>
+                        <button class="btn-acao" id="btn-resetar-fonte">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            <span>Resetar</span>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Áudio e Volume (Baseado no SQL) -->
+                <section class="grupo">
+                    <h3>Áudio</h3>
+                    <div class="controle-slider">
+                        <label for="velocidade-audio"><i class="fa-solid fa-gauge-high"></i> Velocidade</label>
+                        <input type="range" id="velocidade-audio" name="velocidade_audio" min="0.5" max="2" step="0.1" value="1">
+                        <span class="valor-slider">1.0x</span>
+                    </div>
+                    <div class="controle-slider">
+                        <label for="volume-audio"><i class="fa-solid fa-volume-low"></i> Volume</label>
+                        <input type="range" id="volume-audio" name="volume_audio" min="0" max="1" step="0.1" value="1">
+                        <span class="valor-slider">100%</span>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <!-- FIM DO WIDGET DE ACESSIBILIDADE -->
+
+    <script src="../js/acessibilidade.js"></script>
+</body>
+</html>
