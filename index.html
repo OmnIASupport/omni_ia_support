@@ -2,7 +2,11 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <meta
         name="description"
@@ -13,7 +17,7 @@
 
     <title>Omni IA Support — Português e Libras em tempo real</title>
 
-    <!-- ALTERADO: favicon localizado dentro de frontend-new/pages/. -->
+    <!-- Ícone localizado dentro de frontend-new/pages/. -->
     <link
         rel="icon"
         type="image/png"
@@ -38,7 +42,7 @@
         rel="stylesheet"
     >
 
-    <!-- MANTIDO: style.css está na mesma pasta deste index.html. -->
+    <!-- CSS da página inicial, na mesma pasta deste HTML. -->
     <link rel="stylesheet" href="./style.css">
 </head>
 
@@ -48,14 +52,11 @@
     </a>
 
     <header class="site-header">
-
-        <!-- ALTERADO: link para o index.html da mesma pasta. -->
         <a
             href="./index.html"
             class="logo-container"
             aria-label="Omni IA Support - página inicial"
         >
-            <!-- ALTERADO: caminho da logo. -->
             <img
                 src="./frontend-new/pages/logo.png"
                 alt=""
@@ -69,18 +70,19 @@
         </a>
 
         <nav class="menu" aria-label="Menu principal">
-
-            <!-- ALTERADO: removida a referência duplicada ao projeto. -->
             <a
                 href="./index.html"
                 class="nav-btn"
                 aria-current="page"
             >
-                <i class="fa-solid fa-house" aria-hidden="true"></i>
+                <i
+                    class="fa-solid fa-house"
+                    aria-hidden="true"
+                ></i>
+
                 <span>Home</span>
             </a>
 
-            <!-- ALTERADO: caminho do dashboard. -->
             <a
                 href="./frontend-new/pages/dashboard.html"
                 class="nav-btn"
@@ -93,7 +95,6 @@
                 <span>Dashboard</span>
             </a>
 
-            <!-- ALTERADO: caminho da tradução. -->
             <a
                 href="./frontend-new/pages/traduzir.html"
                 class="nav-btn"
@@ -106,7 +107,6 @@
                 <span>Traduzir</span>
             </a>
 
-            <!-- ALTERADO: caminho da ajuda. -->
             <a
                 href="./frontend-new/pages/ajuda.html"
                 class="nav-btn"
@@ -120,12 +120,13 @@
             </a>
         </nav>
 
+        <!-- ALTERADO: mantido somente um bloco de usuário. -->
         <div
             class="user-pill"
             id="user-pill"
-            data-logado="false"
+            data-perfil-visivel="false"
         >
-            <!-- ALTERADO: caminho da tela de login. -->
+            <!-- Mostrado quando não há identificação visual salva. -->
             <a
                 href="./frontend-new/pages/login.html"
                 class="btn-entrar-header"
@@ -141,16 +142,18 @@
             </a>
 
             <!--
-                ÂNCORA DO PERFIL PRESERVADA.
-                Mantidos classe, ID e conteúdo.
-                Alterado apenas o caminho para usuario.html.
+                O cabecalho.js preenche o nome e a inicial.
+                A âncora e as classes de decoração foram preservadas.
+
+                Enquanto a página de perfil não existir, o link
+                aponta para esta área do próprio cabeçalho.
             -->
             <a
-                href="./frontend-new/pages/usuario.html"
+                href="#user-pill"
                 class="user-perfil-logado"
                 id="user-perfil-logado"
+                aria-label="Identificação do usuário"
                 hidden
-                aria-label="Abrir seu perfil"
             >
                 <span
                     class="avatar"
@@ -159,22 +162,37 @@
                 >?</span>
 
                 <span class="user-info">
-                    <span class="user-name" id="user-nome">—</span>
-                    <span class="user-role" id="user-papel">—</span>
-                </span>
+                    <span
+                        class="user-name"
+                        id="user-nome"
+                    ></span>
 
-                <button
-                    type="button"
-                    class="btn-sair"
-                    id="btn-sair"
-                    aria-label="Sair da conta"
-                >
-                    <i
-                        class="fa-solid fa-arrow-right-from-bracket"
-                        aria-hidden="true"
-                    ></i>
-                </button>
+                    <span
+                        class="user-role"
+                        id="user-papel"
+                    >
+                        Minha conta
+                    </span>
+                </span>
             </a>
+
+            <!--
+                Remove somente a identificação visual.
+                Não encerra uma sessão no backend.
+            -->
+            <button
+                type="button"
+                class="btn-sair"
+                id="btn-sair"
+                aria-label="Remover identificação deste navegador"
+                title="Remover identificação"
+                hidden
+            >
+                <i
+                    class="fa-solid fa-arrow-right-from-bracket"
+                    aria-hidden="true"
+                ></i>
+            </button>
         </div>
     </header>
 
@@ -198,7 +216,6 @@
                 </p>
 
                 <div class="hero-acoes">
-                    <!-- ALTERADO: caminho da tradução. -->
                     <a
                         href="./frontend-new/pages/traduzir.html"
                         class="btn-primario"
@@ -211,7 +228,6 @@
                         Traduzir com 3D
                     </a>
 
-                    <!-- ALTERADO: caminho da ajuda. -->
                     <a
                         href="./frontend-new/pages/ajuda.html"
                         class="btn-ghost"
@@ -229,7 +245,6 @@
             <div class="hero-mascote">
                 <div class="mascote-circulo"></div>
 
-                <!-- ALTERADO: caminho da imagem do Leo. -->
                 <img
                     src="./frontend-new/pages/leo.png"
                     alt="Leo, mascote do Omni IA, acenando"
@@ -249,7 +264,9 @@
 
             <ol class="passos-lista">
                 <li class="passo">
-                    <span class="passo-num" aria-hidden="true">01</span>
+                    <span class="passo-num" aria-hidden="true">
+                        01
+                    </span>
 
                     <h3>Você envia a mensagem</h3>
 
@@ -260,7 +277,9 @@
                 </li>
 
                 <li class="passo">
-                    <span class="passo-num" aria-hidden="true">02</span>
+                    <span class="passo-num" aria-hidden="true">
+                        02
+                    </span>
 
                     <h3>A IA traduz</h3>
 
@@ -271,7 +290,9 @@
                 </li>
 
                 <li class="passo">
-                    <span class="passo-num" aria-hidden="true">03</span>
+                    <span class="passo-num" aria-hidden="true">
+                        03
+                    </span>
 
                     <h3>O avatar sinaliza</h3>
 
@@ -287,7 +308,9 @@
             <header class="secao-head">
                 <p class="eyebrow">Formatos</p>
 
-                <h2 id="titulo-formas">Escolha como conversar</h2>
+                <h2 id="titulo-formas">
+                    Escolha como conversar
+                </h2>
 
                 <p class="secao-intro">
                     Cada pessoa usa o formato que funciona melhor para ela.
@@ -295,7 +318,6 @@
             </header>
 
             <div class="formas-grid">
-                <!-- ALTERADO: caminho da tradução. -->
                 <a
                     href="./frontend-new/pages/traduzir.html"
                     class="forma"
@@ -314,7 +336,6 @@
                     </span>
                 </a>
 
-                <!-- ALTERADO: caminho da tradução. -->
                 <a
                     href="./frontend-new/pages/traduzir.html"
                     class="forma"
@@ -326,14 +347,15 @@
 
                     <h3>Áudio</h3>
 
-                    <p>Fale e ouça as respostas em voz sintetizada.</p>
+                    <p>
+                        Fale e ouça as respostas em voz sintetizada.
+                    </p>
 
                     <span class="forma-seta" aria-hidden="true">
                         <i class="fa-solid fa-arrow-right"></i>
                     </span>
                 </a>
 
-                <!-- ALTERADO: caminho da tradução. -->
                 <a
                     href="./frontend-new/pages/traduzir.html"
                     class="forma"
@@ -366,10 +388,11 @@
                     Precisa de ajuda para começar?
                 </h2>
 
-                <p>Acesse a central de ajuda para tirar dúvidas.</p>
+                <p>
+                    Acesse a central de ajuda para tirar dúvidas.
+                </p>
             </div>
 
-            <!-- ALTERADO: caminho da ajuda. -->
             <a
                 href="./frontend-new/pages/ajuda.html"
                 class="btn-primario btn-claro"
@@ -386,7 +409,6 @@
 
     <footer class="site-footer">
         <div class="footer-marca">
-            <!-- ALTERADO: caminho da logo do rodapé. -->
             <img
                 src="./frontend-new/pages/logo.png"
                 alt=""
@@ -400,7 +422,6 @@
             </p>
         </div>
 
-        <!-- ALTERADO: caminhos dos links do rodapé. -->
         <nav aria-label="Rodapé">
             <a href="./frontend-new/pages/traduzir.html">
                 Traduzir
@@ -420,7 +441,6 @@
         </nav>
 
         <div class="footer-redes">
-            <!-- MANTIDO: endereço externo do Instagram. -->
             <a
                 href="https://www.instagram.com/omniia.support"
                 target="_blank"
@@ -434,13 +454,15 @@
             </a>
         </div>
 
-        <p class="footer-copy">© 2026 Omni IA Support</p>
+        <p class="footer-copy">
+            © 2026 Omni IA Support
+        </p>
     </footer>
 
-    <!--
-        ALTERADO: removidos "../omni_ia_support/" e barras duplicadas.
-        Mantida a escolha de carregar frontend-new/js/script.js.
-    -->
+    <!-- Script geral da página inicial, na raiz do projeto. -->
     <script src="./script.js" defer></script>
+
+    <!-- Apresenta o nome de exibição e a inicial no cabeçalho. -->
+    <script src="./frontend-new/js/cabecalho.js" defer></script>
 </body>
 </html>

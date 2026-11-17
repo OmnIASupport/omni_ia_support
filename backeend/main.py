@@ -6,35 +6,52 @@ from fastapi.responses import JSONResponse
 from httpx import RequestError
 from postgrest.exceptions import APIError
 
-from controller import usuario, formato_idioma
+# ALTERADO: acrescentado o controller de autenticação.
+from controller import (
+    usuario,
+    formato_idioma,
+    autenticacao,
+)
 
 
 logger = logging.getLogger("uvicorn.error")
 
+
 app = FastAPI(
     title="Omni IA Support - API",
     description=(
-        "CRUD de usuários e formatos/idiomas "
+        "Cadastro, consulta de usuários, "
+        "verificação de login e formatos/idiomas "
         "com Supabase por HTTPS."
     ),
 )
 
 
-# Configuração do CORS
+# Configuração do CORS.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://127.0.0.1:5500",
         "http://localhost:5500",
     ],
-    allow_methods=["GET", "POST", "PUT", "DELETE"],
-    allow_headers=["Content-Type"],
+    allow_methods=[
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE",
+    ],
+    allow_headers=[
+        "Content-Type",
+    ],
 )
 
 
-# Registra todas as rotas dos dois arquivos.
+# Registro das rotas.
 app.include_router(usuario.router)
 app.include_router(formato_idioma.router)
+
+# NOVO: disponibiliza POST /login/.
+app.include_router(autenticacao.router)
 
 
 # Trata erros retornados pela Data API do Supabase.
@@ -43,9 +60,11 @@ async def tratar_erro_supabase(
     request: Request,
     erro: APIError,
 ):
+    # Não registra o conteúdo completo da exceção,
+    # que pode conter detalhes da operação.
     logger.error(
-        "Erro na operação do Supabase: %s",
-        erro,
+        "Erro na operação do Supabase. Código: %s",
+        erro.code,
     )
 
     return JSONResponse(
@@ -53,7 +72,7 @@ async def tratar_erro_supabase(
         content={
             "detail": (
                 "O Supabase recusou a operação. "
-                "Confira a mensagem no terminal."
+                "Verifique a configuração do backend."
             )
         },
     )

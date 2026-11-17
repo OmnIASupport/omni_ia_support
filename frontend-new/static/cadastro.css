@@ -310,3 +310,54 @@ h1, h2, h3 { font-family: var(--fonte-titulo); font-weight: 700; letter-spacing:
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* =========================================================
+   Cadastro — Validação e estado de envio
+   ========================================================= */
+
+/* Mensagens e elementos ocultos. */
+[hidden] {
+    display: none !important;
+}
+
+/* Destaque visual dos campos inválidos. */
+#form-cadastro .campo-input.invalido {
+    border-color: var(--erro, #b91c1c);
+    box-shadow: 0 0 0 1px var(--erro, #b91c1c);
+}
+
+/* Mensagens de erro dos campos e da API. */
+#form-cadastro .erro,
+#form-cadastro .erro-geral {
+    overflow-wrap: anywhere;
+}
+
+/* Evita que a mensagem geral fique colada nos campos. */
+#form-cadastro .erro-geral {
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+/* Indica que o cadastro está sendo enviado. */
+#btn-cadastrar:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+#btn-cadastrar.carregando {
+    pointer-events: none;
+}
+
+/* Mantém o botão do olho disponível para interação. */
+#toggle-senha {
+    cursor: pointer;
+}
+
+/* Foco visível para navegação por teclado. */
+#btn-cadastrar:focus-visible,
+#toggle-senha:focus-visible,
+#termos:focus-visible,
+#form-cadastro input[name="acessibilidade"]:focus-visible {
+    outline: 3px solid #1d4ed8;
+    outline-offset: 4px;
+}

@@ -454,3 +454,137 @@ main {
     .hero-mascote { max-width: 320px; }
     .hero-leo { width: 100%; margin-bottom: -8%; }
 }
+
+/* =========================================================
+   Cabeçalho — Nome de exibição e avatar
+   Acrescentar ao final do style.css
+   ========================================================= */
+
+/* Garante que os elementos ocultados pelo JavaScript não apareçam. */
+[hidden] {
+    display: none !important;
+}
+
+/* Área que contém Entrar ou identificação do usuário. */
+#user-pill {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    min-width: 0;
+}
+
+/* Link com avatar e nome. Mantém a decoração existente. */
+#user-perfil-logado {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Círculo com a primeira letra do nome.
+   As cores existentes de .avatar continuam sendo utilizadas. */
+#avatar-iniciais {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+
+    border-radius: 50%;
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+/* Organiza nome e descrição em duas linhas. */
+#user-perfil-logado .user-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    min-width: 0;
+}
+
+/* Evita que nomes longos ocupem todo o cabeçalho. */
+#user-nome {
+    display: block;
+    max-width: 180px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+/* Texto "Minha conta". */
+#user-papel {
+    display: block;
+    font-size: 0.75rem;
+    line-height: 1.3;
+    opacity: 0.8;
+}
+
+/* O botão agora fica fora do link do perfil. */
+#btn-sair {
+    position: static;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    padding: 0;
+
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Destaque para navegação por teclado. */
+#btn-entrar-header:focus-visible,
+#user-perfil-logado:focus-visible,
+#btn-sair:focus-visible {
+    outline: 3px solid #1d4ed8;
+    outline-offset: 4px;
+}
+
+/* Ajuste do bloco do usuário em telas menores.
+   Não modifica a organização do restante do menu. */
+@media (max-width: 600px) {
+    #user-pill {
+        gap: 8px;
+    }
+
+    #user-perfil-logado {
+        gap: 8px;
+    }
+
+    #avatar-iniciais {
+        width: 36px;
+        height: 36px;
+        flex-basis: 36px;
+        font-size: 0.9rem;
+    }
+
+    #user-nome {
+        max-width: 110px;
+        font-size: 0.85rem;
+    }
+
+    #user-papel {
+        font-size: 0.7rem;
+    }
+
+    #btn-sair {
+        width: 36px;
+        height: 36px;
+        flex-basis: 36px;
+    }
+}

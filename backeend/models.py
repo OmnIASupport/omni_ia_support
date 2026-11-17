@@ -145,3 +145,33 @@ class FormatoIdiomaEntrada(BaseModel):
 
 class FormatoIdiomaSaida(FormatoIdiomaEntrada):
     id_formato_idioma: int
+
+# LOGIN: 
+
+class LoginEntrada(BaseModel):
+    email_usuario: str = Field(
+        min_length=1,
+        max_length=255,
+    )
+
+    senha_usuario: SecretStr = Field(
+        min_length=1,
+        max_length=128,
+    )
+
+    @field_validator("email_usuario")
+    @classmethod
+    def normalizar_email(cls, valor: str) -> str:
+        valor = valor.strip().lower()
+
+        if not valor:
+            raise ValueError("Informe seu e-mail.")
+
+        return valor
+
+
+class LoginSaida(BaseModel):
+    id_usuario: int
+    nome_exibicao: str
+    email_usuario: str | None
+    tipo_usuario: str
