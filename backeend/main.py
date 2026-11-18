@@ -1,10 +1,12 @@
 import logging
 
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from httpx import RequestError
 from postgrest.exceptions import APIError
+
 
 # ALTERADO: acrescentado o controller de autenticação.
 from controller import (
@@ -13,18 +15,27 @@ from controller import (
     autenticacao,
 )
 
+# NOVO: disponibiliza o CRUD de perfis de acessibilidade.
+from controller.perfil_acessibilidade import (
+    router as perfil_acessibilidade_router,
+)
+
+
 
 logger = logging.getLogger("uvicorn.error")
+
 
 
 app = FastAPI(
     title="Omni IA Support - API",
     description=(
         "Cadastro, consulta de usuários, "
-        "verificação de login e formatos/idiomas "
+        "verificação de login, formatos/idiomas "
+        "e preferências de acessibilidade "
         "com Supabase por HTTPS."
     ),
 )
+
 
 
 # Configuração do CORS.
@@ -37,7 +48,7 @@ app.add_middleware(
     allow_methods=[
         "GET",
         "POST",
-        "PUT",
+        "PATCH",
         "DELETE",
     ],
     allow_headers=[
@@ -46,12 +57,19 @@ app.add_middleware(
 )
 
 
+
 # Registro das rotas.
 app.include_router(usuario.router)
 app.include_router(formato_idioma.router)
 
+
 # NOVO: disponibiliza POST /login/.
 app.include_router(autenticacao.router)
+
+
+# NOVO: disponibiliza o CRUD de perfis de acessibilidade.
+app.include_router(perfil_acessibilidade_router)
+
 
 
 # Trata erros retornados pela Data API do Supabase.
@@ -67,6 +85,20 @@ async def tratar_erro_supabase(
         erro.code,
     )
 
+    # Código 23503: violação de chave estrangeira.
+    if erro.code == "23503":
+        return JSONResponse(
+            status_code=409,
+            content={
+                "detail": (
+                    "Operação bloqueada por um vínculo entre tabelas. "
+                    "Confira o usuário vinculado ao perfil de "
+                    "acessibilidade. Um perfil só pode ser criado "
+                    "para um usuário cadastrado."
+                )
+            },
+        )
+
     return JSONResponse(
         status_code=502,
         content={
@@ -76,6 +108,7 @@ async def tratar_erro_supabase(
             )
         },
     )
+
 
 
 # Trata falhas durante a comunicação HTTP.
@@ -88,6 +121,7 @@ async def tratar_erro_rede(
         "Falha de comunicação: %s",
         type(erro).__name__,
     )
+
 
     return JSONResponse(
         status_code=503,
