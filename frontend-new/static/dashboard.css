@@ -1,37 +1,56 @@
 /* =========================================================
    Omni IA Support — Dashboard
+
+   Base, cabeçalho, rodapé e animações:
+   ../../style.css
+
+   Tema e contraste do avatar:
+   acessibilidade.css
    ========================================================= */
 
-.dashboard-main {
+/* =========================================================
+   Conteúdo principal
+   ========================================================= */
+
+   .dashboard-main {
     padding: 48px 32px 96px;
     max-width: 1200px;
     margin: 0 auto;
+
     display: flex;
     flex-direction: column;
     gap: 96px;
 }
 
-/* =========================================================
-   SEÇÕES E RESUMO
-   ========================================================= */
-.section { animation: entrar 0.7s ease both; }
+.dashboard-main .section {
+    min-width: 0;
+    animation: entrar 0.7s ease both;
+}
 
-.secao-head {
+.dashboard-main .secao-head {
     max-width: 640px;
     margin-bottom: 40px;
 }
-.secao-head h2 { margin-bottom: 10px; }
-.secao-intro {
+
+.dashboard-main .secao-head h2 {
+    margin-bottom: 10px;
+}
+
+.dashboard-main .secao-intro {
     color: var(--texto-suave);
     font-size: 1rem;
     line-height: 1.7;
 }
 
-/* Resumo (Grade de indicadores) */
+/* =========================================================
+   Resumo da conta
+   ========================================================= */
+
 .resumo-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0;
+
     background: var(--branco);
     border: 1px solid var(--linha);
     border-radius: var(--raio-lg);
@@ -40,12 +59,16 @@
 }
 
 .resumo-item {
+    min-width: 0;
     padding: 28px 24px;
+
     display: flex;
     flex-direction: column;
     gap: 8px;
+
     border-right: 1px solid var(--linha);
 }
+
 .resumo-item:last-child {
     border-right: none;
 }
@@ -64,11 +87,13 @@
     font-weight: 700;
     color: var(--azul-500);
     line-height: 1.1;
+    overflow-wrap: anywhere;
 }
 
 /* =========================================================
-   ATALHOS
+   Atalhos
    ========================================================= */
+
 .atalhos-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -77,61 +102,85 @@
 
 .atalho {
     position: relative;
+    min-width: 0;
+
     display: flex;
     flex-direction: column;
     gap: 10px;
+
     padding: 28px 26px 24px;
     background: var(--branco);
     border: 1px solid var(--linha);
     border-radius: var(--raio-lg);
-    transition: transform var(--transicao), border-color var(--transicao), box-shadow var(--transicao);
+
+    transition:
+        transform var(--transicao),
+        border-color var(--transicao),
+        box-shadow var(--transicao);
 }
+
 .atalho:hover {
     transform: translateY(-4px);
     border-color: var(--azul-500);
     box-shadow: var(--sombra-md);
 }
+
 .atalho h3 {
     font-size: 1.15rem;
     color: var(--texto);
 }
+
 .atalho p {
     font-size: 0.92rem;
     color: var(--texto-suave);
     line-height: 1.6;
     flex: 1;
 }
+
 .atalho-acao {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+
     margin-top: 8px;
     font-size: 0.9rem;
     font-weight: 800;
     color: var(--texto);
+
     border-bottom: 1.5px solid var(--texto);
     padding-bottom: 2px;
     width: fit-content;
-    transition: color var(--transicao), border-color var(--transicao);
+
+    transition:
+        color var(--transicao),
+        border-color var(--transicao);
 }
-.atalho-acao i { transition: transform var(--transicao); }
+
+.atalho-acao i {
+    transition: transform var(--transicao);
+}
+
 .atalho:hover .atalho-acao {
     color: var(--azul-500);
     border-bottom-color: var(--azul-500);
 }
-.atalho:hover .atalho-acao i {
+
+.atalho:hover .atalho-acao i,
+.atalho:focus-visible .atalho-acao i {
     transform: translateX(4px);
 }
 
 /* =========================================================
-   HISTÓRICO (TABELA)
+   Histórico
    ========================================================= */
+
 .tabela-wrapper {
+    min-width: 0;
     background: var(--branco);
     border: 1px solid var(--linha);
     border-radius: var(--raio-lg);
     box-shadow: var(--sombra-sm);
-    overflow: hidden;
+    overflow-x: auto;
 }
 
 .tabela-historico {
@@ -148,6 +197,7 @@
 
 .tabela-historico th {
     padding: 16px 24px;
+
     font-size: 0.75rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -175,17 +225,19 @@
     color: var(--texto) !important;
     font-weight: 500;
     max-width: 300px;
+
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-/* Status (Pílulas) */
-.status {
+/* Status */
+.dashboard-main .status {
     display: inline-flex;
     align-items: center;
     padding: 5px 12px;
     border-radius: 999px;
+
     font-size: 0.75rem;
     font-weight: 700;
     white-space: nowrap;
@@ -202,8 +254,9 @@
 }
 
 /* =========================================================
-   SOBRE
+   Sobre
    ========================================================= */
+
 .sobre-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -211,16 +264,20 @@
 }
 
 .sobre-item {
+    min-width: 0;
     padding: 24px 26px;
+
     background: var(--branco);
     border: 1px solid var(--linha);
     border-radius: var(--raio-lg);
 }
+
 .sobre-item h3 {
     font-size: 1rem;
     margin-bottom: 6px;
     color: var(--texto);
 }
+
 .sobre-item p {
     font-size: 0.9rem;
     color: var(--texto-suave);
@@ -228,26 +285,35 @@
 }
 
 /* =========================================================
-   LEO DO DASHBOARD
+   Leo do Dashboard
    ========================================================= */
+
 .dashboard-leo {
-    max-width: 100%; 
+    max-width: 100%;
     aspect-ratio: auto;
     height: 400px;
+
     display: flex;
     justify-content: center;
     align-items: flex-end;
+
     overflow: visible;
     animation: flutuarEntrada 0.9s 0.4s ease both;
 }
 
 .dashboard-leo .mascote-circulo {
     position: absolute;
-    inset: 10% 0 10% 0;
+    inset: 10% 0;
     border-radius: 50%;
     border: none;
-    box-shadow: 0 15px 40px rgba(1, 53, 205, 0.08); 
-    background: linear-gradient(135deg, #eaf2ff 0%, #d4e3f7 100%);
+
+    box-shadow: 0 15px 40px rgba(1, 53, 205, 0.08);
+    background: linear-gradient(
+        135deg,
+        #eaf2ff 0%,
+        #d4e3f7 100%
+    );
+
     z-index: 0;
 }
 
@@ -257,10 +323,17 @@
     bottom: 5%;
     left: 50%;
     transform: translateX(-50%);
+
     width: 80%;
     height: 80%;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(87, 191, 251, 0.35) 0%, rgba(87, 191, 251, 0) 70%);
+
+    background: radial-gradient(
+        circle,
+        rgba(87, 191, 251, 0.35) 0%,
+        rgba(87, 191, 251, 0) 70%
+    );
+
     z-index: 1;
     pointer-events: none;
 }
@@ -270,26 +343,33 @@
     width: 115%;
     max-width: none;
     margin-left: -7.5%;
-    margin-bottom: -20px; 
+    margin-bottom: -20px;
     object-fit: contain;
+
     z-index: 2;
-    filter: drop-shadow(0 25px 35px rgba(1, 53, 205, 0.25));
+    filter: drop-shadow(
+        0 25px 35px rgba(1, 53, 205, 0.25)
+    );
 }
 
 /* =========================================================
-   RESPONSIVO
+   Tablets e telas intermediárias
    ========================================================= */
+
 @media (max-width: 1024px) {
     .dashboard-main {
         padding: 32px 20px 72px;
         gap: 72px;
     }
+
     .resumo-grid {
-        grid-template-columns: 1fr 1fr; /* Vira 2x2 no tablet */
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
     .resumo-item:nth-child(2) {
         border-right: none;
     }
+
     .resumo-item:nth-child(3),
     .resumo-item:nth-child(4) {
         border-top: 1px solid var(--linha);
@@ -297,17 +377,19 @@
 
     .atalhos-grid,
     .sobre-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
+
     .dashboard-leo {
         height: 320px;
         max-width: 500px;
         margin: 0 auto;
     }
+
     .dashboard-leo .hero-leo {
         width: 120%;
         margin-left: -10%;
-        margin-bottom: -15px; 
+        margin-bottom: -15px;
     }
 
     .tabela-historico th,
@@ -316,30 +398,38 @@
     }
 }
 
+/* =========================================================
+   Celulares
+   ========================================================= */
+
 @media (max-width: 640px) {
     .dashboard-main {
         padding: 28px 16px 56px;
         gap: 56px;
     }
+
     .dashboard-leo {
         height: 240px;
     }
+
     .dashboard-leo .hero-leo {
-        margin-bottom: -10px; 
-    }
-    
-    .resumo-grid {
-        grid-template-columns: 1fr; /* Empilha tudo no mobile */
-    }
-    .resumo-item {
-        border-right: none;
-        border-bottom: 1px solid var(--linha);
-    }
-    .resumo-item:last-child {
-        border-bottom: none;
+        margin-bottom: -10px;
     }
 
-    /* Tabela Mobile */
+    .resumo-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* Uma única divisão entre cada indicador */
+    .resumo-grid .resumo-item {
+        border: none;
+    }
+
+    .resumo-grid .resumo-item + .resumo-item {
+        border-top: 1px solid var(--linha);
+    }
+
+    /* Histórico em formato de cartões */
     .tabela-historico thead {
         display: none;
     }
@@ -364,15 +454,19 @@
     .tabela-historico td {
         padding: 6px 0;
         border-top: none;
+
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 12px;
+
         text-align: right;
     }
 
     .tabela-historico td::before {
         content: attr(data-label);
+        flex-shrink: 0;
+
         font-weight: 700;
         font-size: 0.75rem;
         text-transform: uppercase;
@@ -384,5 +478,12 @@
     .celula-mensagem {
         max-width: 100%;
         white-space: normal;
+        overflow-wrap: anywhere;
     }
 }
+
+/*
+   As animações entrar e flutuarEntrada, o cabeçalho
+   responsivo e a preferência por movimento reduzido
+   continuam definidos no style.css compartilhado.
+*/

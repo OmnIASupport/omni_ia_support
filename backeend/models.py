@@ -170,8 +170,14 @@ class LoginEntrada(BaseModel):
         return valor
 
 
-class LoginSaida(BaseModel):
+class UsuarioAutenticadoSaida(BaseModel):
     id_usuario: int
     nome_exibicao: str
     email_usuario: str | None
     tipo_usuario: str
+
+
+class LoginSaida(UsuarioAutenticadoSaida):
+    access_token: str
+    token_type: str = "bearer"
+    expires_in: int

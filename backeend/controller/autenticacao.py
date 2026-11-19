@@ -1,23 +1,38 @@
-
-# Omni IA Support — Verificação de login
+# Omni IA Support — Autenticação
 #
 # POST /login/
-# - Recebe e-mail e senha.
-# - Consulta o usuário no Supabase.
-# - Verifica a senha contra o hash salvo.
-# - Retorna somente dados públicos.
+# - Verifica e-mail e senha.
+# - Retorna dados públicos e token de acesso.
 #
-# Não cria token ou sessão nesta etapa.
-
+# GET /login/me
+# - Valida o token.
+# - Retorna o usuário autenticado.
 
 import logging
 
-from fastapi import APIRouter, HTTPException, Response, status
+from typing import Annotated
+
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    Response,
+    status,
+)
 from pwdlib import PasswordHash
 from pwdlib.exceptions import UnknownHashError
 
 from database import supabase
-from models import LoginEntrada, LoginSaida
+from models import (
+    LoginEntrada,
+    LoginSaida,
+    UsuarioAutenticadoSaida,
+)
+from seguranca import (
+    DURACAO_TOKEN_MINUTOS,
+    criar_token_acesso,
+    obter_usuario_atual,
+)
 
 
 logger = logging.getLogger("uvicorn.error")
@@ -29,8 +44,6 @@ router = APIRouter(
 
 password_hash = PasswordHash.recommended()
 
-# Gerado uma vez ao carregar este módulo.
-# Permite executar uma verificação mesmo quando o e-mail não existe.
 HASH_FICTICIO = password_hash.hash(
     "valor-interno-para-verificacao-de-login"
 )
@@ -45,10 +58,8 @@ def entrar(
     dados: LoginEntrada,
     response: Response,
 ):
-    # Evita armazenar a resposta de login em cache HTTP.
     response.headers["Cache-Control"] = "no-store"
 
-    # Consulta somente as colunas necessárias.
     resultado = (
         supabase.table("usuario")
         .select(
@@ -66,7 +77,6 @@ def entrar(
 
     usuario = resultado.data[0] if resultado.data else None
 
-    # O hash nunca é enviado ao frontend.
     hash_salvo = (
         usuario.get("senha_usuario")
         if usuario
@@ -92,18 +102,11 @@ def entrar(
             hash_para_verificar,
         )
     except UnknownHashError:
-        # Não registra senha, hash ou dados completos do usuário.
         logger.error(
             "Login recusado: hash de senha não reconhecido."
         )
-
         senha_valida = False
 
-    # A mesma mensagem é usada para:
-    # - e-mail inexistente;
-    # - senha incorreta;
-    # - usuário inativo;
-    # - senha sem hash válido.
     if (
         usuario is None
         or not hash_disponivel
@@ -118,9 +121,32 @@ def entrar(
             },
         )
 
+    token = criar_token_acesso(
+        usuario["id_usuario"],
+    )
+
     return {
         "id_usuario": usuario["id_usuario"],
         "nome_exibicao": usuario["nome_exibicao"],
         "email_usuario": usuario["email_usuario"],
         "tipo_usuario": usuario["tipo_usuario"],
+        "access_token": token,
+        "token_type": "bearer",
+        "expires_in": DURACAO_TOKEN_MINUTOS * 60,
     }
+
+
+@router.get(
+    "/me",
+    response_model=UsuarioAutenticadoSaida,
+)
+def consultar_usuario_autenticado(
+    response: Response,
+    usuario: Annotated[
+        dict,
+        Depends(obter_usuario_atual),
+    ],
+):
+    response.headers["Cache-Control"] = "no-store"
+
+    return usuario

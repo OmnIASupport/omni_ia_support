@@ -449,3 +449,30 @@ body.dark-mode .ajuda-cta:hover {
     border-color: #0a7bf5 !important;
 }
 /* ========================================================= */
+
+/* =========================================================
+   Cabeçalho — Contraste do avatar no modo escuro
+   ========================================================= */
+
+/* Círculo claro com inicial escura */
+body.dark-mode #avatar-iniciais {
+    background: #ffffff !important;
+    color: #0e1530 !important;
+}
+
+/* Nome ao lado do avatar continua claro */
+body.dark-mode #user-nome {
+    color: #f1f5f9 !important;
+}
+
+/* Mantém o botão de sair visível */
+body.dark-mode #btn-sair {
+    color: #f1f5f9 !important;
+    background: transparent !important;
+}
+
+body.dark-mode #btn-sair:hover {
+    color: #fca5a5 !important;
+    background: rgba(239, 68, 68, 0.15) !important;
+}
+

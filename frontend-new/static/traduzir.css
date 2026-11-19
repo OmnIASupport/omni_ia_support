@@ -1,68 +1,43 @@
 /* =========================================================
    Omni IA Support — Traduzir (Estúdio do Avatar 3D)
+
+   Base, cabeçalho e rodapé: ../../style.css
+   Tema compartilhado: acessibilidade.css
    ========================================================= */
 
-:root {
-  --azul-900: #001a6e;
-  --azul-700: #0135cd;
-  --azul-500: #0a7bf5;
-  --ciano: #57bffb;
-  --azul-100: #eaf2ff;
-  --branco: #ffffff;
-  --fundo: #f4f8ff;
-  --texto: #0e1530;
-  --texto-suave: #5a6484;
-  --linha: rgba(1, 53, 205, 0.12);
+/* Variáveis exclusivas do conteúdo da tradução */
+.traduzir-main {
+  --glass: rgba(255, 255, 255, 0.72);
+  --raio: 16px;
+  --raio-lg: 32px;
   --sombra-sm: 0 2px 10px rgba(1, 53, 205, 0.05);
   --sombra-md: 0 10px 40px -10px rgba(1, 53, 205, 0.2);
   --sombra-lg: 0 20px 60px -15px rgba(1, 53, 205, 0.3);
-  --raio: 16px;
-  --raio-lg: 32px;
-  --transicao: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --fonte-titulo: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
-  --fonte-corpo: "Manrope", "Segoe UI", system-ui, sans-serif;
-  --glass: rgba(255, 255, 255, 0.72);
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html,
+/* Fundo específico desta página */
 body {
-  min-height: 100%;
-}
-
-body {
-  font-family: var(--fonte-corpo);
-  color: var(--texto);
   background:
-    radial-gradient(circle at 15% 10%, rgba(87, 191, 251, 0.16) 0%, transparent 45%),
-    radial-gradient(circle at 85% 0%, rgba(10, 123, 245, 0.14) 0%, transparent 45%),
-    var(--fundo);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(87, 191, 251, 0.16) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 85% 0%,
+      rgba(10, 123, 245, 0.14) 0%,
+      transparent 45%
+    ),
+    #f4f8ff;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-button {
+/* Base dos botões somente dentro da tradução */
+:where(.traduzir-main button) {
   font: inherit;
   cursor: pointer;
   border: none;
   background: none;
   color: inherit;
-}
-
-[hidden] {
-  display: none !important;
 }
 
 .sr-only {
@@ -77,65 +52,56 @@ button {
   border: 0;
 }
 
-.skip-link {
-  position: absolute;
-  left: -9999px;
-  top: 12px;
-  padding: 10px 16px;
-  background: var(--azul-700);
-  color: var(--branco);
-  border-radius: 8px;
-  z-index: 200;
-}
+/* =========================================================
+   Layout e introdução
+   ========================================================= */
 
-.skip-link:focus {
-  left: 12px;
-}
-
-/* LAYOUT */
 .traduzir-main {
   max-width: 1180px;
   margin: 0 auto;
   padding: 48px 24px 96px;
+
   display: flex;
   flex-direction: column;
   gap: 36px;
 }
 
-/* INTRODUÇÃO */
-.intro {
+.traduzir-main .intro {
   text-align: center;
   max-width: 760px;
   margin: 0 auto;
   animation: slideDown 0.6s ease both;
 }
 
-.intro .eyebrow {
+.traduzir-main .intro .eyebrow {
   justify-content: center;
   color: var(--azul-500);
   margin-bottom: 12px;
 }
 
-.intro h1 {
+.traduzir-main .intro h1 {
   font-family: var(--fonte-titulo);
   font-size: clamp(2.2rem, 4vw, 3.3rem);
   margin-bottom: 12px;
   letter-spacing: -0.03em;
 }
 
-.intro h1 em {
+.traduzir-main .intro h1 em {
   font-style: normal;
   color: var(--azul-500);
   text-shadow: 0 4px 20px rgba(10, 123, 245, 0.28);
 }
 
-.intro > p:last-child {
+.traduzir-main .intro > p:last-child {
   color: var(--texto-suave);
   font-size: 1.05rem;
 }
 
-/* VIDRO */
-.glass-panel {
+/* =========================================================
+   Painéis de vidro
+   ========================================================= */
+
+.traduzir-main .glass-panel {
   background: var(--glass);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -145,7 +111,7 @@ button {
 }
 
 /* =========================================================
-   ESTÚDIO DO AVATAR 3D
+   Estúdio do avatar
    ========================================================= */
 
 .avatar-estudio {
@@ -153,18 +119,30 @@ button {
   min-height: 560px;
   padding: 24px;
   overflow: hidden;
+
   display: flex;
   flex-direction: column;
-  animation: scaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  animation:
+    scaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .estudio-fundo {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 110%, rgba(10, 123, 245, 0.18) 0%, transparent 55%),
-    linear-gradient(180deg, rgba(234, 242, 255, 0.7), rgba(255, 255, 255, 0.2));
+    radial-gradient(
+      circle at 50% 110%,
+      rgba(10, 123, 245, 0.18) 0%,
+      transparent 55%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(234, 242, 255, 0.7),
+      rgba(255, 255, 255, 0.2)
+    );
   z-index: 0;
+  pointer-events: none;
 }
 
 .estudio-brilho {
@@ -174,27 +152,48 @@ button {
   transform: translateX(-50%);
   width: 720px;
   height: 720px;
-  background: radial-gradient(circle, rgba(87, 191, 251, 0.28) 0%, transparent 62%);
+
+  background: radial-gradient(
+    circle,
+    rgba(87, 191, 251, 0.28) 0%,
+    transparent 62%
+  );
+
   pointer-events: none;
   z-index: 0;
 }
 
 .estudio-grade {
   position: absolute;
-  inset: auto 0 0 0;
+  inset: auto 0 0;
   height: 38%;
+
   background-image:
-    linear-gradient(rgba(10, 123, 245, 0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(10, 123, 245, 0.12) 1px, transparent 1px);
+    linear-gradient(
+      rgba(10, 123, 245, 0.12) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(10, 123, 245, 0.12) 1px,
+      transparent 1px
+    );
+
   background-size: 44px 44px;
-  mask-image: linear-gradient(to top, #000 10%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to top, #000 10%, transparent 100%);
+
+  mask-image:
+    linear-gradient(to top, #000 10%, transparent 100%);
+  -webkit-mask-image:
+    linear-gradient(to top, #000 10%, transparent 100%);
+
   z-index: 0;
+  pointer-events: none;
 }
 
 .estudio-topo {
   position: relative;
   z-index: 2;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -207,10 +206,12 @@ button {
   align-items: center;
   gap: 10px;
   padding: 9px 16px;
+
   border-radius: 999px;
   background: var(--branco);
   border: 1px solid var(--linha);
   box-shadow: var(--sombra-sm);
+
   font-size: 0.85rem;
   font-weight: 700;
 }
@@ -218,6 +219,7 @@ button {
 .status-ponto {
   width: 9px;
   height: 9px;
+  flex-shrink: 0;
   border-radius: 50%;
   background: #22c55e;
   box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
@@ -228,10 +230,12 @@ button {
   align-items: center;
   gap: 14px;
   padding: 8px 16px;
+
   border-radius: 999px;
   background: var(--branco);
   border: 1px solid var(--linha);
   box-shadow: var(--sombra-sm);
+
   font-weight: 700;
   font-size: 0.9rem;
 }
@@ -239,9 +243,12 @@ button {
 .btn-inverter {
   width: 38px;
   height: 38px;
+  flex-shrink: 0;
   border-radius: 50%;
+
   display: grid;
   place-items: center;
+
   background: var(--azul-100);
   color: var(--azul-500);
   transition: var(--transicao);
@@ -249,28 +256,37 @@ button {
 
 .btn-inverter:hover {
   background: var(--azul-500);
-  color: var(--branco);
+  color: #ffffff;
   transform: rotate(180deg);
 }
 
-/* ÁREA DO MODELO 3D */
+/* =========================================================
+   Área do modelo 3D
+   ========================================================= */
+
 .avatar-cena {
   position: relative;
   z-index: 1;
   flex: 1;
   min-height: 360px;
   margin: 22px 0;
+
   border-radius: 28px;
   border: 1px solid rgba(10, 123, 245, 0.14);
+
   background:
-    radial-gradient(circle at 50% 85%, rgba(10, 123, 245, 0.1), transparent 60%),
+    radial-gradient(
+      circle at 50% 85%,
+      rgba(10, 123, 245, 0.1),
+      transparent 60%
+    ),
     rgba(255, 255, 255, 0.35);
+
   display: grid;
   place-items: center;
   overflow: hidden;
 }
 
-/* Aqui entra o canvas do Three.js, Babylon.js ou outro motor 3D */
 .avatar-cena canvas {
   width: 100%;
   height: 100%;
@@ -281,16 +297,22 @@ button {
   position: relative;
   width: 180px;
   height: 180px;
+
   display: grid;
   place-items: center;
+
   border-radius: 48px;
   background: linear-gradient(135deg, #ffffff, #eaf2ff);
   color: var(--azul-500);
   font-size: 4rem;
+
   box-shadow:
     inset 0 2px 12px rgba(255, 255, 255, 0.85),
     0 24px 50px -12px rgba(10, 123, 245, 0.35);
-  transform: perspective(700px) rotateX(8deg) rotateY(-10deg);
+
+  transform:
+    perspective(700px) rotateX(8deg) rotateY(-10deg);
+
   animation: flutuar 4.5s ease-in-out infinite;
 }
 
@@ -307,9 +329,11 @@ button {
   bottom: 22px;
   left: 50%;
   transform: translateX(-50%);
+
   width: min(560px, calc(100% - 36px));
   padding: 16px 20px;
   border-radius: 20px;
+
   background: rgba(255, 255, 255, 0.82);
   border: 1px solid rgba(255, 255, 255, 0.75);
   box-shadow: var(--sombra-md);
@@ -328,10 +352,14 @@ button {
   font-size: 0.95rem;
 }
 
-/* CONTROLES DO ESTÚDIO */
+/* =========================================================
+   Controles do estúdio
+   ========================================================= */
+
 .estudio-controles {
   position: relative;
   z-index: 2;
+
   display: flex;
   justify-content: center;
   gap: 12px;
@@ -344,10 +372,12 @@ button {
   gap: 8px;
   height: 42px;
   padding: 0 16px;
+
   border-radius: 12px;
   background: var(--branco);
   border: 1px solid var(--linha);
   color: var(--texto);
+
   font-size: 0.85rem;
   font-weight: 700;
   transition: var(--transicao);
@@ -361,14 +391,16 @@ button {
 }
 
 /* =========================================================
-   PAINÉIS
+   Painéis de entrada e resultado
    ========================================================= */
 
 .controles-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px;
-  animation: slideUp 0.8s 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  animation:
+    slideUp 0.8s 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .painel-controle {
@@ -376,7 +408,10 @@ button {
   flex-direction: column;
   padding: 24px;
   min-width: 0;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .painel-controle:hover {
@@ -384,55 +419,69 @@ button {
   box-shadow: var(--sombra-lg);
 }
 
-.painel-header {
+/*
+   O widget também utiliza .painel-header.
+   Estas regras afetam somente os painéis da tradução.
+*/
+.traduzir-main .painel-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
+
   margin-bottom: 16px;
+  padding: 0;
+  border: none;
 }
 
-.painel-header h2 {
+.traduzir-main .painel-header h2 {
   font-family: var(--fonte-titulo);
   font-size: 1.1rem;
+
   display: flex;
   align-items: center;
   gap: 8px;
+
+  color: var(--texto) !important;
 }
 
-.painel-header h2 i {
+.traduzir-main .painel-header h2 i {
   color: var(--azul-500);
 }
 
-.painel-header span {
+.traduzir-main .painel-header span {
   font-size: 0.75rem;
   color: var(--texto-suave);
   font-weight: 700;
 }
 
-.badge {
+.traduzir-main .badge {
   background: var(--azul-100) !important;
   color: var(--azul-700) !important;
   padding: 4px 10px;
   border-radius: 99px;
 }
 
-textarea {
+.traduzir-main textarea {
   width: 100%;
   min-height: 160px;
   padding: 16px;
+
   border: 1.5px solid var(--linha);
   border-radius: var(--raio);
   background: rgba(255, 255, 255, 0.55);
   color: var(--texto);
+
   font-family: var(--fonte-corpo);
   font-size: 1rem;
   line-height: 1.6;
+
   resize: vertical;
   transition: var(--transicao);
 }
 
-textarea:focus {
+.traduzir-main textarea:focus {
   outline: none;
   background: var(--branco);
   border-color: var(--azul-500);
@@ -443,6 +492,7 @@ textarea:focus {
   flex: 1;
   min-height: 160px;
   padding: 16px;
+
   border: 1.5px dashed var(--linha);
   border-radius: var(--raio);
   background: rgba(255, 255, 255, 0.35);
@@ -462,11 +512,13 @@ textarea:focus {
   font-weight: 500;
   line-height: 1.6;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .painel-acoes {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 16px;
 }
@@ -474,12 +526,16 @@ textarea:focus {
 .btn-icon {
   width: 44px;
   height: 44px;
+  flex: 0 0 44px;
+
   display: grid;
   place-items: center;
+
   border-radius: 12px;
   background: var(--branco);
   border: 1px solid var(--linha);
   color: var(--texto-suave);
+
   font-size: 1.1rem;
   transition: var(--transicao);
 }
@@ -490,24 +546,27 @@ textarea:focus {
   color: var(--azul-500);
 }
 
-.btn-primario {
+.traduzir-main .btn-primario {
   flex: 1;
   display: inline-flex;
   justify-content: center;
   align-items: center;
   gap: 8px;
-  height: 44px;
-  padding: 0 20px;
+
+  min-height: 44px;
+  padding: 10px 20px;
   border-radius: 12px;
+
   background: var(--texto);
-  color: var(--branco);
+  color: #ffffff;
   font-weight: 800;
   font-size: 0.95rem;
+
   box-shadow: 0 4px 15px rgba(14, 21, 48, 0.2);
   transition: var(--transicao);
 }
 
-.btn-primario:hover {
+.traduzir-main .btn-primario:hover {
   background: var(--azul-500);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(10, 123, 245, 0.4);
@@ -519,12 +578,15 @@ textarea:focus {
   justify-content: center;
   align-items: center;
   gap: 8px;
-  height: 44px;
-  padding: 0 16px;
+
+  min-height: 44px;
+  padding: 10px 16px;
   border-radius: 12px;
+
   background: var(--branco);
   border: 1.5px solid var(--linha);
   color: var(--texto);
+
   font-weight: 700;
   font-size: 0.9rem;
   transition: var(--transicao);
@@ -543,12 +605,21 @@ textarea:focus {
   font-weight: 500;
 }
 
-/* ANIMAÇÕES */
+/* Este rodapé possui três blocos, sem a coluna de redes sociais */
+.site-footer {
+  grid-template-columns: 1.2fr 1fr auto;
+}
+
+/* =========================================================
+   Animações
+   ========================================================= */
+
 @keyframes slideDown {
   from {
     opacity: 0;
     transform: translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -560,6 +631,7 @@ textarea:focus {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -571,6 +643,7 @@ textarea:focus {
     opacity: 0;
     transform: scale(0.96);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -580,10 +653,19 @@ textarea:focus {
 @keyframes flutuar {
   0%,
   100% {
-    transform: perspective(700px) rotateX(8deg) rotateY(-10deg) translateY(0);
+    transform:
+      perspective(700px)
+      rotateX(8deg)
+      rotateY(-10deg)
+      translateY(0);
   }
+
   50% {
-    transform: perspective(700px) rotateX(8deg) rotateY(-10deg) translateY(-12px);
+    transform:
+      perspective(700px)
+      rotateX(8deg)
+      rotateY(-10deg)
+      translateY(-12px);
   }
 }
 
@@ -594,43 +676,65 @@ textarea:focus {
 }
 
 /* =========================================================
-   MODO ESCURO
+   Modo escuro — elementos específicos da tradução
+
+   O cabeçalho e seu avatar utilizam acessibilidade.css.
    ========================================================= */
 
 body.dark-mode {
-  --fundo: #0b1120;
-  --texto: #f1f5f9;
-  --texto-suave: #94a3b8;
-  --branco: #1e293b;
-  --linha: rgba(255, 255, 255, 0.1);
-  --glass: rgba(30, 41, 59, 0.72);
   background:
-    radial-gradient(circle at 15% 10%, rgba(10, 123, 245, 0.18) 0%, transparent 45%),
-    radial-gradient(circle at 85% 0%, rgba(87, 191, 251, 0.12) 0%, transparent 45%),
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(10, 123, 245, 0.18) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 85% 0%,
+      rgba(87, 191, 251, 0.12) 0%,
+      transparent 45%
+    ),
     #0b1120;
 }
 
-body.dark-mode .glass-panel {
+body.dark-mode .traduzir-main {
+  --glass: rgba(30, 41, 59, 0.72);
+}
+
+body.dark-mode .traduzir-main .glass-panel {
   border-color: rgba(255, 255, 255, 0.08);
   box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.6);
 }
 
 body.dark-mode .estudio-fundo {
   background:
-    radial-gradient(circle at 50% 110%, rgba(10, 123, 245, 0.2) 0%, transparent 55%),
-    linear-gradient(180deg, rgba(15, 23, 42, 0.7), rgba(30, 41, 59, 0.2));
+    radial-gradient(
+      circle at 50% 110%,
+      rgba(10, 123, 245, 0.2) 0%,
+      transparent 55%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(15, 23, 42, 0.7),
+      rgba(30, 41, 59, 0.2)
+    );
 }
 
 body.dark-mode .avatar-cena {
   border-color: rgba(87, 191, 251, 0.18);
+
   background:
-    radial-gradient(circle at 50% 85%, rgba(10, 123, 245, 0.16), transparent 60%),
+    radial-gradient(
+      circle at 50% 85%,
+      rgba(10, 123, 245, 0.16),
+      transparent 60%
+    ),
     rgba(15, 23, 42, 0.35);
 }
 
 body.dark-mode .avatar-3d-placeholder {
   background: linear-gradient(135deg, #1e293b, #0f172a);
   color: #57bffb;
+
   box-shadow:
     inset 0 2px 12px rgba(255, 255, 255, 0.08),
     0 24px 50px -12px rgba(0, 0, 0, 0.8);
@@ -668,12 +772,12 @@ body.dark-mode .btn-secundario:hover {
   color: #57bffb;
 }
 
-body.dark-mode textarea {
+body.dark-mode .traduzir-main textarea {
   background: rgba(15, 23, 42, 0.55);
   color: #f1f5f9;
 }
 
-body.dark-mode textarea:focus {
+body.dark-mode .traduzir-main textarea:focus {
   background: #0f172a;
 }
 
@@ -681,24 +785,33 @@ body.dark-mode .resultado-box {
   background: rgba(15, 23, 42, 0.35);
 }
 
-body.dark-mode .btn-primario {
-  background: #57bffb;
-  color: #0f172a;
+body.dark-mode .traduzir-main .btn-primario {
+  background: #57bffb !important;
+  color: #0f172a !important;
 }
 
-body.dark-mode .btn-primario:hover {
-  background: #38bdf8;
+body.dark-mode .traduzir-main .btn-primario:hover {
+  background: #38bdf8 !important;
 }
 
-body.dark-mode .badge {
+body.dark-mode .traduzir-main .badge {
   background: rgba(10, 123, 245, 0.2) !important;
   color: #57bffb !important;
 }
 
-/* RESPONSIVO */
+/* =========================================================
+   Responsivo
+   ========================================================= */
+
+@media (max-width: 1024px) {
+  .site-footer {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 980px) {
   .controles-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .avatar-estudio {
@@ -743,18 +856,18 @@ body.dark-mode .badge {
     padding: 18px;
   }
 
-  .btn-primario,
-  .btn-secundario {
+  .traduzir-main .btn-primario,
+  .traduzir-main .btn-secundario {
     width: 100%;
   }
 }
 
+/* Movimento reduzido */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  .traduzir-main *,
+  .traduzir-main *::before,
+  .traduzir-main *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }

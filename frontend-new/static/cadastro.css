@@ -2,7 +2,7 @@
    Omni IA Support — Cadastro (Layout Centralizado + Decoração)
    ========================================================= */
 
-:root {
+   :root {
     --azul-900: #001a6e;
     --azul-700: #0135cd;
     --azul-500: #0a7bf5;
@@ -70,140 +70,69 @@ h1, h2, h3 { font-family: var(--fonte-titulo); font-weight: 700; letter-spacing:
 .forma-linha.l3 { width: 380px; height: 380px; top: 30%; right: 22%; opacity: 0.25; border-style: dashed; }
 
 /* =========================================================
-   LEO DECORATIVO (Esquerda - Espiando)
+   LEO DECORATIVO
    ========================================================= */
 .leo-decorativo {
-    position: fixed;
-    bottom: -50px; /* Ajustado para ficar no ponto ideal */
-    width: 460px;
-    height: 460px;
-    z-index: 1;
-    pointer-events: none;
-    animation: flutuarEntrada 0.9s 0.3s ease both;
+    position: fixed; bottom: -50px; width: 460px; height: 460px;
+    z-index: 1; pointer-events: none; animation: flutuarEntrada 0.9s 0.3s ease both;
 }
-
 .leo-esquerdo { left: -20px; } 
-
 .leo-glow {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 85%; height: 85%;
-    border-radius: 50%;
-    background: #b8cfeb;
-    z-index: 1;
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 85%; height: 85%; border-radius: 50%; background: #b8cfeb; z-index: 1;
     box-shadow: 0 0 0 20px rgba(184, 207, 235, 0.25);
 }
-
 .leo-img {
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 100%; height: 100%;
-    object-fit: contain;
-    z-index: 2;
-    filter: drop-shadow(0 20px 30px rgba(1, 53, 205, 0.2));
+    position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
+    object-fit: contain; z-index: 2; filter: drop-shadow(0 20px 30px rgba(1, 53, 205, 0.2));
 }
 
 /* =========================================================
    MAIN CENTRAL
    ========================================================= */
 .cadastro-shell {
-    position: relative;
-    z-index: 2;
-    min-height: 100vh;
-    display: grid;
-    place-items: center;
-    padding: 40px 24px;
+    position: relative; z-index: 2; min-height: 100vh;
+    display: grid; place-items: center; padding: 40px 24px;
 }
-
 .cadastro-card {
-    width: 100%;
-    max-width: 520px;
-    background: var(--branco);
-    border: 1px solid rgba(1, 53, 205, 0.08);
-    border-radius: var(--raio-lg);
-    padding: 40px 44px;
-    box-shadow: var(--sombra-card);
-    animation: entrar 0.7s ease both;
+    width: 100%; max-width: 520px; background: var(--branco);
+    border: 1px solid rgba(1, 53, 205, 0.08); border-radius: var(--raio-lg);
+    padding: 40px 44px; box-shadow: var(--sombra-card); animation: entrar 0.7s ease both;
 }
 
 /* =========================================================
    CABEÇALHO DO CARD
    ========================================================= */
 .cadastro-head { display: flex; flex-direction: column; gap: 24px; margin-bottom: 32px; }
-
-.logo-container {
-    display: flex; align-items: center; gap: 12px; width: fit-content;
-    transition: transform var(--transicao), color var(--transicao);
-}
+.logo-container { display: flex; align-items: center; gap: 12px; width: fit-content; transition: transform var(--transicao), color var(--transicao); }
 .logo-container:hover { transform: translateY(-2px); color: var(--azul-500); }
-.logo-container:hover .nome-logo strong,
-.logo-container:hover .nome-logo span { color: var(--azul-500); }
-
-.logo-img {
-    width: 40px; height: 40px; object-fit: contain;
-    border-radius: 10px; background: var(--branco); padding: 4px;
-    box-shadow: var(--sombra-sm);
-    transition: box-shadow var(--transicao);
-}
+.logo-container:hover .nome-logo strong, .logo-container:hover .nome-logo span { color: var(--azul-500); }
+.logo-img { width: 40px; height: 40px; object-fit: contain; border-radius: 10px; background: var(--branco); padding: 4px; box-shadow: var(--sombra-sm); transition: box-shadow var(--transicao); }
 .logo-container:hover .logo-img { box-shadow: 0 4px 12px rgba(10, 123, 245, 0.25); }
-
 .nome-logo { display: flex; flex-direction: column; line-height: 1.15; }
 .nome-logo strong { font-family: var(--fonte-titulo); font-size: 1.15rem; font-weight: 700; color: var(--texto); transition: color var(--transicao); }
 .nome-logo span { font-size: 0.68rem; font-weight: 500; color: var(--texto-suave); margin-top: 2px; transition: color var(--transicao); }
-
 .cadastro-titulo h1 { font-size: clamp(1.8rem, 3.2vw, 2.4rem); color: var(--texto); margin-bottom: 8px; }
 .cadastro-titulo p { font-size: 0.95rem; color: var(--texto-suave); }
 
-.eyebrow {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.08em; color: var(--texto-suave);
-    margin-bottom: 12px;
-}
-.eyebrow .dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--azul-500);
-    box-shadow: 0 0 0 4px rgba(10, 123, 245, 0.15);
-}
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--texto-suave); margin-bottom: 12px; }
+.eyebrow .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--azul-500); box-shadow: 0 0 0 4px rgba(10, 123, 245, 0.15); }
 
 /* =========================================================
    FORMULÁRIO
    ========================================================= */
 #form-cadastro { display: flex; flex-direction: column; gap: 22px; }
-
 .campo { display: flex; flex-direction: column; gap: 10px; }
-.campo > label, .campo-acessibilidade > legend {
-    font-size: 0.72rem; font-weight: 700; color: var(--texto-suave);
-    letter-spacing: 0.12em; text-transform: uppercase;
-}
-
-.campo-input {
-    display: flex; align-items: center; gap: 12px; padding: 4px 0 10px;
-    border-bottom: 1.5px solid var(--linha); transition: border-color var(--transicao);
-}
+.campo > label, .campo-acessibilidade > legend { font-size: 0.72rem; font-weight: 700; color: var(--texto-suave); letter-spacing: 0.12em; text-transform: uppercase; }
+.campo-input { display: flex; align-items: center; gap: 12px; padding: 4px 0 10px; border-bottom: 1.5px solid var(--linha); transition: border-color var(--transicao); }
 .campo-input:focus-within { border-bottom-color: var(--texto); }
 .campo-input.invalido { border-bottom-color: var(--erro); }
-
-.campo-input > i {
-    color: var(--texto-suave); font-size: 0.85rem; flex-shrink: 0;
-    width: 16px; text-align: center; transition: color var(--transicao);
-}
+.campo-input > i { color: var(--texto-suave); font-size: 0.85rem; flex-shrink: 0; width: 16px; text-align: center; transition: color var(--transicao); }
 .campo-input:focus-within > i { color: var(--texto); }
-
-.campo-input input {
-    flex: 1; border: none; outline: none; background: transparent;
-    padding: 10px 0; font-size: 1rem; font-weight: 500;
-}
+.campo-input input { flex: 1; border: none; outline: none; background: transparent; padding: 10px 0; font-size: 1rem; font-weight: 500; }
 .campo-input input::placeholder { color: #9aa3bd; font-weight: 400; }
-
-.toggle-senha {
-    display: grid; place-items: center; width: 32px; height: 32px;
-    border-radius: 8px; color: var(--texto-suave);
-    transition: color var(--transicao), background var(--transicao);
-}
+.toggle-senha { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; color: var(--texto-suave); transition: color var(--transicao), background var(--transicao); }
 .toggle-senha:hover { color: var(--azul-500); background: var(--azul-100); }
-
 .erro { font-size: 0.78rem; font-weight: 600; color: var(--erro); padding-left: 28px; }
 .erro-geral { font-size: 0.85rem; font-weight: 600; color: var(--erro); background: var(--erro-bg); border-radius: var(--raio); padding: 10px 14px; }
 
@@ -213,27 +142,16 @@ h1, h2, h3 { font-family: var(--fonte-titulo); font-weight: 700; letter-spacing:
 .campo-acessibilidade { border: none; display: flex; flex-direction: column; gap: 14px; }
 .ajuda-acessibilidade { font-size: 0.85rem; color: var(--texto-suave); margin-top: -6px; }
 .niveis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-
 .nivel { position: relative; cursor: pointer; }
 .nivel input { position: absolute; opacity: 0; pointer-events: none; }
-
-.nivel-card {
-    display: flex; flex-direction: column; align-items: center; text-align: center;
-    gap: 6px; padding: 16px 10px;
-    border: 1.5px solid var(--linha); border-radius: var(--raio);
-    background: var(--branco); height: 100%;
-    transition: border-color var(--transicao), background var(--transicao), transform var(--transicao);
-}
+.nivel-card { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; padding: 16px 10px; border: 1.5px solid var(--linha); border-radius: var(--raio); background: var(--branco); height: 100%; transition: border-color var(--transicao), background var(--transicao), transform var(--transicao); }
 .nivel-card i { font-size: 1.25rem; color: var(--texto); margin-bottom: 4px; transition: color var(--transicao); }
 .nivel-card strong { font-size: 0.85rem; font-weight: 700; color: var(--texto); }
 .nivel-card small { font-size: 0.7rem; color: var(--texto-suave); line-height: 1.3; }
-
 .nivel:hover .nivel-card { border-color: var(--azul-500); transform: translateY(-2px); }
 .nivel:hover .nivel-card i { color: var(--azul-500); }
-
 .nivel input:checked + .nivel-card { border-color: var(--azul-500); background: var(--azul-100); }
 .nivel input:checked + .nivel-card i { color: var(--azul-500); }
-
 .nivel input:focus-visible + .nivel-card { outline: 2px solid var(--azul-500); outline-offset: 2px; }
 
 /* =========================================================
@@ -311,47 +229,22 @@ h1, h2, h3 { font-family: var(--fonte-titulo); font-weight: 700; letter-spacing:
     *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 
-/* =========================================================
-   Cadastro — Validação e estado de envio
-   ========================================================= */
-
 /* Mensagens e elementos ocultos. */
-[hidden] {
-    display: none !important;
-}
+[hidden] { display: none !important; }
 
 /* Destaque visual dos campos inválidos. */
-#form-cadastro .campo-input.invalido {
-    border-color: var(--erro, #b91c1c);
-    box-shadow: 0 0 0 1px var(--erro, #b91c1c);
-}
+#form-cadastro .campo-input.invalido { border-color: var(--erro, #b91c1c); box-shadow: 0 0 0 1px var(--erro, #b91c1c); }
 
 /* Mensagens de erro dos campos e da API. */
-#form-cadastro .erro,
-#form-cadastro .erro-geral {
-    overflow-wrap: anywhere;
-}
-
-/* Evita que a mensagem geral fique colada nos campos. */
-#form-cadastro .erro-geral {
-    margin-top: 12px;
-    margin-bottom: 12px;
-}
+#form-cadastro .erro, #form-cadastro .erro-geral { overflow-wrap: anywhere; }
+#form-cadastro .erro-geral { margin-top: 12px; margin-bottom: 12px; }
 
 /* Indica que o cadastro está sendo enviado. */
-#btn-cadastrar:disabled {
-    opacity: 0.7;
-    cursor: wait;
-}
-
-#btn-cadastrar.carregando {
-    pointer-events: none;
-}
+#btn-cadastrar:disabled { opacity: 0.7; cursor: wait; }
+#btn-cadastrar.carregando { pointer-events: none; }
 
 /* Mantém o botão do olho disponível para interação. */
-#toggle-senha {
-    cursor: pointer;
-}
+#toggle-senha { cursor: pointer; }
 
 /* Foco visível para navegação por teclado. */
 #btn-cadastrar:focus-visible,
@@ -360,4 +253,33 @@ h1, h2, h3 { font-family: var(--fonte-titulo); font-weight: 700; letter-spacing:
 #form-cadastro input[name="acessibilidade"]:focus-visible {
     outline: 3px solid #1d4ed8;
     outline-offset: 4px;
+}
+
+/* =========================================================
+   TRAVA DE SEGURANÇA: IGNORAR O MODO ESCURO NO CADASTRO
+   ========================================================= */
+/* Se o body tiver a classe dark-mode, ele vai ignorar as variáveis 
+   do modo escuro e forçar as cores claras de volta para o cadastro. */
+body.dark-mode {
+    --fundo: #f6f9fe !important;
+    --texto: #0e1530 !important;
+    --texto-suave: #5a6484 !important;
+    --branco: #ffffff !important;
+    --linha: rgba(1, 53, 205, 0.14) !important;
+    
+    background: linear-gradient(180deg, #dde9f5 0%, #cfdff0 55%, #c6d8ec 100%) !important;
+    color: var(--texto) !important;
+}
+
+body.dark-mode .cadastro-card {
+    background: #ffffff !important;
+    border-color: rgba(1, 53, 205, 0.08) !important;
+}
+
+body.dark-mode .campo-input input,
+body.dark-mode .cadastro-titulo h1,
+body.dark-mode .cadastro-titulo p,
+body.dark-mode .nome-logo strong,
+body.dark-mode .nome-logo span {
+    color: #0e1530 !important;
 }
