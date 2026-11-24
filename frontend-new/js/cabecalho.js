@@ -1,15 +1,19 @@
 /* =========================================================
    Omni IA Support — Identificação visual no cabeçalho
 
-   Mostra o nome e a primeira letra após cadastro ou login.
+   - Mostra o nome e a primeira letra após cadastro ou login.
+   - Ao sair, remove o token e a identificação visual.
+   - Recarrega a página para reiniciar o widget como visitante.
 
-   Não autentica o usuário e não autoriza operações na API.
+   A identificação visual não autentica o usuário.
+   A validação das requisições continua no backend.
    ========================================================= */
 
    (() => {
     "use strict";
 
     const CHAVE_PERFIL = "omni:perfil-interface";
+    const CHAVE_TOKEN = "omni:token_acesso";
 
     const pill = document.querySelector("#user-pill");
     const entrar = document.querySelector("#btn-entrar-header");
@@ -29,11 +33,16 @@
 
     if (obrigatorios.some((elemento) => !elemento)) {
         console.error(
-            "Cabeçalho: faltam elementos no index.html."
+            "Cabeçalho: faltam elementos no HTML. " +
+            "Confira os IDs."
         );
+
         return;
     }
 
+    let saindo = false;
+
+    // ---------- Estado de visitante ----------
     function mostrarVisitante() {
         entrar.hidden = false;
         perfil.hidden = true;
@@ -42,14 +51,21 @@
         nome.textContent = "";
         avatar.textContent = "?";
 
+        perfil.removeAttribute("aria-label");
+
         pill.dataset.perfilVisivel = "false";
     }
 
+    // ---------- Nome para apresentação ----------
     function carregarNome() {
         try {
-            const salvo = sessionStorage.getItem(CHAVE_PERFIL);
+            const salvo = sessionStorage.getItem(
+                CHAVE_PERFIL
+            );
 
-            if (!salvo) return null;
+            if (!salvo) {
+                return null;
+            }
 
             const dados = JSON.parse(salvo);
 
@@ -60,9 +76,13 @@
                 return null;
             }
 
-            const nomeExibicao = dados.nome_exibicao.trim();
+            const nomeExibicao =
+                dados.nome_exibicao.trim();
 
-            if (!nomeExibicao || nomeExibicao.length > 150) {
+            if (
+                !nomeExibicao ||
+                nomeExibicao.length > 150
+            ) {
                 return null;
             }
 
@@ -72,6 +92,7 @@
         }
     }
 
+    // ---------- Atualização do cabeçalho ----------
     function atualizarCabecalho() {
         const nomeExibicao = carregarNome();
 
@@ -99,17 +120,64 @@
         pill.dataset.perfilVisivel = "true";
     }
 
-    remover.addEventListener("click", () => {
+    // ---------- Saída da conta neste navegador ----------
+    remover.addEventListener("click", (evento) => {
+        evento.preventDefault();
+
+        if (saindo) {
+            return;
+        }
+
+        saindo = true;
+
+        // Primeiro remove a credencial usada pela API.
+        try {
+            localStorage.removeItem(CHAVE_TOKEN);
+
+            if (
+                localStorage.getItem(CHAVE_TOKEN) !== null
+            ) {
+                throw new Error(
+                    "A credencial permaneceu no armazenamento."
+                );
+            }
+        } catch {
+            saindo = false;
+
+            console.error(
+                "Não foi possível remover a credencial de acesso."
+            );
+
+            window.alert(
+                "Não foi possível concluir a saída. " +
+                "Confira as permissões de armazenamento " +
+                "do navegador e tente novamente."
+            );
+
+            return;
+        }
+
+        // Depois limpa a identificação visual.
         try {
             sessionStorage.removeItem(CHAVE_PERFIL);
         } catch {
-            // Ainda permite limpar a apresentação atual.
+            console.warn(
+                "Não foi possível remover o nome " +
+                "do armazenamento."
+            );
         }
 
         mostrarVisitante();
+
+        // Reinicia o widget sem o token da conta anterior.
+        window.location.reload();
     });
 
-    window.addEventListener("pageshow", atualizarCabecalho);
+    // Atualiza também ao retornar pelo histórico do navegador.
+    window.addEventListener(
+        "pageshow",
+        atualizarCabecalho
+    );
 
     atualizarCabecalho();
 })();
