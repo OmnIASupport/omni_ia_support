@@ -1,4 +1,12 @@
-from fastapi import APIRouter, HTTPException, Response, status
+from typing import Annotated
+
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    Response,
+    status,
+)
 
 from database import supabase
 from models_perfil_acessibilidade import (
@@ -7,6 +15,7 @@ from models_perfil_acessibilidade import (
     PerfilAcessibilidadeAtualizacao,
 )
 from postgrest.exceptions import APIError
+from seguranca import obter_usuario_atual
 
 
 router = APIRouter(
@@ -139,14 +148,24 @@ def preparar_atualizacao(
     response_model=PerfilAcessibilidadeSaida,
     status_code=status.HTTP_201_CREATED,
 )
-def cadastrar_perfil(dados: PerfilAcessibilidadeEntrada):
-    # Confere se o usuário está disponível antes de gravar.
-    validar_usuario(dados.id_usuario)
+def cadastrar_perfil(
+    dados: PerfilAcessibilidadeEntrada,
+    usuario: Annotated[
+        dict,
+        Depends(obter_usuario_atual),
+    ],
+):
+    id_usuario = usuario["id_usuario"]
 
     try:
         resposta = (
             supabase.table("perfil_acessibilidade")
-            .insert(dados.model_dump(mode="json"))
+            .insert(
+                {
+                    **dados.model_dump(mode="json"),
+                    "id_usuario": id_usuario,
+                }
+            )
             .execute()
         )
     except APIError as erro:
@@ -154,22 +173,19 @@ def cadastrar_perfil(dados: PerfilAcessibilidadeEntrada):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail=(
-                    "Já existe um perfil de acessibilidade "
-                    "para este usuário."
+                    "Você já possui um perfil de acessibilidade."
                 ),
             ) from erro
 
         if erro.code == "23503":
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=status.HTTP_409_CONFLICT,
                 detail=(
-                    "O usuário informado não está mais disponível "
-                    "para vincular o perfil. Consulte os usuários "
-                    "cadastrados."
+                    "A conta vinculada à sua sessão não está "
+                    "mais disponível para criar o perfil."
                 ),
             ) from erro
 
-        # Preserva o tratamento geral dos demais erros do Supabase.
         raise
 
     if not resposta.data:
@@ -189,37 +205,64 @@ def cadastrar_perfil(dados: PerfilAcessibilidadeEntrada):
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail=(
-                "O Supabase respondeu sem o ID do perfil cadastrado. "
-                "Confira os registros antes de tentar novamente."
+                "O Supabase respondeu sem o ID do perfil "
+                "cadastrado. Confira os registros antes de "
+                "tentar novamente."
             ),
         )
 
     return buscar_perfil(id_novo)
 
 @router.get(
-    "/",
-    response_model=list[PerfilAcessibilidadeSaida],
+    "/meu",
+    response_model=PerfilAcessibilidadeSaida | None,
 )
-def listar_perfis():
+def consultar_meu_perfil(
+    response: Response,
+    usuario: Annotated[
+        dict,
+        Depends(obter_usuario_atual),
+    ],
+):
+    response.headers["Cache-Control"] = "no-store"
+
     resposta = (
         supabase.table("perfil_acessibilidade")
         .select(COLUNAS)
-        .order("id_perfil_acessibilidade")
+        .eq(
+            "id_usuario",
+            usuario["id_usuario"],
+        )
+        .limit(1)
         .execute()
     )
 
-    return [
-        preparar_saida(registro)
-        for registro in resposta.data
-    ]
+    if not resposta.data:
+        return None
+
+    return preparar_saida(resposta.data[0])
 
 
 @router.get(
     "/{id_perfil_acessibilidade}",
     response_model=PerfilAcessibilidadeSaida,
 )
-def consultar_perfil(id_perfil_acessibilidade: int):
-    return buscar_perfil(id_perfil_acessibilidade)
+def consultar_perfil(
+    id_perfil_acessibilidade: int,
+    usuario: Annotated[
+        dict,
+        Depends(obter_usuario_atual),
+    ],
+):
+    perfil = buscar_perfil(id_perfil_acessibilidade)
+
+    if perfil["id_usuario"] != usuario["id_usuario"]:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Perfil de acessibilidade não encontrado.",
+        )
+
+    return perfil
 
 @router.patch(
     "/{id_perfil_acessibilidade}",
@@ -228,11 +271,29 @@ def consultar_perfil(id_perfil_acessibilidade: int):
 def atualizar_perfil(
     id_perfil_acessibilidade: int,
     dados: PerfilAcessibilidadeAtualizacao,
+    usuario: Annotated[
+        dict,
+        Depends(obter_usuario_atual),
+    ],
 ):
-    # Confere se o perfil existe antes de atualizar.
-    buscar_perfil(id_perfil_acessibilidade)
+    perfil = buscar_perfil(id_perfil_acessibilidade)
+
+    if perfil["id_usuario"] != usuario["id_usuario"]:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Perfil de acessibilidade não encontrado.",
+        )
 
     campos = preparar_atualizacao(dados)
+
+    if not campos:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                "Informe pelo menos um campo para atualizar "
+                "o perfil de acessibilidade."
+            ),
+        )
 
     resposta = (
         supabase.table("perfil_acessibilidade")
@@ -256,7 +317,21 @@ def atualizar_perfil(
     "/{id_perfil_acessibilidade}",
     status_code=status.HTTP_204_NO_CONTENT,
 )
-def excluir_perfil(id_perfil_acessibilidade: int):
+def excluir_perfil(
+    id_perfil_acessibilidade: int,
+    usuario: Annotated[
+        dict,
+        Depends(obter_usuario_atual),
+    ],
+):
+    perfil = buscar_perfil(id_perfil_acessibilidade)
+
+    if perfil["id_usuario"] != usuario["id_usuario"]:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Perfil de acessibilidade não encontrado.",
+        )
+
     resposta = (
         supabase.table("perfil_acessibilidade")
         .delete()

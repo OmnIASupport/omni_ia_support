@@ -8,9 +8,6 @@ from pydantic import BaseModel, ConfigDict, Field
 class PerfilAcessibilidadeEntrada(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    # Usuário existente ao qual o perfil pertence.
-    id_usuario: int = Field(gt=0)
-
     # Preferências de apresentação.
     prefere_legenda: bool = False
 

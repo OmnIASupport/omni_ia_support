@@ -7,7 +7,8 @@
    - Guarda o nome para apresentação no cabeçalho.
    - Redireciona para o index.html da raiz.
 
-   Não cria uma sessão autenticada no navegador.
+   Guarda o token de acesso para as requisições autenticadas.
+Implementação de armazenamento destinada ao teste local.
    ========================================================= */
 
    (() => {
@@ -16,6 +17,7 @@
     const API_URL = "http://127.0.0.1:8000/login/";
     const CHAVE_EMAIL = "omni:email";
     const CHAVE_PERFIL = "omni:perfil-interface";
+    const CHAVE_TOKEN = "omni:token_acesso";
 
     const $ = (seletor) => document.querySelector(seletor);
 
@@ -294,14 +296,37 @@
             );
         }
 
-        if (!usuario || usuario.id_usuario == null) {
+        if (
+            !usuario ||
+            usuario.id_usuario == null ||
+            typeof usuario.access_token !== "string" ||
+            !usuario.access_token.trim() ||
+            usuario.token_type?.toLowerCase() !== "bearer"
+        ) {
             throw new Error(
-                "A API retornou uma resposta de login incompleta."
+                "A API retornou uma resposta de login incompleta. " +
+                "Confira se o backend está retornando access_token " +
+                "e token_type."
             );
         }
-
+        
         return usuario;
     }
+    // ---------- Credencial para integração local ----------
+function guardarToken(usuario) {
+    try {
+        localStorage.setItem(
+            CHAVE_TOKEN,
+            usuario.access_token
+        );
+    } catch {
+        throw new Error(
+            "Não foi possível guardar a credencial de acesso. " +
+            "Confira se o navegador permite armazenamento " +
+            "para este site."
+        );
+    }
+}
 
     // ---------- Envio ----------
     form.addEventListener("submit", async (evento) => {
@@ -320,8 +345,11 @@
                 email_usuario: emailInformado,
                 senha_usuario: senha.value,
             });
-
-            // NOVO: guarda o nome retornado pela API.
+            
+            // Guarda a credencial antes de abrir a página inicial.
+            guardarToken(usuario);
+            
+            // Guarda somente o nome para apresentação.
             guardarNome(usuario);
 
             atualizarEmailLembrado(emailInformado);

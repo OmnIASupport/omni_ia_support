@@ -1,4 +1,4 @@
-#!/home/felipe/omni_ia_support/.venv/bin/python3
+#!/home/omniiasupport/omni_ia_support/.venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

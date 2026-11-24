@@ -476,3 +476,22 @@ body.dark-mode #btn-sair:hover {
     background: rgba(239, 68, 68, 0.15) !important;
 }
 
+.omni-acess-status {
+    margin: 0 0 12px;
+    font-size: 0.85rem;
+    color: #4b5563;
+}
+
+.omni-acess-status.erro {
+    color: #b91c1c;
+    font-weight: 600;
+}
+
+body.dark-mode .omni-acess-status {
+    color: #cbd5e1;
+}
+
+body.dark-mode .omni-acess-status.erro {
+    color: #fca5a5;
+}
+
