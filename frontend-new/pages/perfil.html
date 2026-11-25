@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Gerencie seu perfil e dados pessoais no Omni IA Support.">
+  <meta name="theme-color" content="#eaf2ff">
+  <title>Meu Perfil — Omni IA Support</title>
+
+  <link rel="icon" href="icone-omni.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Base visual e estilos específicos (O CSS de acessibilidade foi removido) -->
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="../static/perfil.css">
+</head>
+<body>
+  <a href="#conteudo" class="skip-link">Pular para o conteúdo</a>
+
+  <header class="site-header">
+    <a href="../../index.html" class="logo-container" aria-label="Omni IA Support - página inicial">
+      <img src="logo.png" alt="" class="logo-img">
+      <div class="nome-logo">
+        <strong>Omni IA</strong>
+        <span>Support &amp; Acessibilidade</span>
+      </div>
+    </a>
+
+    <nav class="menu" aria-label="Menu principal">
+      <a href="../../index.html" class="nav-btn">
+        <i class="fa-solid fa-house" aria-hidden="true"></i>
+        <span>Home</span>
+      </a>
+      <a href="dashboard.html" class="nav-btn">
+        <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="traduzir.html" class="nav-btn">
+        <i class="fa-solid fa-hands-asl-interpreting" aria-hidden="true"></i>
+        <span>Traduzir</span>
+      </a>
+      <a href="ajuda.html" class="nav-btn">
+        <i class="fa-solid fa-headset" aria-hidden="true"></i>
+        <span>Ajuda</span>
+      </a>
+    </nav>
+
+    <div class="user-pill" id="user-pill" data-perfil-visivel="false">
+      <a href="login.html?redirect=perfil.html" class="btn-entrar-header" id="btn-entrar-header" aria-label="Entrar na sua conta">
+        <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
+        <span>Entrar</span>
+      </a>
+
+      <div class="user-perfil-logado" id="user-perfil-logado" hidden>
+        <a href="perfil.html" class="perfil-link" aria-current="page" aria-label="Abrir seu perfil">
+          <span class="avatar" id="avatar-iniciais" aria-hidden="true">?</span>
+          <span class="user-info">
+            <span class="user-name" id="user-nome">—</span>
+          </span>
+        </a>
+        <button type="button" class="btn-sair" id="btn-sair" aria-label="Sair da conta" title="Sair">
+          <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="conteudo" class="perfil-main">
+    <!-- Barra superior com retorno ao Dashboard -->
+    <div class="perfil-navegacao">
+      <a href="dashboard.html" class="btn-voltar">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        <span>Voltar ao Dashboard</span>
+      </a>
+    </div>
+
+    <!-- Cartão de Identidade -->
+    <section class="perfil-hero" aria-labelledby="titulo-perfil">
+      <div class="perfil-avatar-grande" id="perfil-avatar" aria-hidden="true">?</div>
+
+      <div class="perfil-info-topo">
+        <p class="eyebrow">Sua conta</p>
+        <h1 id="titulo-perfil">Olá, <span id="perfil-nome-display">Usuário</span></h1>
+        <p class="perfil-email">
+          <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+          <span id="perfil-email-display">—</span>
+        </p>
+        <span class="perfil-badge" id="perfil-nivel">Nível: —</span>
+      </div>
+
+      <a href="#form-editar" class="btn-ghost">
+        <i class="fa-solid fa-pen" aria-hidden="true"></i>
+        Editar dados
+      </a>
+    </section>
+
+    <div class="perfil-grid">
+      <!-- Formulário de Edição -->
+      <section class="perfil-card" id="form-editar" aria-labelledby="titulo-dados">
+        <header class="card-head">
+          <h2 id="titulo-dados">
+            <i class="fa-solid fa-user-pen" aria-hidden="true"></i>
+            Dados Pessoais
+          </h2>
+          <p>Atualize seu nome, e-mail, telefone e preferência de comunicação.</p>
+        </header>
+
+        <form id="form-perfil" novalidate>
+          <div class="campo">
+            <label for="edit-nome">Nome completo ou de exibição</label>
+            <div class="campo-input">
+              <i class="fa-regular fa-user" aria-hidden="true"></i>
+              <input type="text" id="edit-nome" name="nome" maxlength="150" placeholder="Seu nome" required>
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="edit-email">E-mail</label>
+            <div class="campo-input">
+              <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+              <input type="email" id="edit-email" name="email" maxlength="255" placeholder="voce@exemplo.com" required>
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="edit-telefone">Telefone</label>
+            <div class="campo-input">
+              <i class="fa-solid fa-phone" aria-hidden="true"></i>
+              <input type="tel" id="edit-telefone" name="telefone" maxlength="20" placeholder="(11) 99999-9999">
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="edit-nivel">Nível de acessibilidade</label>
+            <div class="campo-input">
+              <i class="fa-solid fa-universal-access" aria-hidden="true"></i>
+              <select id="edit-nivel" name="nivel">
+                <option value="surdo">Surdo (Uso Libras como primeira língua)</option>
+                <option value="ouvinte">Ouvinte (Quero me comunicar com surdos)</option>
+                <option value="ambos">Ambos (Uso as duas formas)</option>
+              </select>
+            </div>
+          </div>
+
+          <p class="alerta-msg alerta-erro" id="erro-perfil" role="alert" hidden></p>
+          <p class="alerta-msg alerta-sucesso" id="sucesso-perfil" role="status" hidden></p>
+
+          <div class="form-acoes">
+            <button type="submit" class="btn-primario" id="btn-salvar-perfil">
+              <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+              Salvar alterações
+            </button>
+
+            <a href="dashboard.html" class="btn-ghost">
+              Voltar ao painel
+            </a>
+          </div>
+        </form>
+      </section>
+
+      <!-- Coluna Lateral -->
+      <aside class="perfil-lateral">
+        <section class="perfil-card" aria-labelledby="titulo-seguranca">
+          <header class="card-head">
+            <h2 id="titulo-seguranca">
+              <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+              Sessão e Segurança
+            </h2>
+          </header>
+          <p class="texto-suave">
+            As alterações salvas aqui atualizam imediatamente sua sessão local e o resumo exibido no Dashboard.
+          </p>
+          <hr class="divisor">
+          <button type="button" class="btn-perigo btn-full" id="btn-encerrar-sessao">
+            <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+            Encerrar sessão
+          </button>
+        </section>
+
+        <section class="perfil-card" aria-labelledby="titulo-sobre">
+          <header class="card-head">
+            <h2 id="titulo-sobre">
+              <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+              Resumo da conta
+            </h2>
+          </header>
+          <ul class="lista-detalhes">
+            <li><span>Status:</span> <strong class="texto-verde">Ativa</strong></li>
+            <li><span>Armazenamento:</span> <strong>Sessão local (Navegador)</strong></li>
+            <li><span>Sincronização:</span> <strong>Integrada ao Dashboard</strong></li>
+          </ul>
+          <p class="nota">
+            O salvamento local mantém seus dados ativos neste navegador, sem substituir uma atualização no banco de dados do servidor.
+          </p>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-marca">
+      <img src="logo.png" alt="" class="footer-logo">
+      <p>
+        <strong>Omni IA Support</strong><br>
+        Comunicação acessível entre Português e Libras.
+      </p>
+    </div>
+    <nav aria-label="Links do rodapé">
+      <a href="../../index.html">Home</a>
+      <a href="traduzir.html">Traduzir</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="ajuda.html">Ajuda</a>
+    </nav>
+    <p class="footer-copy">© 2026 Omni IA Support</p>
+  </footer>
+
+  <script src="../js/cabecalho.js" defer></script>
+  <script src="../js/perfil.js" defer></script>
+</body>
+</html>

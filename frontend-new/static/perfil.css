@@ -1,0 +1,388 @@
+/* =========================================================
+   Omni IA Support — Meu Perfil
+   Base visual: ../../style.css e acessibilidade.css
+   ========================================================= */
+
+   .perfil-main {
+    padding: 40px 32px 96px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  
+  /* =========================================================
+     Botão Voltar ao Dashboard
+     ========================================================= */
+  
+  .perfil-navegacao {
+    display: flex;
+    align-items: center;
+  }
+  
+  .btn-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    background: var(--branco);
+    border: 1px solid var(--linha);
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--texto);
+    box-shadow: var(--sombra-sm);
+    transition:
+      transform var(--transicao),
+      border-color var(--transicao),
+      color var(--transicao);
+  }
+  
+  .btn-voltar:hover {
+    transform: translateX(-3px);
+    border-color: var(--azul-500);
+    color: var(--azul-500);
+  }
+  
+  /* =========================================================
+     Cartão de Identidade (Hero do Perfil)
+     ========================================================= */
+  
+  .perfil-hero {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 32px;
+    background: var(--branco);
+    border: 1px solid var(--linha);
+    border-radius: var(--raio-lg);
+    box-shadow: var(--sombra-sm);
+    animation: entrar 0.6s ease both;
+  }
+  
+  .perfil-avatar-grande {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--azul-500), var(--azul-700));
+    color: var(--branco);
+    font-family: var(--fonte-titulo);
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    box-shadow: 0 10px 24px rgba(1, 53, 205, 0.2);
+  }
+  
+  .perfil-info-topo {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .perfil-info-topo h1 {
+    font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+    color: var(--texto);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+  
+  .perfil-email {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    color: var(--texto-suave);
+    overflow-wrap: anywhere;
+  }
+  
+  .perfil-badge {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    margin-top: 4px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: var(--azul-100);
+    color: var(--azul-700);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+  
+  /* =========================================================
+     Grid Principal e Cards
+     ========================================================= */
+  
+  .perfil-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+  
+  .perfil-lateral {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .perfil-card {
+    background: var(--branco);
+    border: 1px solid var(--linha);
+    border-radius: var(--raio-lg);
+    padding: 32px;
+    box-shadow: var(--sombra-sm);
+    animation: entrar 0.7s ease both;
+  }
+  
+  .card-head {
+    margin-bottom: 24px;
+  }
+  
+  .card-head h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2rem;
+    color: var(--texto);
+    margin-bottom: 6px;
+  }
+  
+  .card-head h2 i {
+    color: var(--azul-500);
+  }
+  
+  .card-head p {
+    font-size: 0.92rem;
+    color: var(--texto-suave);
+    line-height: 1.6;
+  }
+  
+  /* =========================================================
+     Formulário
+     ========================================================= */
+  
+  #form-perfil {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .campo label {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--texto);
+  }
+  
+  .campo-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .campo-input i {
+    position: absolute;
+    left: 16px;
+    color: var(--texto-suave);
+    font-size: 0.95rem;
+    pointer-events: none;
+  }
+  
+  .campo-input input,
+  .campo-input select {
+    width: 100%;
+    padding: 13px 16px 13px 44px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--texto);
+    background: #f9fbff;
+    border: 1.5px solid var(--linha);
+    border-radius: var(--raio-md, 12px);
+    transition:
+      border-color var(--transicao),
+      background var(--transicao),
+      box-shadow var(--transicao);
+  }
+  
+  .campo-input input:focus,
+  .campo-input select:focus {
+    outline: none;
+    background: var(--branco);
+    border-color: var(--azul-500);
+    box-shadow: 0 0 0 4px rgba(1, 53, 205, 0.12);
+  }
+  
+  .form-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  
+  /* =========================================================
+     Alertas de Feedback
+     ========================================================= */
+  
+  .alerta-msg {
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  
+  .alerta-erro {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+  }
+  
+  .alerta-sucesso {
+    background: #e8f5ee;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+  }
+  
+  /* =========================================================
+     Coluna Lateral e Detalhes
+     ========================================================= */
+  
+  .texto-suave {
+    font-size: 0.9rem;
+    color: var(--texto-suave);
+    line-height: 1.6;
+  }
+  
+  .divisor {
+    border: none;
+    border-top: 1px solid var(--linha);
+    margin: 20px 0;
+  }
+  
+  .btn-full {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .btn-perigo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 999px;
+    border: 1.5px solid #fecaca;
+    background: #fef2f2;
+    color: #dc2626;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+      background var(--transicao),
+      border-color var(--transicao);
+  }
+  
+  .btn-perigo:hover {
+    background: #fee2e2;
+    border-color: #f87171;
+  }
+  
+  .lista-detalhes {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  
+  .lista-detalhes li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--linha);
+    font-size: 0.9rem;
+    color: var(--texto-suave);
+  }
+  
+  .lista-detalhes li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  
+  .lista-detalhes strong {
+    color: var(--texto);
+    text-align: right;
+  }
+  
+  .texto-verde {
+    color: #16a34a !important;
+  }
+  
+  .nota {
+    font-size: 0.82rem;
+    color: var(--texto-suave);
+    line-height: 1.5;
+    background: #f9fbff;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--linha);
+  }
+  
+  /* =========================================================
+     Responsividade
+     ========================================================= */
+  
+  @media (max-width: 1024px) {
+    .perfil-main {
+      padding: 32px 20px 72px;
+    }
+  
+    .perfil-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .perfil-main {
+      padding: 24px 16px 56px;
+      gap: 24px;
+    }
+  
+    .perfil-hero {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 24px;
+      gap: 16px;
+    }
+  
+    .perfil-avatar-grande {
+      width: 68px;
+      height: 68px;
+      font-size: 1.6rem;
+    }
+  
+    .perfil-card {
+      padding: 24px 20px;
+    }
+  
+    .form-acoes .btn-primario,
+    .form-acoes .btn-ghost {
+      width: 100%;
+      justify-content: center;
+    }
+  }
