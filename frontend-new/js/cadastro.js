@@ -1,24 +1,29 @@
 /* =========================================================
-   Omni IA Support — Cadastro
+   Omni IA Support — Cadastro com entrada automática
 
-   - POST /usuarios/
-   - Valida os campos.
-   - Envia senha_usuario para o backend.
-   - Guarda somente o nome para apresentação no cabeçalho.
+   - Valida os campos do formulário.
+   - POST /usuarios/ para criar a conta.
+   - POST /login/ para autenticar após o cadastro.
+   - Guarda o token utilizado pelo widget.
+   - Guarda o nome para apresentação no cabeçalho.
    - Redireciona para o index.html da raiz.
 
-   Não cria uma sessão autenticada no navegador.
+   Não salva a senha em localStorage ou sessionStorage.
    ========================================================= */
 
    (() => {
     "use strict";
 
     const API_URL = "http://127.0.0.1:8000/usuarios/";
+    const LOGIN_URL = "http://127.0.0.1:8000/login/";
+
     const CHAVE_PERFIL = "omni:perfil-interface";
+    const CHAVE_TOKEN = "omni:token_acesso";
 
     const $ = (seletor) => document.querySelector(seletor);
 
     const form = $("#form-cadastro");
+
     if (!form) return;
 
     const nomeExib = $("#nome-exibicao");
@@ -58,18 +63,23 @@
         console.error(
             "Cadastro: faltam elementos no HTML. Confira os IDs."
         );
+
         return;
     }
 
     const textoBtn = btnCadastrar.querySelector(".btn-texto");
 
     if (!textoBtn) {
-        console.error("Cadastro: falta .btn-texto no botão.");
+        console.error(
+            "Cadastro: falta .btn-texto no botão."
+        );
+
         return;
     }
 
     let enviando = false;
     let redirecionando = false;
+    let contaCriada = false;
 
     // ---------- Configuração ----------
     senha.disabled = false;
@@ -91,12 +101,17 @@
 
     textoBtn.textContent = "Criar conta";
 
+    erroGeral.setAttribute("role", "alert");
+
     // ---------- Mensagens ----------
     function mostrarErro(campo, mensagem) {
         const wrapper =
-            campo.closest(".campo-input") || campo.parentElement;
+            campo.closest(".campo-input") ||
+            campo.parentElement;
 
-        const erro = document.getElementById(`erro-${campo.id}`);
+        const erro = document.getElementById(
+            `erro-${campo.id}`
+        );
 
         wrapper?.classList.add("invalido");
 
@@ -110,9 +125,12 @@
 
     function limparErro(campo) {
         const wrapper =
-            campo.closest(".campo-input") || campo.parentElement;
+            campo.closest(".campo-input") ||
+            campo.parentElement;
 
-        const erro = document.getElementById(`erro-${campo.id}`);
+        const erro = document.getElementById(
+            `erro-${campo.id}`
+        );
 
         wrapper?.classList.remove("invalido");
 
@@ -156,7 +174,9 @@
     function validarNomeCompleto(valor) {
         const texto = valor.trim();
 
-        if (!texto) return null;
+        if (!texto) {
+            return null;
+        }
 
         if (/\p{N}/u.test(texto)) {
             return "O nome completo não pode conter números.";
@@ -200,7 +220,10 @@
         }
 
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(texto)) {
-            return "Digite um e-mail completo, como nome@gmail.com.";
+            return (
+                "Digite um e-mail completo, " +
+                "como nome@gmail.com."
+            );
         }
 
         const dominio = texto.split("@")[1];
@@ -251,17 +274,25 @@
     function validarTelefone(valor) {
         const digitos = soDigitos(valor);
 
-        if (!digitos) return null;
+        if (!digitos) {
+            return null;
+        }
 
         if (![10, 11].includes(digitos.length)) {
-            return "Informe um telefone com DDD e 10 ou 11 dígitos.";
+            return (
+                "Informe um telefone com DDD " +
+                "e 10 ou 11 dígitos."
+            );
         }
 
         if (!DDDS_VALIDOS.has(Number(digitos.slice(0, 2)))) {
             return "DDD inválido.";
         }
 
-        if (digitos.length === 11 && digitos[2] !== "9") {
+        if (
+            digitos.length === 11 &&
+            digitos[2] !== "9"
+        ) {
             return "O celular deve começar com 9 após o DDD.";
         }
 
@@ -276,32 +307,39 @@
     }
 
     function formatarTelefone(valor) {
-        const d = soDigitos(valor).slice(0, 11);
+        const digitos = soDigitos(valor).slice(0, 11);
 
-        if (d.length <= 2) {
-            return d ? `(${d}` : "";
+        if (digitos.length <= 2) {
+            return digitos ? `(${digitos}` : "";
         }
 
-        if (d.length <= 6) {
-            return `(${d.slice(0, 2)}) ${d.slice(2)}`;
-        }
-
-        if (d.length <= 10) {
+        if (digitos.length <= 6) {
             return (
-                `(${d.slice(0, 2)}) ` +
-                `${d.slice(2, 6)}-${d.slice(6)}`
+                `(${digitos.slice(0, 2)}) ` +
+                digitos.slice(2)
+            );
+        }
+
+        if (digitos.length <= 10) {
+            return (
+                `(${digitos.slice(0, 2)}) ` +
+                `${digitos.slice(2, 6)}-` +
+                digitos.slice(6)
             );
         }
 
         return (
-            `(${d.slice(0, 2)}) ` +
-            `${d.slice(2, 7)}-${d.slice(7)}`
+            `(${digitos.slice(0, 2)}) ` +
+            `${digitos.slice(2, 7)}-` +
+            digitos.slice(7)
         );
     }
 
     // ---------- Validação geral ----------
     const nivelEscolhido = () =>
-        form.querySelector('input[name="acessibilidade"]:checked');
+        form.querySelector(
+            'input[name="acessibilidade"]:checked'
+        );
 
     function validarFormulario() {
         limparErroGeral();
@@ -310,7 +348,10 @@
 
         const verificacoes = [
             [nomeExib, validarNomeExibicao(nomeExib.value)],
-            [nomeCompleto, validarNomeCompleto(nomeCompleto.value)],
+            [
+                nomeCompleto,
+                validarNomeCompleto(nomeCompleto.value),
+            ],
             [email, validarEmail(email.value)],
             [telefone, validarTelefone(telefone.value)],
             [senha, validarSenha(senha.value)],
@@ -327,15 +368,18 @@
 
         const nivel = nivelEscolhido();
 
-        const nivelValido =
+        const nivelValido = Boolean(
             nivel &&
-            ["surdo", "ouvinte", "ambos"].includes(nivel.value);
+            ["surdo", "ouvinte", "ambos"].includes(
+                nivel.value
+            )
+        );
 
         erroAcessibilidade.textContent = nivelValido
             ? ""
             : "Escolha um nível de acessibilidade.";
 
-        erroAcessibilidade.hidden = Boolean(nivelValido);
+        erroAcessibilidade.hidden = nivelValido;
 
         if (!nivelValido) {
             valido = false;
@@ -368,22 +412,23 @@
         return valido;
     }
 
-    // ---------- Eventos ----------
+    // ---------- Eventos dos campos ----------
     [nomeExib, nomeCompleto, email, telefone, senha].forEach(
         (campo) => {
             campo.addEventListener("input", () => {
                 limparErro(campo);
-                limparErroGeral();
+
+                if (!contaCriada) {
+                    limparErroGeral();
+                }
             });
         }
     );
 
     nomeCompleto.addEventListener("input", () => {
         if (/\p{N}/u.test(nomeCompleto.value)) {
-            nomeCompleto.value = nomeCompleto.value.replace(
-                /\p{N}/gu,
-                ""
-            );
+            nomeCompleto.value =
+                nomeCompleto.value.replace(/\p{N}/gu, "");
 
             mostrarErro(
                 nomeCompleto,
@@ -393,7 +438,9 @@
     });
 
     telefone.addEventListener("input", () => {
-        telefone.value = formatarTelefone(telefone.value);
+        telefone.value = formatarTelefone(
+            telefone.value
+        );
     });
 
     [
@@ -402,6 +449,10 @@
         [senha, validarSenha],
     ].forEach(([campo, validar]) => {
         campo.addEventListener("blur", () => {
+            if (contaCriada) {
+                return;
+            }
+
             const erro = validar(campo.value);
 
             if (erro) {
@@ -416,7 +467,10 @@
         radio.addEventListener("change", () => {
             erroAcessibilidade.textContent = "";
             erroAcessibilidade.hidden = true;
-            limparErroGeral();
+
+            if (!contaCriada) {
+                limparErroGeral();
+            }
         });
     });
 
@@ -426,15 +480,22 @@
             erroTermos.hidden = true;
         }
 
-        limparErroGeral();
+        if (!contaCriada) {
+            limparErroGeral();
+        }
     });
 
+    // ---------- Mostrar / ocultar senha ----------
     toggleSenha.addEventListener("click", () => {
         const mostrar = senha.type === "password";
 
         senha.type = mostrar ? "text" : "password";
 
-        toggleSenha.setAttribute("aria-pressed", String(mostrar));
+        toggleSenha.setAttribute(
+            "aria-pressed",
+            String(mostrar)
+        );
+
         toggleSenha.setAttribute(
             "aria-label",
             mostrar ? "Ocultar senha" : "Mostrar senha"
@@ -452,15 +513,23 @@
     // ---------- Botão ----------
     function atualizarBotao(ocupado) {
         btnCadastrar.disabled = ocupado;
-        btnCadastrar.classList.toggle("carregando", ocupado);
-        form.setAttribute("aria-busy", String(ocupado));
+
+        btnCadastrar.classList.toggle(
+            "carregando",
+            ocupado
+        );
+
+        form.setAttribute(
+            "aria-busy",
+            String(ocupado)
+        );
 
         textoBtn.textContent = ocupado
             ? "Criando conta..."
             : "Criar conta";
     }
 
-    // ---------- API ----------
+    // ---------- Mensagens da API ----------
     function obterMensagemErro(dados, status) {
         if (Array.isArray(dados?.detail)) {
             return dados.detail.map((erro) => {
@@ -468,7 +537,8 @@
                     .filter((parte) => parte !== "body")
                     .join(".");
 
-                const mensagem = erro.msg || "Valor inválido.";
+                const mensagem =
+                    erro.msg || "Valor inválido.";
 
                 return campo
                     ? `${campo}: ${mensagem}`
@@ -480,48 +550,149 @@
             return dados.detail;
         }
 
-        return `Não foi possível criar a conta. HTTP ${status}.`;
+        return (
+            "Não foi possível criar a conta. " +
+            `HTTP ${status}.`
+        );
     }
 
+    // ---------- Cadastro na API ----------
     async function cadastrarUsuario(dados) {
         let resposta;
 
         try {
             resposta = await fetch(API_URL, {
                 method: "POST",
+
                 headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",
                 },
+
                 body: JSON.stringify(dados),
             });
         } catch {
             throw new Error(
-                "Não foi possível acessar a API. Confira a FastAPI " +
-                "e o CORS. Verifique se o cadastro foi concluído " +
-                "antes de tentar novamente."
+                "Não foi possível confirmar a resposta do cadastro. " +
+                "A conta pode ter sido criada antes da interrupção. " +
+                "Tente entrar pela tela de login antes de " +
+                "repetir o cadastro."
             );
         }
 
-        const usuario = await resposta.json().catch(() => null);
+        if (resposta.ok) {
+            contaCriada = true;
+        }
+
+        const usuario = await resposta.json().catch(
+            () => null
+        );
 
         if (!resposta.ok) {
             throw new Error(
-                obterMensagemErro(usuario, resposta.status)
+                obterMensagemErro(
+                    usuario,
+                    resposta.status
+                )
             );
         }
 
         if (!usuario || usuario.id_usuario == null) {
             throw new Error(
-                "A API respondeu sem o ID do usuário. Confira " +
-                "o backend antes de repetir o cadastro."
+                "O cadastro foi confirmado, mas a resposta " +
+                "não trouxe o ID do usuário."
             );
         }
 
         return usuario;
     }
 
-    // ---------- Dados apenas para apresentação ----------
+    // ---------- Login após o cadastro ----------
+    async function autenticarAposCadastro(
+        emailInformado,
+        senhaInformada,
+        idUsuarioCriado
+    ) {
+        let resposta;
+
+        try {
+            resposta = await fetch(LOGIN_URL, {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+
+                body: JSON.stringify({
+                    email_usuario: emailInformado,
+                    senha_usuario: senhaInformada,
+                }),
+
+                cache: "no-store",
+            });
+        } catch {
+            throw new Error(
+                "Não foi possível acessar a API " +
+                "para entrar automaticamente."
+            );
+        }
+
+        const usuario = await resposta.json().catch(
+            () => null
+        );
+
+        if (!resposta.ok) {
+            throw new Error(
+                typeof usuario?.detail === "string"
+                    ? usuario.detail
+                    : "Não foi possível entrar automaticamente."
+            );
+        }
+
+        if (
+            !usuario ||
+            String(usuario.id_usuario) !==
+                String(idUsuarioCriado) ||
+            typeof usuario.access_token !== "string" ||
+            !usuario.access_token.trim() ||
+            typeof usuario.token_type !== "string" ||
+            usuario.token_type.toLowerCase() !== "bearer"
+        ) {
+            throw new Error(
+                "A API retornou uma resposta de " +
+                "autenticação inesperada."
+            );
+        }
+
+        return usuario;
+    }
+
+    // ---------- Token para o widget ----------
+    function guardarToken(usuario) {
+        try {
+            localStorage.setItem(
+                CHAVE_TOKEN,
+                usuario.access_token
+            );
+
+            if (
+                localStorage.getItem(CHAVE_TOKEN) !==
+                usuario.access_token
+            ) {
+                throw new Error(
+                    "A credencial não foi confirmada."
+                );
+            }
+        } catch {
+            throw new Error(
+                "Não foi possível guardar a credencial " +
+                "de acesso no navegador."
+            );
+        }
+    }
+
+    // ---------- Nome para apresentação ----------
     function guardarNome(usuario) {
         try {
             sessionStorage.removeItem(CHAVE_PERFIL);
@@ -536,13 +707,14 @@
             sessionStorage.setItem(
                 CHAVE_PERFIL,
                 JSON.stringify({
-                    nome_exibicao: usuario.nome_exibicao.trim(),
+                    nome_exibicao:
+                        usuario.nome_exibicao.trim(),
                 })
             );
         } catch {
-            // O cadastro continua mesmo se o armazenamento falhar.
             console.warn(
-                "Não foi possível guardar o nome para o cabeçalho."
+                "Não foi possível guardar o nome " +
+                "para o cabeçalho."
             );
         }
     }
@@ -551,47 +723,116 @@
     form.addEventListener("submit", async (evento) => {
         evento.preventDefault();
 
-        if (enviando || redirecionando) return;
-        if (!validarFormulario()) return;
+        if (enviando || redirecionando) {
+            return;
+        }
+
+        if (contaCriada) {
+            mostrarErroGeral(
+                "Sua conta já foi criada. " +
+                "Use a tela de login para entrar; " +
+                "não é necessário cadastrar novamente."
+            );
+
+            return;
+        }
+
+        if (!validarFormulario()) {
+            return;
+        }
 
         enviando = true;
         atualizarBotao(true);
 
         const conteudo = {
-            nome_exibicao: nomeExib.value.trim(),
-            nome_completo: nomeCompleto.value.trim() || null,
-            email_usuario: email.value.trim().toLowerCase(),
-            telefone_usuario: soDigitos(telefone.value) || null,
-            tipo_usuario: nivelEscolhido().value,
+            nome_exibicao:
+                nomeExib.value.trim(),
+
+            nome_completo:
+                nomeCompleto.value.trim() || null,
+
+            email_usuario:
+                email.value.trim().toLowerCase(),
+
+            telefone_usuario:
+                soDigitos(telefone.value) || null,
+
+            tipo_usuario:
+                nivelEscolhido().value,
+
             status_usuario: "ativo",
-            senha_usuario: senha.value,
+
+            senha_usuario:
+                senha.value,
         };
 
         try {
-            const usuario = await cadastrarUsuario(conteudo);
+            // 1. Cria a conta.
+            const usuarioCriado =
+                await cadastrarUsuario(conteudo);
 
-            // NOVO: guarda o nome retornado pela API.
-            guardarNome(usuario);
+            textoBtn.textContent =
+                "Conta criada. Entrando...";
 
+            // 2. Autentica a conta recém-criada.
+            const usuarioAutenticado =
+                await autenticarAposCadastro(
+                    conteudo.email_usuario,
+                    conteudo.senha_usuario,
+                    usuarioCriado.id_usuario
+                );
+
+            // 3. Guarda o token utilizado pelo widget.
+            guardarToken(usuarioAutenticado);
+
+            // 4. Guarda o nome para o cabeçalho.
+            guardarNome(usuarioAutenticado);
+
+            // 5. Limpa o campo de senha.
             senha.value = "";
 
             redirecionando = true;
-            textoBtn.textContent = "Abrindo página inicial...";
+
+            textoBtn.textContent =
+                "Abrindo página inicial...";
 
             // cadastro.html fica em frontend-new/pages/.
-            window.location.href = "../../index.html";
+            window.location.href =
+                "../../index.html";
         } catch (erro) {
-            // Não registra o objeto enviado nem a senha.
-            mostrarErroGeral(
+            const mensagem =
                 erro instanceof Error
                     ? erro.message
-                    : "Não foi possível cadastrar."
-            );
+                    : "Não foi possível concluir a operação.";
+
+            if (contaCriada) {
+                senha.value = "";
+
+                mostrarErroGeral(
+                    "Sua conta foi criada, mas a entrada " +
+                    "automática não foi concluída. " +
+                    mensagem +
+                    " Acesse a tela de login para entrar. " +
+                    "Não faça outro cadastro."
+                );
+            } else {
+                mostrarErroGeral(mensagem);
+            }
         } finally {
+            // Remove a referência à senha neste objeto.
+            conteudo.senha_usuario = "";
+
             enviando = false;
 
             if (!redirecionando) {
                 atualizarBotao(false);
+
+                if (contaCriada) {
+                    btnCadastrar.disabled = true;
+
+                    textoBtn.textContent =
+                        "Conta criada — acesse o login";
+                }
             }
         }
     });
