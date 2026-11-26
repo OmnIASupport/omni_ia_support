@@ -1,190 +1,597 @@
 /* =========================================================
-   Omni IA Support — Perfil do Usuário (Com Trava de Segurança)
+   Omni IA Support — Perfil do Usuário
+
+   - Sem token: tela bloqueada, com aviso de Login/Cadastro.
+   - Com token: GET /usuarios/me preenche a tela.
+   - Salvar: PATCH /usuarios/me e, depois da confirmação,
+     atualiza o nome e a inicial no cabeçalho.
    ========================================================= */
-   (() => {
+
+(() => {
     "use strict";
 
-    const CHAVE_USUARIO = "omni:usuario";
-    const CHAVE_SESSAO = "omni:sessao";
+    const API_URL = "http://127.0.0.1:8000";
+    const CHAVE_TOKEN = "omni:token_acesso";
+    const CHAVE_PERFIL = "omni:perfil-interface";
+    const EVENTO_PERFIL = "omni:perfil-atualizado";
+    const NIVEIS_VALIDOS = ["surdo", "ouvinte", "ambos"];
 
-    // Elementos do Cabeçalho
-    const pill = document.getElementById("user-pill");
-    const perfilBox = document.getElementById("user-perfil-logado");
-    const elNome = document.getElementById("user-nome");
-    const elIniciais = document.getElementById("avatar-iniciais");
-    const btnSair = document.getElementById("btn-sair");
+    const $ = (id) => document.getElementById(id);
 
-    // Elementos da Página
-    const avatarGrande = document.getElementById("perfil-avatar");
-    const nomeDisplay = document.getElementById("perfil-nome-display");
-    const emailDisplay = document.getElementById("perfil-email-display");
-    const nivelBadge = document.getElementById("perfil-nivel");
-    
-    const form = document.getElementById("form-perfil");
-    const inputNome = document.getElementById("edit-nome");
-    const inputEmail = document.getElementById("edit-email");
-    const inputTelefone = document.getElementById("edit-telefone");
-    const inputNivel = document.getElementById("edit-nivel");
-    const msgErro = document.getElementById("erro-perfil");
-    const msgSucesso = document.getElementById("sucesso-perfil");
-    const btnSalvar = document.getElementById("btn-salvar-perfil");
-    const btnEncerrarSessao = document.getElementById("btn-encerrar-sessao");
+    const avatarGrande = $("perfil-avatar");
+    const nomeDisplay = $("perfil-nome-display");
+    const emailDisplay = $("perfil-email-display");
+    const nivelBadge = $("perfil-nivel");
 
-    // Lê os dados salvos
-    function lerSessao() {
+    const form = $("form-perfil");
+    const inputNome = $("edit-nome");
+    const inputEmail = $("edit-email");
+    const inputTelefone = $("edit-telefone");
+    const inputNivel = $("edit-nivel");
+    const msgErro = $("erro-perfil");
+    const msgSucesso = $("sucesso-perfil");
+    const btnSalvar = $("btn-salvar-perfil");
+    const btnEncerrarSessao = $("btn-encerrar-sessao");
+
+    const obrigatorios = [
+        avatarGrande,
+        nomeDisplay,
+        emailDisplay,
+        nivelBadge,
+        form,
+        inputNome,
+        inputEmail,
+        inputTelefone,
+        inputNivel,
+        msgErro,
+        msgSucesso,
+        btnSalvar,
+        btnEncerrarSessao,
+    ];
+
+    if (obrigatorios.some((elemento) => !elemento)) {
+        console.error(
+            "Perfil: faltam elementos no HTML. Confira os IDs."
+        );
+
+        return;
+    }
+
+    let tokenDaSessao = null;
+    let usuarioAtual = null;
+    let salvando = false;
+    let temporizadorSucesso = null;
+
+    // ---------- Utilitários ----------
+    const obterToken = () => {
         try {
-            const raw = localStorage.getItem(CHAVE_USUARIO) || sessionStorage.getItem(CHAVE_SESSAO);
-            if (!raw) return null;
-            return JSON.parse(raw);
-        } catch (e) {
+            return localStorage.getItem(CHAVE_TOKEN);
+        } catch {
             return null;
         }
-    }
+    };
 
-    function obterIniciais(nome) {
-        const partes = String(nome || "Usuário").trim().split(/\s+/).filter(Boolean);
-        if (partes.length === 0) return "?";
-        if (partes.length === 1) return partes[0].slice(0, 2).toUpperCase();
-        return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase();
-    }
+    const inicial = (nome) =>
+        Array.from(String(nome || "").trim())[0]
+            ?.toLocaleUpperCase("pt-BR") || "?";
 
-    function traduzirNivel(valor) {
+    const traduzirNivel = (valor) => {
         if (valor === "surdo") return "Surdo";
         if (valor === "ouvinte") return "Ouvinte";
         if (valor === "ambos") return "Ambos";
+
         return "Não informado";
+    };
+
+    const soDigitos = (valor) =>
+        String(valor || "").replace(/\D/g, "");
+
+    function formatarTelefone(valor) {
+        const d = soDigitos(valor).slice(0, 11);
+
+        if (d.length <= 2) return d ? `(${d}` : "";
+
+        if (d.length <= 6) {
+            return `(${d.slice(0, 2)}) ${d.slice(2)}`;
+        }
+
+        if (d.length <= 10) {
+            return (
+                `(${d.slice(0, 2)}) ` +
+                `${d.slice(2, 6)}-${d.slice(6)}`
+            );
+        }
+
+        return (
+            `(${d.slice(0, 2)}) ` +
+            `${d.slice(2, 7)}-${d.slice(7)}`
+        );
     }
 
-    // =========================================================
-    // TRAVA DE SEGURANÇA: Bloqueia a tela se não estiver logado
-    // =========================================================
-    function bloquearAcesso() {
-        // 1. Esconde o botão de salvar
-        if (btnSalvar) btnSalvar.style.display = "none";
+    // ---------- Validação ----------
+    const DDDS_VALIDOS = new Set([
+        11, 12, 13, 14, 15, 16, 17, 18, 19,
+        21, 22, 24, 27, 28,
+        31, 32, 33, 34, 35, 37, 38,
+        41, 42, 43, 44, 45, 46, 47, 48, 49,
+        51, 53, 54, 55,
+        61, 62, 63, 64, 65, 66, 67, 68, 69,
+        71, 73, 74, 75, 77, 79,
+        81, 82, 83, 84, 85, 86, 87, 88, 89,
+        91, 92, 93, 94, 95, 96, 97, 98, 99,
+    ]);
 
-        // 2. Desabilita todos os inputs do formulário
-        const inputs = form.querySelectorAll("input, select");
-        inputs.forEach(input => {
-            input.disabled = true;
-            input.placeholder = "Faça login para editar";
-        });
+    function validarNome(nome) {
+        if (!nome) return "O nome não pode ficar vazio.";
 
-        // 3. Mostra a mensagem de erro
-        msgErro.innerHTML = '<i class="fa-solid fa-lock" style="margin-right: 8px;"></i> Você precisa fazer <strong>Login</strong> ou <strong>Cadastro</strong> para desbloquear esta página e editar seus dados.';
+        if (nome.length < 2) {
+            return "O nome deve ter pelo menos 2 caracteres.";
+        }
+
+        if (nome.length > 150) {
+            return "O nome de exibição deve ter até 150 caracteres.";
+        }
+
+        return null;
+    }
+
+    function validarTelefone(digitos) {
+        if (!digitos) return null;
+
+        if (![10, 11].includes(digitos.length)) {
+            return "Informe um telefone com DDD e 10 ou 11 dígitos.";
+        }
+
+        if (!DDDS_VALIDOS.has(Number(digitos.slice(0, 2)))) {
+            return "DDD inválido.";
+        }
+
+        if (digitos.length === 11 && digitos[2] !== "9") {
+            return "O celular deve começar com 9 após o DDD.";
+        }
+
+        if (
+            digitos.length === 10 &&
+            !"2345".includes(digitos[2])
+        ) {
+            return "Telefone fixo inválido.";
+        }
+
+        return null;
+    }
+
+    // ---------- Mensagens ----------
+    function limparMensagens() {
+        clearTimeout(temporizadorSucesso);
+
+        msgErro.replaceChildren();
+        msgErro.hidden = true;
+
+        msgSucesso.textContent = "";
+        msgSucesso.hidden = true;
+    }
+
+    function mostrarErro(texto) {
+        clearTimeout(temporizadorSucesso);
+
+        msgSucesso.hidden = true;
+        msgErro.replaceChildren();
+        msgErro.textContent = texto;
         msgErro.hidden = false;
-        
-        // 4. Deixa o alerta em destaque
-        msgErro.style.backgroundColor = "#fef2f2";
-        msgErro.style.border = "1px solid #fecaca";
-        msgErro.style.padding = "16px";
-        msgErro.style.borderRadius = "8px";
-        msgErro.style.fontSize = "1rem";
-
-        // 5. Atualiza o cabeçalho para mostrar "Entrar"
-        if (pill) pill.dataset.logado = "false";
-        if (perfilBox) perfilBox.hidden = true;
-        const btnEntrar = document.getElementById("btn-entrar-header");
-        if (btnEntrar) btnEntrar.hidden = false;
     }
 
-    // =========================================================
-    // PREENCHER DADOS (Se estiver logado)
-    // =========================================================
-    function carregarDados() {
-        const usuario = lerSessao();
+    function mostrarSucesso(texto) {
+        clearTimeout(temporizadorSucesso);
 
-        if (!usuario) {
-            bloquearAcesso(); // Chama a trava
+        msgErro.replaceChildren();
+        msgErro.hidden = true;
+
+        msgSucesso.textContent = texto;
+        msgSucesso.hidden = false;
+
+        temporizadorSucesso = setTimeout(() => {
+            msgSucesso.hidden = true;
+        }, 4000);
+    }
+
+    function mostrarAvisoLogin(prefixo = "") {
+        clearTimeout(temporizadorSucesso);
+
+        msgSucesso.hidden = true;
+        msgErro.replaceChildren();
+
+        const icone = document.createElement("i");
+        icone.className = "fa-solid fa-lock";
+        icone.setAttribute("aria-hidden", "true");
+
+        const login = document.createElement("a");
+        login.href = "login.html?redirect=perfil.html";
+        login.textContent = "Login";
+
+        const cadastro = document.createElement("a");
+        cadastro.href = "cadastro.html";
+        cadastro.textContent = "Cadastro";
+
+        msgErro.append(
+            icone,
+            document.createTextNode(
+                `${prefixo}Você precisa fazer `
+            ),
+            login,
+            document.createTextNode(" ou "),
+            cadastro,
+            document.createTextNode(
+                " para desbloquear esta página e editar seus dados."
+            )
+        );
+
+        msgErro.hidden = false;
+    }
+
+    // ---------- Cabeçalho ----------
+    function notificarCabecalho() {
+        window.dispatchEvent(new CustomEvent(EVENTO_PERFIL));
+    }
+
+    function guardarNomeCabecalho(nome) {
+        try {
+            sessionStorage.setItem(
+                CHAVE_PERFIL,
+                JSON.stringify({ nome_exibicao: nome })
+            );
+        } catch {
+            console.warn(
+                "Não foi possível guardar o nome para o cabeçalho."
+            );
+        }
+
+        notificarCabecalho();
+    }
+
+    function limparSessaoLocal() {
+        try {
+            localStorage.removeItem(CHAVE_TOKEN);
+        } catch {
+            // Verificado por quem chama.
+        }
+
+        try {
+            sessionStorage.removeItem(CHAVE_PERFIL);
+        } catch {
+            // O nome é apenas apresentação.
+        }
+
+        tokenDaSessao = null;
+
+        notificarCabecalho();
+    }
+
+    // ---------- Estado da tela ----------
+    function definirEdicao(habilitada) {
+        [inputNome, inputTelefone, inputNivel].forEach(
+            (campo) => {
+                campo.disabled = !habilitada;
+            }
+        );
+
+        inputEmail.readOnly = true;
+
+        btnSalvar.style.display = habilitada ? "" : "none";
+    }
+
+    function bloquearAcesso(prefixo = "") {
+        usuarioAtual = null;
+
+        definirEdicao(false);
+
+        inputNome.value = "";
+        inputEmail.value = "";
+        inputTelefone.value = "";
+        inputNivel.selectedIndex = -1;
+
+        inputNome.placeholder = "Faça login para editar";
+        inputTelefone.placeholder = "Faça login para editar";
+
+        avatarGrande.textContent = "?";
+        nomeDisplay.textContent = "Visitante";
+        emailDisplay.textContent = "—";
+        nivelBadge.textContent = "Nível: —";
+
+        mostrarAvisoLogin(prefixo);
+    }
+
+    function preencherTela(usuario) {
+        const nome = usuario.nome_exibicao;
+
+        usuarioAtual = {
+            nome_exibicao: nome,
+            telefone_usuario: usuario.telefone_usuario ?? null,
+            tipo_usuario: usuario.tipo_usuario,
+        };
+
+        avatarGrande.textContent = inicial(nome);
+        nomeDisplay.textContent = nome;
+
+        emailDisplay.textContent =
+            usuario.email_usuario || "Não informado";
+
+        nivelBadge.textContent =
+            `Nível: ${traduzirNivel(usuario.tipo_usuario)}`;
+
+        inputNome.value = nome;
+        inputEmail.value = usuario.email_usuario || "";
+        inputTelefone.value = formatarTelefone(
+            usuario.telefone_usuario
+        );
+
+        inputNome.placeholder = "Seu nome";
+        inputTelefone.placeholder = "(11) 99999-9999";
+
+        const nivelEditavel = NIVEIS_VALIDOS.includes(
+            usuario.tipo_usuario
+        );
+
+        inputNivel.value = nivelEditavel
+            ? usuario.tipo_usuario
+            : "";
+
+        definirEdicao(true);
+
+        inputNivel.disabled = !nivelEditavel;
+    }
+
+    // ---------- API ----------
+    function mensagemDaApi(dados, status) {
+        if (Array.isArray(dados?.detail)) {
+            return dados.detail
+                .map((erro) =>
+                    String(erro.msg || "Valor inválido.")
+                        .replace(/^Value error,\s*/, "")
+                )
+                .join(" | ");
+        }
+
+        if (typeof dados?.detail === "string") {
+            return dados.detail;
+        }
+
+        return `Não foi possível concluir a operação. HTTP ${status}.`;
+    }
+
+    function erroDeSessao() {
+        const erro = new Error(
+            "A sessão mudou. Recarregue a página."
+        );
+
+        erro.status = 401;
+
+        return erro;
+    }
+
+    async function requisicao(caminho, opcoes = {}) {
+        const token = tokenDaSessao;
+
+        if (!token || obterToken() !== token) {
+            throw erroDeSessao();
+        }
+
+        let resposta;
+
+        try {
+            resposta = await fetch(API_URL + caminho, {
+                ...opcoes,
+
+                headers: {
+                    Accept: "application/json",
+
+                    ...(opcoes.body
+                        ? { "Content-Type": "application/json" }
+                        : {}),
+
+                    Authorization: `Bearer ${token}`,
+                },
+
+                cache: "no-store",
+            });
+        } catch {
+            throw new Error(
+                "Não foi possível comunicar com o servidor."
+            );
+        }
+
+        // Ignora a resposta se a sessão mudou durante o envio.
+        if (obterToken() !== token) {
+            throw erroDeSessao();
+        }
+
+        const dados = await resposta.json().catch(() => null);
+
+        if (!resposta.ok) {
+            const erro = new Error(
+                mensagemDaApi(dados, resposta.status)
+            );
+
+            erro.status = resposta.status;
+
+            throw erro;
+        }
+
+        if (!dados) {
+            throw new Error(
+                "O servidor retornou uma resposta inesperada."
+            );
+        }
+
+        return dados;
+    }
+
+    // ---------- Carregamento inicial ----------
+    async function carregarDados() {
+        tokenDaSessao = obterToken();
+
+        if (!tokenDaSessao) {
+            // Sem token, o cabeçalho também volta a visitante.
+            limparSessaoLocal();
+            bloquearAcesso();
+
             return;
         }
 
-        // --- Preencher Cabeçalho ---
-        if (pill) pill.dataset.logado = "true";
-        if (perfilBox) perfilBox.hidden = false;
-        
-        const nome = usuario.nome || usuario.nome_exibicao || "Usuário";
-        if (elNome) elNome.textContent = nome;
-        if (elIniciais) elIniciais.textContent = obterIniciais(nome);
+        definirEdicao(false);
 
-        // --- Preencher Cartão de Identidade ---
-        if (avatarGrande) avatarGrande.textContent = obterIniciais(nome);
-        if (nomeDisplay) nomeDisplay.textContent = nome;
-        
-        const emailSalvo = usuario.email || usuario.email_usuario || "Não informado";
-        if (emailDisplay) emailDisplay.textContent = emailSalvo;
-        if (nivelBadge) nivelBadge.textContent = `Nível: ${traduzirNivel(usuario.nivel || usuario.tipo_usuario)}`;
+        try {
+            const usuario = await requisicao("/usuarios/me");
 
-        // --- Preencher Formulário ---
-        if (inputNome) inputNome.value = nome;
-        if (inputEmail) inputEmail.value = emailSalvo === "Não informado" ? "" : emailSalvo;
-        if (inputTelefone) inputTelefone.value = usuario.telefone || usuario.telefone_usuario || "";
-        if (inputNivel) inputNivel.value = usuario.nivel || usuario.tipo_usuario || "ouvinte";
-    }
+            preencherTela(usuario);
+            guardarNomeCabecalho(usuario.nome_exibicao);
+        } catch (erro) {
+            if (erro.status === 401) {
+                limparSessaoLocal();
+                bloquearAcesso("Sua sessão expirou. ");
 
-    // Salvar Alterações
-    if (form) {
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-            
-            const usuario = lerSessao();
-            if (!usuario) return bloquearAcesso();
-
-            const novoNome = inputNome.value.trim();
-            if (!novoNome) {
-                msgErro.textContent = "O nome não pode ficar vazio.";
-                msgErro.hidden = false;
                 return;
             }
 
-            // Atualiza o objeto
-            usuario.nome = novoNome;
-            usuario.nome_exibicao = novoNome;
-            usuario.telefone = inputTelefone.value.trim();
-            usuario.telefone_usuario = inputTelefone.value.trim();
-            usuario.nivel = inputNivel.value;
-            usuario.tipo_usuario = inputNivel.value;
-            usuario.iniciais = obterIniciais(novoNome);
+            definirEdicao(false);
 
-            try {
-                // Salva de volta
-                if (localStorage.getItem(CHAVE_USUARIO)) {
-                    localStorage.setItem(CHAVE_USUARIO, JSON.stringify(usuario));
-                } else {
-                    sessionStorage.setItem(CHAVE_SESSAO, JSON.stringify(usuario));
+            mostrarErro(
+                `${erro.message} Recarregue a página para tentar novamente.`
+            );
+        }
+    }
+
+    // ---------- Salvar ----------
+    form.addEventListener("submit", async (evento) => {
+        evento.preventDefault();
+
+        if (salvando) return;
+
+        if (!usuarioAtual || !tokenDaSessao) {
+            bloquearAcesso();
+
+            return;
+        }
+
+        limparMensagens();
+
+        const nome = inputNome.value.trim();
+        const telefone = soDigitos(inputTelefone.value);
+
+        const erroNome = validarNome(nome);
+
+        if (erroNome) {
+            mostrarErro(erroNome);
+            inputNome.focus();
+
+            return;
+        }
+
+        const erroTelefone = validarTelefone(telefone);
+
+        if (erroTelefone) {
+            mostrarErro(erroTelefone);
+            inputTelefone.focus();
+
+            return;
+        }
+
+        const alteracoes = {};
+
+        if (nome !== usuarioAtual.nome_exibicao) {
+            alteracoes.nome_exibicao = nome;
+        }
+
+        const telefoneAtual =
+            soDigitos(usuarioAtual.telefone_usuario) || null;
+
+        if ((telefone || null) !== telefoneAtual) {
+            alteracoes.telefone_usuario = telefone || null;
+        }
+
+        if (!inputNivel.disabled) {
+            if (!NIVEIS_VALIDOS.includes(inputNivel.value)) {
+                mostrarErro("Escolha um nível de acessibilidade.");
+                inputNivel.focus();
+
+                return;
+            }
+
+            if (inputNivel.value !== usuarioAtual.tipo_usuario) {
+                alteracoes.tipo_usuario = inputNivel.value;
+            }
+        }
+
+        if (!Object.keys(alteracoes).length) {
+            mostrarSucesso("Nenhuma alteração para salvar.");
+
+            return;
+        }
+
+        salvando = true;
+        btnSalvar.disabled = true;
+
+        try {
+            const atualizado = await requisicao(
+                "/usuarios/me",
+                {
+                    method: "PATCH",
+                    body: JSON.stringify(alteracoes),
                 }
+            );
 
-                // Feedback visual
-                msgErro.hidden = true;
-                msgSucesso.textContent = "Dados atualizados com sucesso!";
-                msgSucesso.hidden = false;
+            preencherTela(atualizado);
 
-                carregarDados(); // Recarrega os dados na tela
-                setTimeout(() => { msgSucesso.hidden = true; }, 3000);
+            // Só atualiza o ícone depois da confirmação do banco.
+            guardarNomeCabecalho(atualizado.nome_exibicao);
 
-            } catch (err) {
-                msgErro.textContent = "Erro ao salvar no navegador.";
-                msgErro.hidden = false;
+            mostrarSucesso("Dados atualizados com sucesso!");
+        } catch (erro) {
+            if (erro.status === 401) {
+                limparSessaoLocal();
+                bloquearAcesso("Sua sessão expirou. ");
+
+                return;
+            }
+
+            mostrarErro(
+                `${erro.message} Suas alterações não foram confirmadas.`
+            );
+        } finally {
+            salvando = false;
+            btnSalvar.disabled = false;
+        }
+    });
+
+    // ---------- Campos ----------
+    inputTelefone.addEventListener("input", () => {
+        inputTelefone.value = formatarTelefone(
+            inputTelefone.value
+        );
+    });
+
+    [inputNome, inputTelefone, inputNivel].forEach((campo) => {
+        campo.addEventListener("input", () => {
+            if (!msgErro.hidden && usuarioAtual) {
+                limparMensagens();
             }
         });
-    }
+    });
 
-    // Encerrar Sessão (Botão da lateral)
-    if (btnEncerrarSessao) {
-        btnEncerrarSessao.addEventListener("click", () => {
-            localStorage.removeItem(CHAVE_USUARIO);
-            sessionStorage.removeItem(CHAVE_SESSAO);
-            window.location.href = "../../index.html";
-        });
-    }
+    // ---------- Encerrar sessão ----------
+    btnEncerrarSessao.addEventListener("click", () => {
+        limparSessaoLocal();
 
-    // Sair pelo Cabeçalho
-    btnSair?.addEventListener("click", (e) => {
-        e.preventDefault();
-        localStorage.removeItem(CHAVE_USUARIO);
-        sessionStorage.removeItem(CHAVE_SESSAO);
+        if (obterToken() !== null) {
+            mostrarErro(
+                "Não foi possível encerrar a sessão. " +
+                "Confira as permissões de armazenamento do navegador."
+            );
+
+            return;
+        }
+
         window.location.href = "../../index.html";
     });
 
-    // Inicializa a página
     carregarDados();
 })();

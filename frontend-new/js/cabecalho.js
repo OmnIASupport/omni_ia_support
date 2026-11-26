@@ -2,6 +2,7 @@
    Omni IA Support — Identificação visual no cabeçalho
 
    - Mostra o nome e a primeira letra após cadastro ou login.
+   - Atualiza o nome quando o perfil é alterado.
    - Ao sair, remove o token e a identificação visual.
    - Recarrega a página para reiniciar o widget como visitante.
 
@@ -9,11 +10,12 @@
    A validação das requisições continua no backend.
    ========================================================= */
 
-   (() => {
+(() => {
     "use strict";
 
     const CHAVE_PERFIL = "omni:perfil-interface";
     const CHAVE_TOKEN = "omni:token_acesso";
+    const EVENTO_PERFIL = "omni:perfil-atualizado";
 
     const pill = document.querySelector("#user-pill");
     const entrar = document.querySelector("#btn-entrar-header");
@@ -176,6 +178,12 @@
     // Atualiza também ao retornar pelo histórico do navegador.
     window.addEventListener(
         "pageshow",
+        atualizarCabecalho
+    );
+
+    // Atualiza quando o perfil é alterado na mesma página.
+    window.addEventListener(
+        EVENTO_PERFIL,
         atualizarCabecalho
     );
 

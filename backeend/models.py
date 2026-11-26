@@ -1,10 +1,13 @@
 from datetime import datetime
+from typing import Literal
 
 from pydantic import (
     BaseModel,
+    ConfigDict,
     Field,
     SecretStr,
     field_validator,
+    model_validator,
 )
 
 
@@ -181,3 +184,74 @@ class LoginSaida(UsuarioAutenticadoSaida):
     access_token: str
     token_type: str = "bearer"
     expires_in: int
+
+# PERFIL: dados que o próprio usuário pode alterar.
+class UsuarioPerfilAtualizacao(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    nome_exibicao: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=150,
+    )
+
+    telefone_usuario: str | None = Field(
+        default=None,
+        max_length=20,
+    )
+
+    tipo_usuario: Literal[
+        "surdo",
+        "ouvinte",
+        "ambos",
+    ] | None = None
+
+    @field_validator("nome_exibicao")
+    @classmethod
+    def validar_nome(cls, valor: str | None) -> str | None:
+        if valor is None:
+            return None
+
+        valor = valor.strip()
+
+        if len(valor) < 2:
+            raise ValueError(
+                "O nome de exibição deve ter pelo menos 2 caracteres."
+            )
+
+        return valor
+
+    @field_validator("telefone_usuario")
+    @classmethod
+    def validar_telefone(cls, valor: str | None) -> str | None:
+        if valor is None:
+            return None
+
+        digitos = "".join(
+            caractere
+            for caractere in valor
+            if caractere.isdigit()
+        )
+
+        if not digitos:
+            return None
+
+        if len(digitos) not in (10, 11):
+            raise ValueError(
+                "Informe um telefone com DDD e 10 ou 11 dígitos."
+            )
+
+        return digitos
+
+    @model_validator(mode="after")
+    def validar_campos_nao_nulos(self):
+        for campo in ("nome_exibicao", "tipo_usuario"):
+            if (
+                campo in self.model_fields_set
+                and getattr(self, campo) is None
+            ):
+                raise ValueError(
+                    f"O campo {campo} não pode ser nulo."
+                )
+
+        return self

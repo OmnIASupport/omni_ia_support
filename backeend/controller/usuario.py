@@ -1,6 +1,13 @@
 from datetime import datetime, timezone
+from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, Response, status
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    Response,
+    status,
+)
 from postgrest.exceptions import APIError
 from pwdlib import PasswordHash
 
@@ -8,8 +15,10 @@ from database import supabase
 from models import (
     UsuarioEntrada,
     UsuarioAtualizacao,
+    UsuarioPerfilAtualizacao,
     UsuarioSaida,
 )
+from seguranca import obter_usuario_atual
 
 
 router = APIRouter(
@@ -31,6 +40,8 @@ COLUNAS_PUBLICAS = (
     "criado_em,"
     "atualizado_em"
 )
+
+NIVEIS_EDITAVEIS = {"surdo", "ouvinte", "ambos"}
 
 
 def tratar_duplicidade(erro: APIError) -> None:
@@ -74,6 +85,95 @@ def cadastrar_usuario(dados: UsuarioEntrada):
         raise HTTPException(
             status_code=502,
             detail="O Supabase não retornou o usuário cadastrado.",
+        )
+
+    return resposta.data[0]
+
+
+# Consultar os dados do usuário autenticado.
+# Deve ficar antes de "/{id_usuario}".
+@router.get(
+    "/me",
+    response_model=UsuarioSaida,
+)
+def consultar_meu_usuario(
+    response: Response,
+    usuario: Annotated[
+        dict,
+        Depends(obter_usuario_atual),
+    ],
+):
+    response.headers["Cache-Control"] = "no-store"
+
+    resposta = (
+        supabase.table("usuario")
+        .select(COLUNAS_PUBLICAS)
+        .eq("id_usuario", usuario["id_usuario"])
+        .limit(1)
+        .execute()
+    )
+
+    if not resposta.data:
+        raise HTTPException(
+            status_code=404,
+            detail="Usuário não encontrado.",
+        )
+
+    return resposta.data[0]
+
+
+# Atualizar somente os dados permitidos do usuário autenticado.
+@router.patch(
+    "/me",
+    response_model=UsuarioSaida,
+)
+def atualizar_meu_usuario(
+    dados: UsuarioPerfilAtualizacao,
+    response: Response,
+    usuario: Annotated[
+        dict,
+        Depends(obter_usuario_atual),
+    ],
+):
+    response.headers["Cache-Control"] = "no-store"
+
+    campos = dados.model_dump(
+        mode="json",
+        exclude_unset=True,
+    )
+
+    if not campos:
+        raise HTTPException(
+            status_code=400,
+            detail="Informe pelo menos um campo para atualizar.",
+        )
+
+    # Contas com outro tipo não trocam de tipo por esta tela.
+    if (
+        "tipo_usuario" in campos
+        and usuario["tipo_usuario"] not in NIVEIS_EDITAVEIS
+    ):
+        raise HTTPException(
+            status_code=403,
+            detail="O tipo desta conta não pode ser alterado aqui.",
+        )
+
+    campos["atualizado_em"] = datetime.now(
+        timezone.utc
+    ).isoformat()
+
+    resposta = (
+        supabase.table("usuario")
+        .update(campos)
+        .eq("id_usuario", usuario["id_usuario"])
+        .select(COLUNAS_PUBLICAS)
+        .execute()
+    )
+
+    if not resposta.data:
+        raise HTTPException(
+            status_code=404,
+            detail="Usuário não encontrado.",
         )
 
     return resposta.data[0]

@@ -3,6 +3,7 @@
    Base visual: ../../style.css e acessibilidade.css
    ========================================================= */
 
+
    .perfil-main {
     padding: 40px 32px 96px;
     max-width: 1200px;
@@ -224,6 +225,16 @@
     box-shadow: 0 0 0 4px rgba(1, 53, 205, 0.12);
   }
   
+  /* Campos somente leitura e bloqueados */
+  
+  .campo-input input[readonly],
+  .campo-input input:disabled,
+  .campo-input select:disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+    background: #eef2f9;
+  }
+  
   .form-acoes {
     display: flex;
     flex-wrap: wrap;
@@ -254,6 +265,18 @@
     background: #e8f5ee;
     color: #16a34a;
     border: 1px solid #bbf7d0;
+  }
+  
+  /* Ícone e links do aviso de login */
+  
+  .alerta-erro i {
+    margin-right: 8px;
+  }
+  
+  .alerta-erro a {
+    color: inherit;
+    font-weight: 800;
+    text-decoration: underline;
   }
   
   /* =========================================================
@@ -386,3 +409,5 @@
       justify-content: center;
     }
   }
+  
+  
