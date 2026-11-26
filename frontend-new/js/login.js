@@ -1,28 +1,38 @@
 /* =========================================================
    Omni IA Support — Login
 
+
    - POST /login/
    - A senha é verificada no backend.
    - Lembra somente o e-mail, se solicitado.
    - Guarda o nome para apresentação no cabeçalho.
+   - Registra a data e hora do último acesso.
    - Redireciona para o index.html da raiz.
+
 
    Guarda o token de acesso para as requisições autenticadas.
 Implementação de armazenamento destinada ao teste local.
    ========================================================= */
 
+
    (() => {
     "use strict";
 
+
     const API_URL = "http://127.0.0.1:8000/login/";
+    const API_REGISTRAR_ACESSO =
+        "http://127.0.0.1:8000/usuarios/me/registrar-acesso";
     const CHAVE_EMAIL = "omni:email";
     const CHAVE_PERFIL = "omni:perfil-interface";
     const CHAVE_TOKEN = "omni:token_acesso";
 
+
     const $ = (seletor) => document.querySelector(seletor);
+
 
     const form = $("#form-login");
     if (!form) return;
+
 
     const email = $("#email");
     const senha = $("#senha");
@@ -31,6 +41,7 @@ Implementação de armazenamento destinada ao teste local.
     const btnEntrar = $("#btn-entrar");
     const erroGeral = $("#erro-geral");
     const linkEsqueci = $("#esqueci");
+
 
     const obrigatorios = [
         email,
@@ -41,6 +52,7 @@ Implementação de armazenamento destinada ao teste local.
         erroGeral,
     ];
 
+
     if (obrigatorios.some((elemento) => !elemento)) {
         console.error(
             "Login: faltam elementos no HTML. Confira os IDs."
@@ -48,92 +60,116 @@ Implementação de armazenamento destinada ao teste local.
         return;
     }
 
+
     const textoBtn = btnEntrar.querySelector(".btn-texto");
+
 
     if (!textoBtn) {
         console.error("Login: falta .btn-texto no botão.");
         return;
     }
 
+
     let enviando = false;
     let redirecionando = false;
+
 
     // ---------- Mensagens ----------
     function mostrarErro(campo, mensagem) {
         const wrapper = campo.closest(".campo-input");
         const erro = document.getElementById(`erro-${campo.id}`);
 
+
         wrapper?.classList.add("invalido");
+
 
         if (erro) {
             erro.textContent = mensagem;
             erro.hidden = false;
         }
 
+
         campo.setAttribute("aria-invalid", "true");
     }
+
 
     function limparErro(campo) {
         const wrapper = campo.closest(".campo-input");
         const erro = document.getElementById(`erro-${campo.id}`);
 
+
         wrapper?.classList.remove("invalido");
+
 
         if (erro) {
             erro.textContent = "";
             erro.hidden = true;
         }
 
+
         campo.removeAttribute("aria-invalid");
     }
+
 
     function mostrarErroGeral(mensagem) {
         erroGeral.textContent = mensagem;
         erroGeral.hidden = false;
     }
 
+
     function limparErroGeral() {
         erroGeral.textContent = "";
         erroGeral.hidden = true;
     }
 
+
     // ---------- Validação ----------
     function validarEmail(valor) {
         const texto = valor.trim();
+
 
         if (!texto) {
             return "Informe seu e-mail.";
         }
 
+
         if (texto.length > 255) {
             return "O e-mail deve ter até 255 caracteres.";
         }
 
+
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(texto)) {
-            return "Digite um e-mail completo, como nome@gmail.com.";
+            return "Digite um e-mail completo, como [nome@gmail.com](mailto:nome@gmail.com).";
         }
+
 
         return null;
     }
+
 
     function validarSenha(valor) {
         if (!valor) {
             return "Informe sua senha.";
         }
 
+
         // A política de criação da senha fica no cadastro.
         return null;
     }
 
+
     function validarFormulario() {
         limparErroGeral();
 
+
         let valido = true;
+
 
         const verificacoes = [
             [email, validarEmail(email.value)],
             [senha, validarSenha(senha.value)],
         ];
+
 
         for (const [campo, erro] of verificacoes) {
             if (erro) {
@@ -144,17 +180,21 @@ Implementação de armazenamento destinada ao teste local.
             }
         }
 
+
         if (!valido) {
             form.querySelector('[aria-invalid="true"]')?.focus();
         }
 
+
         return valido;
     }
+
 
     // ---------- Lembrar somente o e-mail ----------
     function carregarEmail() {
         try {
             const salvo = localStorage.getItem(CHAVE_EMAIL);
+
 
             if (salvo) {
                 email.value = salvo;
@@ -164,6 +204,7 @@ Implementação de armazenamento destinada ao teste local.
             // O login continua com armazenamento indisponível.
         }
     }
+
 
     function atualizarEmailLembrado(valor) {
         try {
@@ -177,6 +218,7 @@ Implementação de armazenamento destinada ao teste local.
         }
     }
 
+
     lembrar.addEventListener("change", () => {
         if (!lembrar.checked) {
             try {
@@ -187,10 +229,12 @@ Implementação de armazenamento destinada ao teste local.
         }
     });
 
+
     // ---------- Nome para apresentação ----------
     function guardarNome(usuario) {
         try {
             sessionStorage.removeItem(CHAVE_PERFIL);
+
 
             if (
                 typeof usuario.nome_exibicao !== "string" ||
@@ -198,6 +242,7 @@ Implementação de armazenamento destinada ao teste local.
             ) {
                 return;
             }
+
 
             sessionStorage.setItem(
                 CHAVE_PERFIL,
@@ -212,11 +257,14 @@ Implementação de armazenamento destinada ao teste local.
         }
     }
 
+
     // ---------- Mostrar / ocultar senha ----------
     toggleSenha.addEventListener("click", () => {
         const mostrar = senha.type === "password";
 
+
         senha.type = mostrar ? "text" : "password";
+
 
         toggleSenha.setAttribute("aria-pressed", String(mostrar));
         toggleSenha.setAttribute(
@@ -224,7 +272,9 @@ Implementação de armazenamento destinada ao teste local.
             mostrar ? "Ocultar senha" : "Mostrar senha"
         );
 
+
         const icone = toggleSenha.querySelector("i");
+
 
         if (icone) {
             icone.className = mostrar
@@ -233,6 +283,7 @@ Implementação de armazenamento destinada ao teste local.
         }
     });
 
+
     [email, senha].forEach((campo) => {
         campo.addEventListener("input", () => {
             limparErro(campo);
@@ -240,18 +291,22 @@ Implementação de armazenamento destinada ao teste local.
         });
     });
 
+
     // ---------- Botão ----------
     function atualizarBotao(ocupado) {
         btnEntrar.disabled = ocupado;
         btnEntrar.classList.toggle("carregando", ocupado);
         form.setAttribute("aria-busy", String(ocupado));
 
+
         textoBtn.textContent = ocupado ? "Entrando..." : "Entrar";
     }
+
 
     // ---------- API ----------
     async function verificarCredenciais(dados) {
         let resposta;
+
 
         try {
             resposta = await fetch(API_URL, {
@@ -269,18 +324,22 @@ Implementação de armazenamento destinada ao teste local.
             );
         }
 
+
         const usuario = await resposta.json().catch(() => null);
+
 
         if (!resposta.ok) {
             if (resposta.status === 401) {
                 throw new Error("E-mail ou senha inválidos.");
             }
 
+
             if (resposta.status === 404) {
                 throw new Error(
                     "A rota POST /login/ não foi encontrada no backend."
                 );
             }
+
 
             if (resposta.status === 422) {
                 throw new Error(
@@ -289,12 +348,14 @@ Implementação de armazenamento destinada ao teste local.
                 );
             }
 
+
             throw new Error(
                 typeof usuario?.detail === "string"
                     ? usuario.detail
                     : `Não foi possível entrar. HTTP ${resposta.status}.`
             );
         }
+
 
         if (
             !usuario ||
@@ -328,17 +389,41 @@ function guardarToken(usuario) {
     }
 }
 
+
+// ---------- Registro do último acesso ----------
+async function registrarAcesso(usuario) {
+    try {
+        await fetch(API_REGISTRAR_ACESSO, {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${usuario.access_token}`,
+            },
+
+            body: JSON.stringify({}),
+        });
+    } catch {
+        // O login continua mesmo se o registro falhar.
+    }
+}
+
+
     // ---------- Envio ----------
     form.addEventListener("submit", async (evento) => {
         evento.preventDefault();
 
+
         if (enviando || redirecionando) return;
         if (!validarFormulario()) return;
+
 
         enviando = true;
         atualizarBotao(true);
 
+
         const emailInformado = email.value.trim().toLowerCase();
+
 
         try {
             const usuario = await verificarCredenciais({
@@ -352,12 +437,20 @@ function guardarToken(usuario) {
             // Guarda somente o nome para apresentação.
             guardarNome(usuario);
 
+
+            // Registra a data e hora do último acesso no banco.
+            await registrarAcesso(usuario);
+
+
             atualizarEmailLembrado(emailInformado);
+
 
             senha.value = "";
 
+
             redirecionando = true;
             textoBtn.textContent = "Abrindo página inicial...";
+
 
             window.location.href = "../../index.html";
         } catch (erro) {
@@ -369,20 +462,24 @@ function guardarToken(usuario) {
         } finally {
             enviando = false;
 
+
             if (!redirecionando) {
                 atualizarBotao(false);
             }
         }
     });
 
+
     // ---------- Recuperação ainda não implementada ----------
     linkEsqueci?.addEventListener("click", (evento) => {
         evento.preventDefault();
+
 
         mostrarErroGeral(
             "A recuperação de senha ainda não está disponível."
         );
     });
+
 
     carregarEmail();
 })();
