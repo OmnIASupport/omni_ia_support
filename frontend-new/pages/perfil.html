@@ -7,21 +7,17 @@
   <meta name="theme-color" content="#eaf2ff">
   <title>Meu Perfil — Omni IA Support</title>
 
-
   <link rel="icon" href="icone-omni.ico">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
-
-  <!-- Base visual e estilos específicos (O CSS de acessibilidade foi removido) -->
   <link rel="stylesheet" href="../../style.css">
   <link rel="stylesheet" href="../static/perfil.css">
 </head>
 <body>
   <a href="#conteudo" class="skip-link">Pular para o conteúdo</a>
-
 
   <header class="site-header">
     <a href="../../index.html" class="logo-container" aria-label="Omni IA Support - página inicial">
@@ -32,34 +28,18 @@
       </div>
     </a>
 
-
     <nav class="menu" aria-label="Menu principal">
-      <a href="../../index.html" class="nav-btn">
-        <i class="fa-solid fa-house" aria-hidden="true"></i>
-        <span>Home</span>
-      </a>
-      <a href="dashboard.html" class="nav-btn">
-        <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
-        <span>Dashboard</span>
-      </a>
-      <a href="traduzir.html" class="nav-btn">
-        <i class="fa-solid fa-hands-asl-interpreting" aria-hidden="true"></i>
-        <span>Traduzir</span>
-      </a>
-      <a href="ajuda.html" class="nav-btn">
-        <i class="fa-solid fa-headset" aria-hidden="true"></i>
-        <span>Ajuda</span>
-      </a>
+      <a href="../../index.html" class="nav-btn"><i class="fa-solid fa-house" aria-hidden="true"></i><span>Home</span></a>
+      <a href="dashboard.html" class="nav-btn"><i class="fa-solid fa-chart-line" aria-hidden="true"></i><span>Dashboard</span></a>
+      <a href="traduzir.html" class="nav-btn"><i class="fa-solid fa-hands-asl-interpreting" aria-hidden="true"></i><span>Traduzir</span></a>
+      <a href="ajuda.html" class="nav-btn"><i class="fa-solid fa-headset" aria-hidden="true"></i><span>Ajuda</span></a>
     </nav>
-
 
     <div class="user-pill" id="user-pill" data-perfil-visivel="false">
       <a href="login.html?redirect=perfil.html" class="btn-entrar-header" id="btn-entrar-header" aria-label="Entrar na sua conta">
         <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
         <span>Entrar</span>
       </a>
-
-
       <div class="user-perfil-logado" id="user-perfil-logado" hidden>
         <a href="perfil.html" class="perfil-link" aria-current="page" aria-label="Abrir seu perfil">
           <span class="avatar" id="avatar-iniciais" aria-hidden="true">?</span>
@@ -74,9 +54,7 @@
     </div>
   </header>
 
-
   <main id="conteudo" class="perfil-main">
-    <!-- Barra superior com retorno ao Dashboard -->
     <div class="perfil-navegacao">
       <a href="dashboard.html" class="btn-voltar">
         <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
@@ -84,12 +62,8 @@
       </a>
     </div>
 
-
-    <!-- Cartão de Identidade -->
     <section class="perfil-hero" aria-labelledby="titulo-perfil">
       <div class="perfil-avatar-grande" id="perfil-avatar" aria-hidden="true">?</div>
-
-
       <div class="perfil-info-topo">
         <p class="eyebrow">Sua conta</p>
         <h1 id="titulo-perfil">Olá, <span id="perfil-nome-display">Usuário</span></h1>
@@ -99,26 +73,18 @@
         </p>
         <span class="perfil-badge" id="perfil-nivel">Nível: —</span>
       </div>
-
-
       <a href="#form-editar" class="btn-ghost">
         <i class="fa-solid fa-pen" aria-hidden="true"></i>
         Editar dados
       </a>
     </section>
 
-
     <div class="perfil-grid">
-      <!-- Formulário de Edição -->
       <section class="perfil-card" id="form-editar" aria-labelledby="titulo-dados">
         <header class="card-head">
-          <h2 id="titulo-dados">
-            <i class="fa-solid fa-user-pen" aria-hidden="true"></i>
-            Dados Pessoais
-          </h2>
-          <p>Atualize seu nome de exibição, telefone e nível de acessibilidade. O e-mail é usado no login e não pode ser alterado aqui.</p>
+          <h2 id="titulo-dados"><i class="fa-solid fa-user-pen" aria-hidden="true"></i> Dados Pessoais</h2>
+          <p>Atualize seu nome de exibição e telefone.</p>
         </header>
-
 
         <form id="form-perfil" novalidate>
           <div class="campo">
@@ -129,7 +95,6 @@
             </div>
           </div>
 
-
           <div class="campo">
             <label for="edit-email">E-mail</label>
             <div class="campo-input">
@@ -137,7 +102,6 @@
               <input type="email" id="edit-email" name="email" maxlength="255" placeholder="voce@exemplo.com" readonly>
             </div>
           </div>
-
 
           <div class="campo">
             <label for="edit-telefone">Telefone</label>
@@ -147,87 +111,66 @@
             </div>
           </div>
 
-
+          <!-- ALTERADO: Agora é um input readonly, não um select -->
           <div class="campo">
             <label for="edit-nivel">Nível de acessibilidade</label>
             <div class="campo-input">
               <i class="fa-solid fa-universal-access" aria-hidden="true"></i>
-              <select id="edit-nivel" name="nivel">
-                <option value="surdo">Surdo (Uso Libras como primeira língua)</option>
-                <option value="ouvinte">Ouvinte (Quero me comunicar com surdos)</option>
-                <option value="ambos">Ambos (Uso as duas formas)</option>
-              </select>
+              <input type="text" id="edit-nivel" name="nivel" readonly placeholder="Nível não definido">
             </div>
+            <small class="ajuda-campo">Para alterar o nível, entre em contato com o suporte.</small>
           </div>
-
 
           <p class="alerta-msg alerta-erro" id="erro-perfil" role="alert" hidden></p>
           <p class="alerta-msg alerta-sucesso" id="sucesso-perfil" role="status" hidden></p>
 
-
           <div class="form-acoes">
             <button type="submit" class="btn-primario" id="btn-salvar-perfil">
-              <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
-              Salvar alterações
+              <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Salvar alterações
             </button>
-
-
-            <a href="dashboard.html" class="btn-ghost">
-              Voltar ao painel
-            </a>
+            <a href="dashboard.html" class="btn-ghost">Voltar ao painel</a>
           </div>
         </form>
       </section>
 
-
-      <!-- Coluna Lateral -->
       <aside class="perfil-lateral">
         <section class="perfil-card" aria-labelledby="titulo-seguranca">
           <header class="card-head">
-            <h2 id="titulo-seguranca">
-              <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
-              Sessão e Segurança
-            </h2>
+            <h2 id="titulo-seguranca"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Sessão e Segurança</h2>
           </header>
-          <p class="texto-suave">
-            As alterações salvas aqui são gravadas na sua conta e atualizam o nome exibido no cabeçalho.
-          </p>
+          <p class="texto-suave">Gerencie o acesso à sua conta.</p>
           <hr class="divisor">
+          
+          <!-- NOVO: Botão para abrir o modal de troca de senha -->
+          <button type="button" class="btn-primario btn-full" id="btn-abrir-modal-senha">
+            <i class="fa-solid fa-key" aria-hidden="true"></i> Alterar Senha
+          </button>
+          
+          <hr class="divisor">
+          
           <button type="button" class="btn-perigo btn-full" id="btn-encerrar-sessao">
-            <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
-            Encerrar sessão
+            <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Encerrar sessão
           </button>
         </section>
 
-
         <section class="perfil-card" aria-labelledby="titulo-sobre">
           <header class="card-head">
-            <h2 id="titulo-sobre">
-              <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-              Resumo da conta
-            </h2>
+            <h2 id="titulo-sobre"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Resumo da conta</h2>
           </header>
           <ul class="lista-detalhes">
             <li><span>Status:</span> <strong class="texto-verde">Ativa</strong></li>
             <li><span>Armazenamento:</span> <strong>Banco de dados (sua conta)</strong></li>
             <li><span>Sincronização:</span> <strong>Integrada ao Dashboard</strong></li>
           </ul>
-          <p class="nota">
-            Seus dados são gravados no servidor e carregados novamente sempre que você entra na conta.
-          </p>
         </section>
       </aside>
     </div>
   </main>
 
-
   <footer class="site-footer">
     <div class="footer-marca">
       <img src="logo.png" alt="" class="footer-logo">
-      <p>
-        <strong>Omni IA Support</strong><br>
-        Comunicação acessível entre Português e Libras.
-      </p>
+      <p><strong>Omni IA Support</strong><br>Comunicação acessível entre Português e Libras.</p>
     </div>
     <nav aria-label="Links do rodapé">
       <a href="../../index.html">Home</a>
@@ -238,6 +181,52 @@
     <p class="footer-copy">© 2026 Omni IA Support</p>
   </footer>
 
+  <!-- NOVO: Modal de Troca de Senha -->
+  <div class="modal-overlay" id="modal-senha" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-labelledby="titulo-modal-senha">
+      <header class="modal-head">
+        <h2 id="titulo-modal-senha"><i class="fa-solid fa-key"></i> Alterar Senha</h2>
+        <button type="button" class="btn-fechar" id="btn-fechar-modal" aria-label="Fechar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </header>
+      
+      <form id="form-senha">
+        <div class="campo">
+          <label for="senha-atual">Senha Atual</label>
+          <div class="campo-input">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="senha-atual" required placeholder="Digite sua senha atual">
+          </div>
+        </div>
+        
+        <div class="campo">
+          <label for="senha-nova">Nova Senha</label>
+          <div class="campo-input">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="senha-nova" required minlength="6" placeholder="Mínimo 6 caracteres">
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="senha-confirmar">Confirmar Nova Senha</label>
+          <div class="campo-input">
+            <i class="fa-solid fa-check-double"></i>
+            <input type="password" id="senha-confirmar" required placeholder="Repita a nova senha">
+          </div>
+        </div>
+
+        <p class="alerta-msg alerta-erro" id="erro-senha" role="alert" hidden></p>
+        <p class="alerta-msg alerta-sucesso" id="sucesso-senha" role="status" hidden></p>
+
+        <div class="modal-acoes">
+          <button type="submit" class="btn-primario btn-full" id="btn-salvar-senha">
+            <i class="fa-solid fa-floppy-disk"></i> Atualizar Senha
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <script src="../js/cabecalho.js" defer></script>
   <script src="../js/perfil.js" defer></script>
