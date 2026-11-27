@@ -1,0 +1,184 @@
+/* ============================================================
+   Omni IA Support — estilos do Avatar Libras
+   ------------------------------------------------------------------
+   Cole este arquivo em:  frontend-new/static/avatar-libras.css
+   e inclua no <head> do traduzir.html:
+
+     <link rel="stylesheet" href="../static/avatar-libras.css">
+
+   Nada aqui afeta o resto do site: todos os seletores estão
+   limitados a #avatar-cena.
+   ============================================================ */
+
+/* ---------- 1. a cena precisa ser o contexto de posicionamento ---------- */
+#avatar-cena {
+    position: relative;
+    min-height: 430px;      /* garante área para o avatar em telas pequenas */
+    overflow: hidden;
+  }
+  
+  /* ---------- 2. o canvas do avatar ---------- */
+  #avatar-cena canvas,
+  #avatar-cena canvas.avatar-libras {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: transparent;   /* fundo transparente: o estudio-* aparece atrás */
+    z-index: 1;
+    pointer-events: none;      /* não rouba cliques dos botões */
+  }
+  
+  /* ---------- 3. caixa de informação: compacta e fora do caminho ---------- *
+   *  No traduzir.css ela é um bloco centralizado de 560px no rodapé da
+   *  cena — o que cobre as mãos do avatar justamente quando ele sinaliza.
+   *  Aqui ela fica pequena, no canto inferior esquerdo, e some durante
+   *  a sinalização (o JS aplica data-sinalizando="true").
+   */
+  #avatar-cena .avatar-informacao {
+    z-index: 2;
+    transition: opacity .28s ease, transform .28s ease;
+  
+    /* reposiciona: canto inferior esquerdo, compacta */
+    left: 18px;
+    right: auto;
+    bottom: 16px;
+    transform: none;
+  
+    width: auto;
+    max-width: min(330px, calc(100% - 36px));
+    padding: 10px 14px;
+    border-radius: 14px;
+    text-align: left;
+  }
+  
+  #avatar-cena .avatar-informacao h2 {
+    font-size: .95rem;
+    margin: 0 0 2px;
+  }
+  
+  #avatar-cena .avatar-informacao p {
+    font-size: .78rem;
+    line-height: 1.45;
+    margin: 0;
+  }
+  
+  /* durante a sinalização a caixa sai de cena */
+  #avatar-cena[data-sinalizando="true"] .avatar-informacao {
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+  }
+  
+  /* ---------- 4. selo discreto de estado ---------- */
+  .avatar-libras-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 100px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: .2px;
+    color: #2b62d9;
+    background: rgba(255, 255, 255, .82);
+    border: 1px solid rgba(43, 98, 217, .22);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity .22s ease, transform .22s ease;
+    pointer-events: none;      /* nunca bloqueia cliques */
+  }
+  
+  .avatar-libras-badge.on {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* bolinha pulsante antes do texto */
+  .avatar-libras-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #2e9bff;
+    box-shadow: 0 0 8px rgba(46, 155, 255, .8);
+    animation: avatarLibrasPulso 1.4s ease-in-out infinite;
+  }
+  
+  @keyframes avatarLibrasPulso {
+    0%, 100% { opacity: 1;   transform: scale(1); }
+    50%      { opacity: .45; transform: scale(.8); }
+  }
+  
+  /* ---------- 5. tela cheia: o avatar ocupa tudo ---------- */
+  #avatar-cena:fullscreen {
+    width: 100vw;
+    height: 100vh;
+    min-height: 100vh;
+    border-radius: 0;
+    background: radial-gradient(circle at 50% 20%, #2b3b5e 0%, #18213a 48%, #0e1424 100%);
+  }
+  
+  #avatar-cena:fullscreen .avatar-informacao {
+    z-index: 2;
+    left: 28px;
+    bottom: 26px;
+    max-width: 380px;
+  }
+  
+  #avatar-cena:fullscreen .avatar-informacao h2 { font-size: 1.05rem; }
+  #avatar-cena:fullscreen .avatar-informacao p  { font-size: .85rem; }
+  
+  /* ---------- 6. acessibilidade: respeita "reduzir movimento" ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .avatar-libras-badge::before { animation: none; }
+    #avatar-cena .avatar-informacao { transition: none; }
+  }
+  
+  /* ---------- 7. telas pequenas ---------- */
+  @media (max-width: 720px) {
+    #avatar-cena { min-height: 340px; }
+    .avatar-libras-badge { font-size: 10.5px; padding: 5px 10px; }
+  }
+
+  body.dark-mode #avatar-cena .avatar-informacao h2 {
+    color: #eaf2ff;
+  }
+  
+  body.dark-mode #avatar-cena .avatar-informacao p {
+    color: #9fb0cc;
+  }
+
+  .avatar-libras-erro {
+    position: absolute;
+    inset: auto 16px 16px 16px;
+    z-index: 9;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: #450a0a;
+    border: 1px solid #991b1b;
+    color: #fecaca;
+    font-size: 12.5px;
+    line-height: 1.5;
+    text-align: left;
+  }
+  
+  .avatar-libras-erro b { color: #fff; font-size: 13px; }
+  
+  .avatar-libras-erro code {
+    background: rgba(0, 0, 0, .35);
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: #fca5a5;
+    font-size: 11.5px;
+  }

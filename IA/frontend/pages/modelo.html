@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07152d">
+  <title>Modelo de IA | Omni IA Support</title>
+  <link rel="icon" href="../static/logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../static/style.css?v=2">
+  <script src="../js/api.js?v=2" defer></script>
+  <script src="../js/modelo.js?v=2" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="dashboard.html"><img src="../static/logo.png" alt=""><span><b>Omni IA</b><small>SUPPORT &amp; ACESSIBILIDADE</small></span></a>
+    <div class="side-label">MENU PRINCIPAL</div>
+    <nav class="side-nav" aria-label="Navegação principal">
+      <a href="dashboard.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+      <a href="resumo.html"><i class="fa-solid fa-table-list"></i> Resumo de dados</a>
+      <a href="chat.html"><i class="fa-solid fa-comments"></i> Omni IA (chat)</a>
+      <a class="active" href="modelo.html" aria-current="page"><i class="fa-solid fa-diagram-project"></i> Modelo de IA</a>
+    </nav>
+    <div class="sidebar-bottom"><span class="status-dot"></span><span>Árvore de Decisão experimental</span></div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div><span class="eyebrow">APRENDIZADO DE MÁQUINA</span><h1>Modelo de IA</h1><p>Árvore de Decisão que estima o status de uma solicitação de tradução a partir das suas características.</p></div>
+      <div class="top-actions"><span class="updated" id="lastUpdated">Carregando modelo...</span></div>
+    </header>
+
+    <section class="notice"><i class="fa-solid fa-flask"></i><span>Modelo <b>experimental</b> treinado com dados simulados. Compare a acurácia com a <b>referência</b> (acertar sempre a classe mais comum) antes de tirar conclusões.</span></section>
+    <p id="mensagem" class="notice notice-erro" hidden></p>
+
+    <section class="metric-grid">
+      <article class="metric-card"><div class="metric-top"><span>Acurácia em teste</span><i class="fa-solid fa-bullseye green"></i></div><strong id="mAcuracia">—</strong><small>20% dos dados reservados para teste</small></article>
+      <article class="metric-card"><div class="metric-top"><span>Referência</span><i class="fa-solid fa-scale-balanced orange"></i></div><strong id="mReferencia">—</strong><small>Sempre prever a classe mais comum</small></article>
+      <article class="metric-card"><div class="metric-top"><span>Registros de treino</span><i class="fa-solid fa-database blue"></i></div><strong id="mRegistros">—</strong><small>Modelo final usa toda a base</small></article>
+    </section>
+
+    <section class="bottom-grid">
+      <article class="panel">
+        <div class="panel-heading"><div><h3>Simular uma solicitação</h3><p>Escolha as características e peça a previsão</p></div><i class="fa-solid fa-sliders"></i></div>
+        <form id="form-modelo" class="form-modelo"><div id="campos" class="form-grid"><div class="empty">Carregando campos...</div></div>
+          <button class="refresh-btn" id="btn-prever" type="submit" disabled><i class="fa-solid fa-wand-magic-sparkles"></i><span>Prever status</span></button>
+        </form>
+      </article>
+      <article class="panel">
+        <div class="panel-heading"><div><h3>Resultado da previsão</h3><p>Probabilidade estimada para cada status</p></div><i class="fa-solid fa-chart-bar"></i></div>
+        <div id="resultado" class="bar-chart"><div class="empty">Preencha o formulário e clique em “Prever status”.</div></div>
+      </article>
+    </section>
+    <footer>Omni IA Support · Modelo de IA · scikit-learn</footer>
+  </main>
+</body>
+</html>

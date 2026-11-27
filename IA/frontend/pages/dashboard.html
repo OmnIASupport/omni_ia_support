@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07152d">
+  <title>Dashboard | Omni IA Support</title>
+  <link rel="icon" href="../static/logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../static/style.css?v=2">
+  <script src="../js/api.js?v=2" defer></script>
+  <script src="../js/dashboard.js?v=2" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="dashboard.html"><img src="../static/logo.png" alt=""><span><b>Omni IA</b><small>SUPPORT &amp; ACESSIBILIDADE</small></span></a>
+    <div class="side-label">MENU PRINCIPAL</div>
+    <nav class="side-nav" aria-label="Navegação principal">
+      <a class="active" href="dashboard.html" aria-current="page"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+      <a href="resumo.html"><i class="fa-solid fa-table-list"></i> Resumo de dados</a>
+      <a href="chat.html"><i class="fa-solid fa-comments"></i> Omni IA (chat)</a>
+      <a href="modelo.html"><i class="fa-solid fa-diagram-project"></i> Modelo de IA</a>
+    </nav>
+    <div class="sidebar-bottom"><span class="status-dot" id="sideDot"></span><span id="sideState">Verificando API...</span></div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div><span class="eyebrow">OMNI IA SUPPORT</span><h1>Dashboard</h1><p>Acompanhe os indicadores e a situação dos serviços.</p></div>
+      <div class="top-actions"><span class="updated" id="lastUpdated">Aguardando dados...</span><button id="refreshBtn" class="refresh-btn" type="button"><i class="fa-solid fa-rotate"></i><span>Atualizar</span></button></div>
+    </header>
+
+    <section class="notice"><i class="fa-solid fa-circle-info"></i><span>Os indicadores abaixo são calculados a partir de um <b>conjunto de dados simulado</b>. Eles não representam usuários reais nem atividade real em produção.</span></section>
+
+    <section class="section-heading"><div><h2>Resumo geral</h2><p id="periodo">Indicadores do conjunto de dados</p></div><span class="live-tag"><span class="status-dot" id="dataDot"></span><span id="dataState">Conectando à API...</span></span></section>
+    <section class="metric-grid">
+      <article class="metric-card"><div class="metric-top"><span>Total de registros</span><i class="fa-solid fa-database blue"></i></div><strong id="totalRegistros">—</strong><small>Linhas analisadas no CSV</small></article>
+      <article class="metric-card"><div class="metric-top"><span>Taxa de conclusão</span><i class="fa-solid fa-circle-check purple"></i></div><strong id="taxaConclusao">—</strong><small>Solicitações concluídas</small></article>
+      <article class="metric-card"><div class="metric-top"><span>Usuários identificados</span><i class="fa-solid fa-users cyan"></i></div><strong id="totalUsuarios">—</strong><small>Identificadores distintos</small></article>
+      <article class="metric-card"><div class="metric-top"><span>Tempo médio</span><i class="fa-solid fa-stopwatch orange"></i></div><strong id="tempoMedio">—</strong><small>Tempo de processamento</small></article>
+      <article class="metric-card"><div class="metric-top"><span>Confiança média</span><i class="fa-solid fa-bullseye green"></i></div><strong id="confiancaMedia">—</strong><small>Etapas de processamento</small></article>
+      <article class="metric-card"><div class="metric-top"><span>Unidades de mídia</span><i class="fa-solid fa-photo-film pink"></i></div><strong id="totalMidias">—</strong><small>Somatório das mídias de entrada</small></article>
+    </section>
+
+    <section class="charts-grid">
+      <article class="panel"><div class="panel-heading"><div><h3>Solicitações por modalidade</h3><p>Tipo de entrada recebido</p></div><i class="fa-solid fa-chart-column"></i></div><div id="modalidadesChart" class="bar-chart"><div class="empty">Carregando...</div></div></article>
+      <article class="panel"><div class="panel-heading"><div><h3>Status das traduções</h3><p>Distribuição dos resultados</p></div><i class="fa-solid fa-chart-pie"></i></div><div id="statusChart" class="status-chart"><div class="empty">Carregando...</div></div></article>
+      <article class="panel"><div class="panel-heading"><div><h3>Tipos de usuário</h3><p>Perfil de quem fez a solicitação</p></div><i class="fa-solid fa-users"></i></div><div id="usuariosChart" class="bar-chart"><div class="empty">Carregando...</div></div></article>
+      <article class="panel"><div class="panel-heading"><div><h3>Volume por dia</h3><p>Solicitações registradas na simulação</p></div><i class="fa-solid fa-chart-line"></i></div><div id="datasChart" class="trend-chart"><div class="empty">Carregando...</div></div></article>
+    </section>
+
+    <section class="bottom-grid">
+      <article class="panel"><div class="panel-heading"><div><h3>Serviços do sistema</h3><p>Disponibilidade dos componentes</p></div><i class="fa-solid fa-server"></i></div>
+        <div class="service-row"><div class="service-icon"><i class="fa-solid fa-chart-simple"></i></div><div class="service-info"><b>API de Dados e IA (FastAPI)</b><small id="apiEndereco">Análises do CSV</small></div><span class="service-state" id="dsState">Verificando...</span></div>
+        <div class="service-row"><div class="service-icon"><i class="fa-solid fa-diagram-project"></i></div><div class="service-info"><b>Árvore de Decisão</b><small id="modeloInfo">Modelo experimental</small></div><span class="service-state" id="mlState">Verificando...</span></div>
+        <div class="service-row"><div class="service-icon"><i class="fa-solid fa-brain"></i></div><div class="service-info"><b>Ollama Local</b><small id="ollamaInfo">Explicações do chat (opcional)</small></div><span class="service-state" id="iaState">Verificando...</span></div>
+      </article>
+      <article class="panel"><div class="panel-heading"><div><h3>Qualidade dos dados</h3><p>Verificação do conjunto simulado</p></div><i class="fa-solid fa-shield-halved"></i></div>
+        <div class="quality-list">
+          <div><span>Registros com campos essenciais vazios</span><b id="camposEssenciais">—</b></div>
+          <div><span>Valores vazios (total, inclui campos opcionais)</span><b id="valoresVazios">—</b></div>
+          <div><span>Linhas duplicadas</span><b id="duplicados">—</b></div>
+          <div><span>Colunas analisadas</span><b id="totalColunas">—</b></div>
+        </div>
+      </article>
+    </section>
+    <footer>Omni IA Support · Dashboard demonstrativo · Dados simulados</footer>
+  </main>
+</body>
+</html>

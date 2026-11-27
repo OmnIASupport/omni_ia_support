@@ -10,7 +10,7 @@
 
   <meta
     name="description"
-    content="Omni IA Support: comunicação acessível entre Português e Libras com avatar 3D intérprete."
+    content="Omni IA Support: comunicação acessível entre Português e Libras com avatar 2D intérprete."
   >
 
   <meta name="theme-color" content="#eaf2ff">
@@ -45,6 +45,13 @@
 
   <!-- Tema e recursos de acessibilidade -->
   <link rel="stylesheet" href="../static/acessibilidade.css">
+
+  <!-- ============================================================
+       AVATAR — CSS do avatar (ALTERAÇÃO 1)
+       Precisa vir DEPOIS de traduzir.css: as duas folhas definem
+       regras para #avatar-cena, e a última carregada é a que vale.
+       ============================================================ -->
+  <link rel="stylesheet" href="../static/avatar-libras.css">
 </head>
 
 <body>
@@ -186,10 +193,10 @@
       </p>
     </section>
 
-    <!-- Palco principal do avatar 3D -->
+    <!-- Palco principal do avatar -->
     <section
       class="avatar-estudio glass-panel"
-      aria-label="Estúdio do avatar 3D intérprete de Libras"
+      aria-label="Estúdio do avatar intérprete de Libras"
     >
       <div class="estudio-fundo" aria-hidden="true"></div>
       <div class="estudio-brilho" aria-hidden="true"></div>
@@ -225,28 +232,23 @@
         </div>
       </div>
 
-      <!-- Área reservada para o modelo 3D -->
+      <!-- ============================================================
+           AVATAR — o boneco é injetado aqui dentro (ALTERAÇÃO 2)
+           O placeholder 3D foi removido. Mantenha o id="avatar-cena":
+           é nele que o js/avatar-libras.js monta o canvas, e os ids
+           avatar-titulo / avatar-descricao continuam sendo do seu
+           traduzir.js.
+           ============================================================ -->
       <div
         class="avatar-cena"
         id="avatar-cena"
         aria-live="polite"
       >
-        <!--
-          Espaço reservado para a futura integração do modelo 3D.
-          Exemplo:
-          <canvas id="avatar-canvas"></canvas>
-        -->
-
-        <div class="avatar-3d-placeholder" aria-hidden="true">
-          <i class="fa-solid fa-hands-asl-interpreting"></i>
-          <span class="avatar-anel"></span>
-        </div>
-
         <div class="avatar-informacao">
           <h2 id="avatar-titulo">Aguardando tradução</h2>
 
           <p id="avatar-descricao">
-            O avatar 3D aparecerá aqui e realizará os sinais
+            O avatar aparecerá aqui e realizará os sinais
             em Libras.
           </p>
         </div>
@@ -434,7 +436,8 @@
       <img src="logo.png" alt="" class="footer-logo">
 
       <p>
-        <strong>Omni IA Support</strong><br>
+        <strong>Omni IA Support</strong>
+
         Comunicação acessível entre Português e Libras.
       </p>
     </div>
@@ -459,5 +462,13 @@
 
   <!-- Widget e preferências de acessibilidade -->
   <script src="../js/acessibilidade.js" defer></script>
+
+  <!-- ============================================================
+       AVATAR (ALTERAÇÃO 3)
+       Motor SEM defer  ->  disponível antes de tudo
+       Ponte COM defer  ->  roda depois do HTML estar pronto
+       ============================================================ -->
+  <script src="../static/jarvis_avatar.js"></script>
+  <script src="../js/avatar-libras.js" defer></script>
 </body>
 </html>

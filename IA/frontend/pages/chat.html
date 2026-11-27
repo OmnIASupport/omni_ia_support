@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07152d">
+  <meta name="description" content="Faça perguntas sobre os dados do Omni IA Support.">
+  <title>Omni IA (chat) | Omni IA Support</title>
+  <link rel="icon" href="../static/logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../static/style.css?v=2">
+  <script src="../js/api.js?v=2" defer></script>
+  <script src="../js/chat.js?v=2" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="dashboard.html"><img src="../static/logo.png" alt=""><span><b>Omni IA</b><small>SUPPORT &amp; ACESSIBILIDADE</small></span></a>
+    <div class="side-label">MENU PRINCIPAL</div>
+    <nav class="side-nav" aria-label="Navegação principal">
+      <a href="dashboard.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+      <a href="resumo.html"><i class="fa-solid fa-table-list"></i> Resumo de dados</a>
+      <a class="active" href="chat.html" aria-current="page"><i class="fa-solid fa-comments"></i> Omni IA (chat)</a>
+      <a href="modelo.html"><i class="fa-solid fa-diagram-project"></i> Modelo de IA</a>
+    </nav>
+    <div class="sidebar-bottom"><span class="status-dot" id="chat-dot"></span><span id="chat-status-api">Verificando API...</span></div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div><span class="eyebrow">ASSISTENTE DE ANÁLISE</span><h1>Pergunte ao Omni IA</h1><p>O Python consulta o CSV e calcula o resultado. O Ollama Local pode complementar com uma explicação.</p></div>
+      <div class="top-actions"><span class="updated" id="chat-ollama">Ollama: verificando...</span><button id="chat-limpar" class="refresh-btn btn-secundario" type="button"><i class="fa-solid fa-broom"></i><span>Limpar</span></button></div>
+    </header>
+
+    <section class="panel chat-panel">
+      <div class="chat-sugestoes" aria-label="Perguntas sugeridas">
+        <span class="chat-field">Experimente perguntar</span>
+        <div class="chat-sugestoes-lista" id="chat-sugestoes">
+          <button type="button" class="chat-sugestao">Qual direção de tradução tem mais erros?</button>
+          <button type="button" class="chat-sugestao">Qual é o tempo médio de processamento?</button>
+          <button type="button" class="chat-sugestao">Qual modalidade de entrada é mais usada?</button>
+          <button type="button" class="chat-sugestao">Quantos usuários usam Libras?</button>
+          <button type="button" class="chat-sugestao">Qual dia teve mais solicitações?</button>
+          <button type="button" class="chat-sugestao">Qual é a acurácia do modelo de IA?</button>
+        </div>
+      </div>
+
+      <section id="chat-mensagens" class="chat-mensagens" aria-live="polite">
+        <article class="msg msg-ia"><span class="avatar"><img src="../static/logo.png" alt=""></span><div class="msg-corpo"><small>Omni IA</small><p>Olá! Faça uma pergunta sobre as solicitações de tradução (status, erros, tempos, modalidades, Libras, usuários, sessões ou o modelo de IA).</p></div></article>
+      </section>
+
+      <form id="chat-form" class="chat-form">
+        <label class="sr-only" for="chat-pergunta">Sua pergunta</label>
+        <textarea id="chat-pergunta" name="pergunta" rows="2" maxlength="500" required placeholder="Ex.: Qual tipo de processamento é mais rápido?" autocomplete="off"></textarea>
+        <div class="chat-form-rodape">
+          <span id="chat-status" role="status">Digite sua pergunta. Enter envia; Shift+Enter quebra a linha.</span>
+          <span id="chat-contador">0/500</span>
+          <button id="chat-enviar" class="refresh-btn" type="submit" disabled><i class="fa-solid fa-paper-plane"></i><span>Consultar</span></button>
+        </div>
+      </form>
+    </section>
+    <footer>As respostas numéricas são calculadas pelo Python com os dados do CSV. O Ollama é opcional: se estiver desligado, o resultado calculado continua disponível.</footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,9 @@
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+.DS_Store
+.env
+backend/omni_ia.db
+modelo/*.joblib

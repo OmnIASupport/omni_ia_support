@@ -1134,3 +1134,12 @@ main {
         transition: none !important;
     }
 }
+
+/* Em style.css, procure por .nav-btn */
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px; /* Era 16px, diminua para 12px */
+    /* ... */
+}

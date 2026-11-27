@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07152d">
+  <title>Resumo de dados | Omni IA Support</title>
+  <link rel="icon" href="../static/logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../static/style.css?v=2">
+  <script src="../js/api.js?v=2" defer></script>
+  <script src="../js/resumo.js?v=2" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="dashboard.html"><img src="../static/logo.png" alt=""><span><b>Omni IA</b><small>SUPPORT &amp; ACESSIBILIDADE</small></span></a>
+    <div class="side-label">MENU PRINCIPAL</div>
+    <nav class="side-nav" aria-label="Navegação principal">
+      <a href="dashboard.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+      <a class="active" href="resumo.html" aria-current="page"><i class="fa-solid fa-table-list"></i> Resumo de dados</a>
+      <a href="chat.html"><i class="fa-solid fa-comments"></i> Omni IA (chat)</a>
+      <a href="modelo.html"><i class="fa-solid fa-diagram-project"></i> Modelo de IA</a>
+    </nav>
+    <div class="sidebar-bottom"><span class="status-dot"></span><span>Módulo de Ciência de Dados</span></div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div><span class="eyebrow">OMNI IA SUPPORT</span><h1>Resumo de dados</h1><p id="periodo">Detalhamento das solicitações de tradução por categoria.</p></div>
+      <div class="top-actions"><span class="updated" id="lastUpdated">Aguardando dados...</span><button id="refreshBtn" class="refresh-btn" type="button"><i class="fa-solid fa-rotate"></i><span>Atualizar</span></button></div>
+    </header>
+
+    <p id="mensagem" class="notice notice-erro" hidden></p>
+
+    <section class="metric-grid metric-grid-4">
+      <article class="metric-card"><div class="metric-top"><span>Solicitações</span><i class="fa-solid fa-paper-plane blue"></i></div><strong id="rSolicitacoes">—</strong><small>Total no CSV</small></article>
+      <article class="metric-card"><div class="metric-top"><span>Taxa de erro</span><i class="fa-solid fa-triangle-exclamation orange"></i></div><strong id="rErro">—</strong><small>Status "erro"</small></article>
+      <article class="metric-card"><div class="metric-top"><span>Tempo mediano</span><i class="fa-solid fa-stopwatch cyan"></i></div><strong id="rMediana">—</strong><small>Processamento</small></article>
+      <article class="metric-card"><div class="metric-top"><span>Sessões</span><i class="fa-solid fa-comments purple"></i></div><strong id="rSessoes">—</strong><small>Sessões de comunicação</small></article>
+    </section>
+
+    <section class="tables-grid">
+      <article class="panel"><div class="panel-heading"><div><h3>Por direção de tradução</h3><p>Volume, tempo, confiança e resultados</p></div><i class="fa-solid fa-right-left"></i></div><div class="table-wrap" id="tDirecoes"></div></article>
+      <article class="panel"><div class="panel-heading"><div><h3>Por tipo de processamento</h3><p>Automático, manual ou híbrido</p></div><i class="fa-solid fa-gears"></i></div><div class="table-wrap" id="tTipos"></div></article>
+      <article class="panel"><div class="panel-heading"><div><h3>Por modalidade de entrada</h3><p>Texto, áudio, vídeo e Libras</p></div><i class="fa-solid fa-photo-film"></i></div><div class="table-wrap" id="tModalidades"></div></article>
+      <article class="panel"><div class="panel-heading"><div><h3>Por tipo de usuário</h3><p>Perfil de quem solicitou</p></div><i class="fa-solid fa-users"></i></div><div class="table-wrap" id="tUsuarios"></div></article>
+      <article class="panel"><div class="panel-heading"><div><h3>Por status da sessão</h3><p>Situação da sessão de comunicação</p></div><i class="fa-solid fa-signal"></i></div><div class="table-wrap" id="tSessoes"></div></article>
+      <article class="panel"><div class="panel-heading"><div><h3>Erros registrados</h3><p>Código e mensagem de erro</p></div><i class="fa-solid fa-bug"></i></div><div class="table-wrap" id="tErros"></div></article>
+    </section>
+    <footer>Omni IA Support · Resumo de dados · Dados simulados</footer>
+  </main>
+</body>
+</html>
